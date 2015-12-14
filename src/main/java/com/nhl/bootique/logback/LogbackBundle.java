@@ -25,6 +25,10 @@ public class LogbackBundle {
 	public static LogbackBundle create(String configPrefix) {
 		return new LogbackBundle(configPrefix);
 	}
+	
+	public static Module logbackModule() {
+		return create().module();
+	}
 
 	private LogbackBundle(String configPrefix) {
 		this.configPrefix = configPrefix;

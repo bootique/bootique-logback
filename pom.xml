@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>com.nhl.bootique.parent</groupId>
 		<artifactId>bootique-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>0.5-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.nhl.bootique.logback</groupId>
 	<artifactId>bootique-logback</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Logback Integration with Bootique</name>
@@ -21,7 +21,7 @@
 
 	<properties>
 		<guice-version>4.0</guice-version>
-		<bootique-version>1.0-SNAPSHOT</bootique-version>
+		<bootique-version>0.5-SNAPSHOT</bootique-version>
 	</properties>
 
 	<scm>

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.nhl.bootique.parent</groupId>
 		<artifactId>bootique-parent</artifactId>
-		<version>0.5</version>
+		<version>0.6</version>
 	</parent>
 
 	<groupId>com.nhl.bootique.logback</groupId>
@@ -20,7 +20,7 @@
 
 	<properties>
 		<guice-version>4.0</guice-version>
-		<bootique-version>0.8-SNAPSHOT</bootique-version>
+		<bootique-version>0.8</bootique-version>
 	</properties>
 
 	<scm>

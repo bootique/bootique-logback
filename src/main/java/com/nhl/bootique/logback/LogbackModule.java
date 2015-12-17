@@ -6,20 +6,19 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
-import com.nhl.bootique.FactoryModule;
+import com.nhl.bootique.ConfigModule;
 import com.nhl.bootique.factory.FactoryConfigurationService;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 
-public class LogbackModule extends FactoryModule<LogbackFactory> {
+public class LogbackModule extends ConfigModule {
 
 	public LogbackModule(String configPrefix) {
-		super(LogbackFactory.class, configPrefix);
+		super(configPrefix);
 	}
 
 	public LogbackModule() {
-		super(LogbackFactory.class);
 	}
 
 	@Override
@@ -35,9 +34,9 @@ public class LogbackModule extends FactoryModule<LogbackFactory> {
 	}
 
 	@Provides
-	public Logger configLogbackRootLogger(FactoryConfigurationService factoryConfig) {
+	public Logger configLogbackRootLogger(FactoryConfigurationService configurationService) {
 		LoggerContext context = createLogbackContext();
-		return factoryConfig.factory(LogbackFactory.class, configPrefix).createRootLogger(context);
+		return configurationService.factory(LogbackFactory.class, configPrefix).createRootLogger(context);
 	}
 
 	// copied from Dropwizard. See DW DefaultLoggingFactory and

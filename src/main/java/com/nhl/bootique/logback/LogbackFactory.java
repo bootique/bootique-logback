@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -22,6 +24,8 @@ public class LogbackFactory {
 	}
 
 	public Logger createRootLogger(LoggerContext context) {
+
+		rerouteJUL();
 
 		final Logger root = context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		context.reset();
@@ -43,6 +47,11 @@ public class LogbackFactory {
 		appenders.forEach(a -> root.addAppender(a.createAppender(context)));
 
 		return root;
+	}
+
+	void rerouteJUL() {
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
 	}
 
 	public void setLevel(String level) {

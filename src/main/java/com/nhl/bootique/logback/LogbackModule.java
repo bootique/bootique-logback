@@ -7,7 +7,7 @@ import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.nhl.bootique.ConfigModule;
-import com.nhl.bootique.factory.FactoryConfigurationService;
+import com.nhl.bootique.config.ConfigurationFactory;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -34,9 +34,9 @@ public class LogbackModule extends ConfigModule {
 	}
 
 	@Provides
-	public Logger configLogbackRootLogger(FactoryConfigurationService configurationService) {
+	public Logger configLogbackRootLogger(ConfigurationFactory configFactory) {
 		LoggerContext context = createLogbackContext();
-		return configurationService.factory(LogbackFactory.class, configPrefix).createRootLogger(context);
+		return configFactory.config(LogbackFactory.class, configPrefix).createRootLogger(context);
 	}
 
 	// copied from Dropwizard. See DW DefaultLoggingFactory and

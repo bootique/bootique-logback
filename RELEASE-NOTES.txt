@@ -1,3 +1,4 @@
 Release 0.7
 
 #1 Take over JUL logger
+#3 Start publishing Bootique to Maven central repo

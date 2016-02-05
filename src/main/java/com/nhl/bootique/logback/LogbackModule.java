@@ -34,7 +34,7 @@ public class LogbackModule extends ConfigModule {
 	}
 
 	@Provides
-	public Logger configLogbackRootLogger(ConfigurationFactory configFactory) {
+	Logger configLogbackRootLogger(ConfigurationFactory configFactory) {
 		LoggerContext context = createLogbackContext();
 		return configFactory.config(LogbackFactory.class, configPrefix).createRootLogger(context);
 	}

@@ -1,4 +1,8 @@
-Release 0.7
+0.8:
+
+#6 Upgrade Bootique to 0.12
+
+0.7:
 
 #1 Take over JUL logger
 #3 Start publishing Bootique to Maven central repo

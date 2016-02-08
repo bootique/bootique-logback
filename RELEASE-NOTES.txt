@@ -1,6 +1,7 @@
 0.8:
 
 #4 Adding Shutdown hook
+#5 Support for file appenders
 #6 Upgrade Bootique to 0.12
 
 0.7:

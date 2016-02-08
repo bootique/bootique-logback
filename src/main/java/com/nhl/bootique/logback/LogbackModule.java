@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.nhl.bootique.ConfigModule;
 import com.nhl.bootique.config.ConfigurationFactory;
+import com.nhl.bootique.shutdown.ShutdownManager;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -34,8 +35,12 @@ public class LogbackModule extends ConfigModule {
 	}
 
 	@Provides
-	Logger configLogbackRootLogger(ConfigurationFactory configFactory) {
+	Logger configLogbackRootLogger(ConfigurationFactory configFactory, ShutdownManager shutdownManager) {
 		LoggerContext context = createLogbackContext();
+		shutdownManager.addShutdownHook(() -> {
+			context.stop();
+		});
+		
 		return configFactory.config(LogbackFactory.class, configPrefix).createRootLogger(context);
 	}
 

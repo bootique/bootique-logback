@@ -12,8 +12,10 @@ import ch.qos.logback.core.AsyncAppenderBase;
 import ch.qos.logback.core.Context;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
+
 // TODO: how do we avoid hardcoding all subclasses in a superclass annotation?
-@JsonSubTypes(value = { @JsonSubTypes.Type(value = ConsoleAppenderFactory.class) })
+@JsonSubTypes(value = { @JsonSubTypes.Type(value = ConsoleAppenderFactory.class),
+		@JsonSubTypes.Type(value = FileAppenderFactory.class) })
 public abstract class AppenderFactory {
 
 	private String logFormat;

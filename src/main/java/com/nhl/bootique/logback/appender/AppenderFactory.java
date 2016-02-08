@@ -1,4 +1,7 @@
-package com.nhl.bootique.logback;
+package com.nhl.bootique.logback.appender;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;
@@ -6,11 +9,12 @@ import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.AsyncAppenderBase;
-import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.Context;
-import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 
-public class AppenderFactory {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
+// TODO: how do we avoid hardcoding all subclasses in a superclass annotation?
+@JsonSubTypes(value = { @JsonSubTypes.Type(value = ConsoleAppenderFactory.class) })
+public abstract class AppenderFactory {
 
 	private String logFormat;
 
@@ -22,21 +26,7 @@ public class AppenderFactory {
 		this.logFormat = logFormat;
 	}
 
-	public Appender<ILoggingEvent> createAppender(LoggerContext context) {
-
-		ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<>();
-		appender.setName("console");
-		appender.setContext(context);
-		appender.setTarget("System.out");
-
-		LayoutWrappingEncoder<ILoggingEvent> layoutEncoder = new LayoutWrappingEncoder<>();
-		layoutEncoder.setLayout(createLayout(context));
-		appender.setEncoder(layoutEncoder);
-
-		appender.start();
-
-		return asAsync(appender);
-	}
+	public abstract Appender<ILoggingEvent> createAppender(LoggerContext context);
 
 	protected PatternLayout createLayout(LoggerContext context) {
 		PatternLayout layout = new PatternLayout();

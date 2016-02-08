@@ -6,6 +6,9 @@ import java.util.Map;
 
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import com.nhl.bootique.logback.appender.AppenderFactory;
+import com.nhl.bootique.logback.appender.ConsoleAppenderFactory;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -41,7 +44,7 @@ public class LogbackFactory {
 		loggers.forEach((name, lf) -> lf.configLogger(name, context));
 
 		if (appenders.isEmpty()) {
-			setAppenders(Collections.singletonList(new AppenderFactory()));
+			setAppenders(Collections.singletonList(new ConsoleAppenderFactory()));
 		}
 
 		appenders.forEach(a -> root.addAppender(a.createAppender(context)));

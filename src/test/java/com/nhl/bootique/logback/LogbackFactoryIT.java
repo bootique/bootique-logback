@@ -58,16 +58,16 @@ public class LogbackFactoryIT {
 
 	@Test
 	public void testFileAppender() throws IOException {
-		File outFile = new File("target/logfile1.log");
-		outFile.delete();
-		assertFalse(outFile.exists());
+		File logFile = new File("target/logfile1.log");
+		logFile.delete();
+		assertFalse(logFile.exists());
 
 		Logger logger = getRootLogger("test-file-appender.yml");
 		logger.info("info-log-to-file");
 
-		assertTrue(outFile.isFile());
+		assertTrue(logFile.isFile());
 
-		String logfileContents = Files.lines(outFile.toPath()).collect(joining("\n"));
+		String logfileContents = Files.lines(logFile.toPath()).collect(joining("\n"));
 		assertTrue(logfileContents.endsWith("ROOT: info-log-to-file"));
 	}
 }

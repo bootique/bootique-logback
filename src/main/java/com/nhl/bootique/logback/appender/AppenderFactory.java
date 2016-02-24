@@ -13,7 +13,7 @@ import ch.qos.logback.core.Context;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
 
-// TODO: how do we avoid hardcoding all subclasses in a superclass annotation?
+// TODO: switch to dynamic mechanism per https://github.com/nhl/bootique/issues/14
 @JsonSubTypes(value = { @JsonSubTypes.Type(value = ConsoleAppenderFactory.class),
 		@JsonSubTypes.Type(value = FileAppenderFactory.class) })
 public abstract class AppenderFactory {

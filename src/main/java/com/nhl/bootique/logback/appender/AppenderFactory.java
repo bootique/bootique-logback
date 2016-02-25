@@ -1,6 +1,5 @@
 package com.nhl.bootique.logback.appender;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import ch.qos.logback.classic.AsyncAppender;
@@ -12,10 +11,6 @@ import ch.qos.logback.core.AsyncAppenderBase;
 import ch.qos.logback.core.Context;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
-
-// TODO: switch to dynamic mechanism per https://github.com/nhl/bootique/issues/14
-@JsonSubTypes(value = { @JsonSubTypes.Type(value = ConsoleAppenderFactory.class),
-		@JsonSubTypes.Type(value = FileAppenderFactory.class) })
 public abstract class AppenderFactory {
 
 	private String logFormat;

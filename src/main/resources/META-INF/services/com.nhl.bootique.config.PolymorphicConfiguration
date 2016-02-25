@@ -1,0 +1,3 @@
+com.nhl.bootique.logback.appender.AppenderFactory
+com.nhl.bootique.logback.appender.ConsoleAppenderFactory
+com.nhl.bootique.logback.appender.FileAppenderFactory

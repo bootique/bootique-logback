@@ -20,7 +20,7 @@
 
 	<properties>
 		<guice-version>4.0</guice-version>
-		<bootique-version>0.12</bootique-version>
+		<bootique-version>0.13-SNAPSHOT</bootique-version>
 	</properties>
 
 	<scm>

@@ -5,9 +5,7 @@ import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Map;
 
 import org.junit.Rule;
@@ -21,22 +19,28 @@ public class LogbackBQConfigIT {
 	public LogbackTestFactory LOGGER_STACK = new LogbackTestFactory();
 
 	@Test
-	public void testFileAppender() throws IOException {
+	public void testFileAppender() {
 
-		File logFile = LOGGER_STACK.emptyLogFile("target/logfile1.log");
+		LOGGER_STACK.prepareLogDir("target/logs/rotate");
 		Logger logger = LOGGER_STACK.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender.yml");
-
 		logger.info("info-log-to-file");
-		assertTrue(logFile.isFile());
 
-		String logfileContents = Files.lines(logFile.toPath()).collect(joining("\n"));
-		assertTrue("Unexpected logs: " + logfileContents, logfileContents.endsWith("ROOT: info-log-to-file"));
+		// must stop to ensure logs are flushed...
+		LOGGER_STACK.stop();
+
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "logfile1.log");
+
+		assertEquals(1, logfileContents.size());
+		String[] lines = logfileContents.get("logfile1.log");
+		String oneLine = asList(lines).stream().collect(joining("\n"));
+
+		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
 	}
 
 	@Test
 	public void testFileAppender_Rotate_ByTime() throws InterruptedException, IOException {
 
-		LOGGER_STACK.prepareLogDir("target/logs/rotate");
+		LOGGER_STACK.prepareLogDir("target/logs/rotate-by-time");
 
 		Logger logger = LOGGER_STACK
 				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-10sec-rotation.yml");
@@ -52,7 +56,7 @@ public class LogbackBQConfigIT {
 		// must stop to ensure logs are flushed...
 		LOGGER_STACK.stop();
 
-		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "logfile-");
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-by-time", "logfile-");
 
 		assertTrue(logfileContents.size() > 1);
 		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));

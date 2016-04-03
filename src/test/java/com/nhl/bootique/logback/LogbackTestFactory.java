@@ -24,16 +24,9 @@ public class LogbackTestFactory extends BQTestFactory {
 		BQRuntime runtime = newRuntime().configurator(bootique -> bootique.module(LogbackModule.class)).build(arg0);
 		return runtime.getInstance(Logger.class);
 	}
-	
+
 	public void stop() {
 		after();
-	}
-
-	public File emptyLogFile(String name) {
-		File logFile = new File(name);
-		logFile.delete();
-		assertFalse(logFile.exists());
-		return logFile;
 	}
 
 	public void prepareLogDir(String dir) {

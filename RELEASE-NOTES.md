@@ -1,7 +1,8 @@
 ## 0.9: 
 
-* #8 Switch to ServiceLoader-based polymorphic configs for AppenderFactory
-* #9 Upgrade to Bootique 0.15
+* #8  Switch to ServiceLoader-based polymorphic configs for AppenderFactory
+* #9  Upgrade to Bootique 0.15
+* #10 'log.useLogbackConfig' : support for Logback XML file.
 
 ## 0.8:
 

@@ -21,11 +21,16 @@ public class LogbackContextFactory {
 	private Level level;
 	private Map<String, LoggerFactory> loggers;
 	private Collection<AppenderFactory> appenders;
+	private boolean useLogbackConfig;
 
 	public LogbackContextFactory() {
 		this.level = Level.INFO;
 		this.loggers = Collections.emptyMap();
 		this.appenders = Collections.emptyList();
+
+		// TODO: to write unit tests for this flag we are waiting for
+		// https://github.com/nhl/bootique/issues/52 to be implemented.
+		this.useLogbackConfig = false;
 	}
 
 	public Logger createRootLogger(ShutdownManager shutdownManager) {
@@ -38,6 +43,15 @@ public class LogbackContextFactory {
 		rerouteJUL();
 
 		Logger root = context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+
+		if (!useLogbackConfig) {
+			configLogbackContext(context, root);
+		}
+
+		return root;
+	}
+
+	protected void configLogbackContext(LoggerContext context, Logger root) {
 		context.reset();
 
 		final LevelChangePropagator propagator = new LevelChangePropagator();
@@ -55,8 +69,6 @@ public class LogbackContextFactory {
 		}
 
 		appenders.forEach(a -> root.addAppender(a.createAppender(context)));
-
-		return root;
 	}
 
 	// inspired by Dropwizard. See DW DefaultLoggingFactory and
@@ -98,5 +110,20 @@ public class LogbackContextFactory {
 
 	public void setAppenders(Collection<AppenderFactory> appenders) {
 		this.appenders = appenders;
+	}
+
+	/**
+	 * If true, all other logback configuration present in YAML is ignored and
+	 * the user is expected to provide its own config file per
+	 * <a href="http://logback.qos.ch/manual/configuration.html">Logback
+	 * documentation</a>.
+	 * 
+	 * @since 0.9
+	 * @param useLogbackConfig
+	 *            if true, all other logback configuration present in YAML is
+	 *            ignored.
+	 */
+	public void setUseLogbackConfig(boolean useLogbackConfig) {
+		this.useLogbackConfig = useLogbackConfig;
 	}
 }

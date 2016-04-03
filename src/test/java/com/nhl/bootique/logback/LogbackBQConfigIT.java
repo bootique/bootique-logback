@@ -27,7 +27,7 @@ import com.nhl.bootique.log.BootLogger;
 
 import ch.qos.logback.classic.Logger;
 
-public class LogbackFactoryIT {
+public class LogbackBQConfigIT {
 
 	private Module createBootiqueModule(String yaml) {
 

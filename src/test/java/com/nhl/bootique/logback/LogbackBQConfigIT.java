@@ -30,7 +30,7 @@ public class LogbackBQConfigIT {
 		assertTrue(logFile.isFile());
 
 		String logfileContents = Files.lines(logFile.toPath()).collect(joining("\n"));
-		assertTrue(logfileContents.endsWith("ROOT: info-log-to-file"));
+		assertTrue("Unexpected logs: " + logfileContents, logfileContents.endsWith("ROOT: info-log-to-file"));
 	}
 
 	@Test

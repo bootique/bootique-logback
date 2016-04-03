@@ -4,33 +4,40 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import org.slf4j.ILoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.nhl.bootique.logback.appender.AppenderFactory;
 import com.nhl.bootique.logback.appender.ConsoleAppenderFactory;
+import com.nhl.bootique.shutdown.ShutdownManager;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
 
-public class LogbackFactory {
+public class LogbackContextFactory {
 
 	private Level level;
 	private Map<String, LoggerFactory> loggers;
 	private Collection<AppenderFactory> appenders;
 
-	public LogbackFactory() {
+	public LogbackContextFactory() {
 		this.level = Level.INFO;
 		this.loggers = Collections.emptyMap();
 		this.appenders = Collections.emptyList();
 	}
 
-	public Logger createRootLogger(LoggerContext context) {
+	public Logger createRootLogger(ShutdownManager shutdownManager) {
+
+		LoggerContext context = createLogbackContext();
+		shutdownManager.addShutdownHook(() -> {
+			context.stop();
+		});
 
 		rerouteJUL();
 
-		final Logger root = context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+		Logger root = context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 		context.reset();
 
 		final LevelChangePropagator propagator = new LevelChangePropagator();
@@ -50,6 +57,30 @@ public class LogbackFactory {
 		appenders.forEach(a -> root.addAppender(a.createAppender(context)));
 
 		return root;
+	}
+
+	// inspired by Dropwizard. See DW DefaultLoggingFactory and
+	// http://jira.qos.ch/browse/SLF4J-167. Though presumably Bootique calls
+	// this from the main thread, so we should not be affected by the issue.
+	protected LoggerContext createLogbackContext() {
+		long startTime = System.nanoTime();
+		while (true) {
+			ILoggerFactory iLoggerFactory = org.slf4j.LoggerFactory.getILoggerFactory();
+
+			if (iLoggerFactory instanceof LoggerContext) {
+				return (LoggerContext) iLoggerFactory;
+			}
+
+			if ((System.nanoTime() - startTime) > 10_000_000) {
+				throw new IllegalStateException("Unable to acquire the logger context");
+			}
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				throw new IllegalStateException(e);
+			}
+		}
 	}
 
 	void rerouteJUL() {

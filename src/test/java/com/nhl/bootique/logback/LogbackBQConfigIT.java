@@ -34,9 +34,9 @@ public class LogbackBQConfigIT {
 	}
 
 	@Test
-	public void testFileAppender_Rotate() throws InterruptedException, IOException {
+	public void testFileAppender_Rotate_ByTime() throws InterruptedException, IOException {
 
-		LOGGER_STACK.prepareLogDir("target/rotate");
+		LOGGER_STACK.prepareLogDir("target/logs/rotate");
 
 		Logger logger = LOGGER_STACK
 				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-10sec-rotation.yml");
@@ -52,11 +52,34 @@ public class LogbackBQConfigIT {
 		// must stop to ensure logs are flushed...
 		LOGGER_STACK.stop();
 
-		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/rotate", "logfile-");
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "logfile-");
 
 		assertTrue(logfileContents.size() > 1);
 		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));
 		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
 				.filter(s -> s.contains("info-log-to-file")).count());
+	}
+
+	@Test
+	public void testFileAppender_Rotate_BySize() throws InterruptedException, IOException {
+
+		LOGGER_STACK.prepareLogDir("target/logs/rotate-by-size");
+
+		Logger logger = LOGGER_STACK
+				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-size-rotation.yml");
+		logger.info("10bytelog1");
+		logger.info("10bytelog2");
+		logger.info("10bytelog3");
+		logger.info("10bytelog4");
+
+		// must stop to ensure logs are flushed...
+		LOGGER_STACK.stop();
+
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-by-size", "logfile-");
+
+		assertTrue(logfileContents.size() > 1);
+		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));
+		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains("10bytelog")).count());
 	}
 }

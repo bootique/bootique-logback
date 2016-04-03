@@ -3,5 +3,6 @@ log:
   appenders:
     - type: file
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/rotate/logfile-%d{yyyyMMDDHHmmss}.log'
+      file: 'target/logs/rotate-by-size/logfile-%d{yyyyMMDD}.log'
       rotate: true
+      maxFileSize: 20

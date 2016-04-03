@@ -1,0 +1,8 @@
+log:
+  level: debug
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: 'target/logs/rotate-maxfiles/logfile-%d{yyyyMMDDHHmmss}.log'
+      rotate: true
+      maxFiles: 2

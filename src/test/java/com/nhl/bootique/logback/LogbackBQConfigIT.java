@@ -90,4 +90,42 @@ public class LogbackBQConfigIT {
 		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
 				.filter(s -> s.contains("10bytelog")).count());
 	}
+
+	@Test
+	public void testFileAppender_Rotate_MaxFiles() throws InterruptedException, IOException {
+
+		LOGGER_STACK.prepareLogDir("target/logs/rotate-maxfiles");
+
+		Logger logger = LOGGER_STACK
+				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-maxfiles-rotation.yml");
+		logger.info("log1");
+		logger.info("log2");
+
+		// file rotation happens every second... so wait at least that long
+		Thread.sleep(1001);
+
+		logger.info("log3");
+		logger.info("log4");
+
+		// file rotation happens every second... so wait at least that long
+		Thread.sleep(1001);
+
+		logger.info("log5");
+		logger.info("log6");
+
+		// file rotation happens every second... so wait at least that long
+		Thread.sleep(1001);
+
+		logger.info("log7");
+		logger.info("log8");
+
+		// must stop to ensure logs are flushed...
+		LOGGER_STACK.stop();
+
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-maxfiles", "logfile-");
+
+		// 3 = 1 current file + 2 archived
+		assertEquals(3, logfileContents.size());
+		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));
+	}
 }

@@ -8,7 +8,10 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.FileAppender;
+import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
+import ch.qos.logback.core.rolling.RollingFileAppender;
+import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
 /**
  * A configuration object that sets up a file appender in Logback, potentially
@@ -89,16 +92,45 @@ public class FileAppenderFactory extends AppenderFactory {
 
 	@Override
 	public Appender<ILoggingEvent> createAppender(LoggerContext context) {
-		FileAppender<ILoggingEvent> appender = new FileAppender<>();
-		appender.setFile(Objects.requireNonNull(file));
-		appender.setContext(context);
 
-		LayoutWrappingEncoder<ILoggingEvent> layoutEncoder = new LayoutWrappingEncoder<>();
-		layoutEncoder.setLayout(createLayout(context));
-		appender.setEncoder(layoutEncoder);
+		LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
+		encoder.setLayout(createLayout(context));
 
-		appender.start();
+		FileAppender<ILoggingEvent> appender = rotate ? createRollingFileAppender(encoder, context)
+				: createSingleFileAppender(encoder, context);
 
 		return asAsync(appender);
+	}
+
+	protected FileAppender<ILoggingEvent> createSingleFileAppender(Encoder<ILoggingEvent> encoder,
+			LoggerContext context) {
+		FileAppender<ILoggingEvent> appender = new FileAppender<>();
+		appender.setFile(Objects.requireNonNull(file));
+
+		appender.setContext(context);
+		appender.setEncoder(encoder);
+		appender.start();
+
+		return appender;
+	}
+
+	protected FileAppender<ILoggingEvent> createRollingFileAppender(Encoder<ILoggingEvent> encoder,
+			LoggerContext context) {
+		
+		TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
+		rollingPolicy.setContext(context);
+		rollingPolicy.setFileNamePattern(file);
+
+		RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
+		appender.setRollingPolicy(rollingPolicy);
+		rollingPolicy.setParent(appender);
+
+		appender.setContext(context);
+		appender.setEncoder(encoder);
+
+		rollingPolicy.start();
+		appender.start();
+
+		return appender;
 	}
 }

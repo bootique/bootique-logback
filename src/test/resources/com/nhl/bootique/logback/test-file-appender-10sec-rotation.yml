@@ -1,0 +1,7 @@
+log:
+  level: debug
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: 'target/rotate/logfile-%d{yyyyMMDDHHmmss}.log'
+      rotate: true

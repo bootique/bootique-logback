@@ -11,6 +11,7 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.rolling.RollingFileAppender;
+import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 
 /**
@@ -116,21 +117,43 @@ public class FileAppenderFactory extends AppenderFactory {
 
 	protected FileAppender<ILoggingEvent> createRollingFileAppender(Encoder<ILoggingEvent> encoder,
 			LoggerContext context) {
-		
-		TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
-		rollingPolicy.setContext(context);
-		rollingPolicy.setFileNamePattern(file);
+
+		TimeBasedRollingPolicy<ILoggingEvent> policy = maxFileSize != null ? createSizeAndTimeRollingPolicy(context)
+				: createTimeRollingPolicy(context);
 
 		RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
-		appender.setRollingPolicy(rollingPolicy);
-		rollingPolicy.setParent(appender);
+		appender.setRollingPolicy(policy);
+		policy.setParent(appender);
 
 		appender.setContext(context);
 		appender.setEncoder(encoder);
 
-		rollingPolicy.start();
+		policy.start();
 		appender.start();
 
 		return appender;
+	}
+
+	protected SizeAndTimeBasedRollingPolicy<ILoggingEvent> createSizeAndTimeRollingPolicy(LoggerContext context) {
+
+		// TODO: validate filename pattern... if %i is absent, the logger would
+		// quietly stop working
+
+		SizeAndTimeBasedRollingPolicy<ILoggingEvent> policy = new SizeAndTimeBasedRollingPolicy<>();
+		policy.setMaxFileSize(maxFileSize);
+		policy.setFileNamePattern(file);
+		policy.setContext(context);
+		return policy;
+	}
+
+	protected TimeBasedRollingPolicy<ILoggingEvent> createTimeRollingPolicy(LoggerContext context) {
+
+		// TODO: validate filename pattern... if %d{} is absent, the logger
+		// would quietly stop working
+
+		TimeBasedRollingPolicy<ILoggingEvent> policy = new TimeBasedRollingPolicy<>();
+		policy.setFileNamePattern(file);
+		policy.setContext(context);
+		return policy;
 	}
 }

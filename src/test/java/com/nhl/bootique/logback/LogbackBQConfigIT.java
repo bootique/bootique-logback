@@ -69,6 +69,10 @@ public class LogbackBQConfigIT {
 				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-size-rotation.yml");
 		logger.info("10bytelog1");
 		logger.info("10bytelog2");
+
+		// add a wait period to let size rotation to happen
+		Thread.sleep(1001);
+
 		logger.info("10bytelog3");
 		logger.info("10bytelog4");
 

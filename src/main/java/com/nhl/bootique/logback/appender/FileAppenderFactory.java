@@ -13,6 +13,7 @@ import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
+import ch.qos.logback.core.util.FileSize;
 
 /**
  * A configuration object that sets up a file appender in Logback, potentially
@@ -63,8 +64,7 @@ public class FileAppenderFactory extends AppenderFactory {
 	 * @param maxFileSize
 	 *            Max size of a single log file expressed in bytes, kilobytes,
 	 *            megabytes or gigabytes by suffixing a numeric value with KB,
-	 *            MB and respectively GB. For example, 5000000. Exceeding this
-	 *            size causes rotation.
+	 *            MB and respectively GB. For example, 5000000.
 	 */
 	public void setMaxFileSize(String maxFileSize) {
 		this.maxFileSize = maxFileSize;
@@ -83,9 +83,14 @@ public class FileAppenderFactory extends AppenderFactory {
 	}
 
 	/**
+	 * Sets a maximum size of all log files combined. Equivalent to Logback
+	 * 'totalSizeCap' property. Requires "maxFiles" to be set.
+	 * 
 	 * @since 0.9
 	 * @param maxTotalFileSize
-	 *            maximum size of all log files combined.
+	 *            maximum size of all log files combined expressed in bytes,
+	 *            kilobytes, megabytes or gigabytes by suffixing a numeric value
+	 *            with KB, MB and respectively GB. For example, 5000000.
 	 */
 	public void setMaxTotalFileSize(String maxTotalFileSize) {
 		this.maxTotalFileSize = maxTotalFileSize;
@@ -121,6 +126,10 @@ public class FileAppenderFactory extends AppenderFactory {
 		TimeBasedRollingPolicy<ILoggingEvent> policy = maxFileSize != null ? createSizeAndTimeRollingPolicy(context)
 				: createTimeRollingPolicy(context);
 
+		if (shouldDeleteOlderFiles()) {
+			setupToDeleteOlderFiles(policy);
+		}
+
 		RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
 		appender.setRollingPolicy(policy);
 		policy.setParent(appender);
@@ -132,6 +141,20 @@ public class FileAppenderFactory extends AppenderFactory {
 		appender.start();
 
 		return appender;
+	}
+
+	protected boolean shouldDeleteOlderFiles() {
+		return maxFiles > 0;
+	}
+
+	protected void setupToDeleteOlderFiles(TimeBasedRollingPolicy<?> policy) {
+
+		policy.setMaxHistory(maxFiles);
+		policy.setCleanHistoryOnStart(true);
+
+		if (maxTotalFileSize != null) {
+			policy.setTotalSizeCap(FileSize.valueOf(maxTotalFileSize));
+		}
 	}
 
 	protected SizeAndTimeBasedRollingPolicy<ILoggingEvent> createSizeAndTimeRollingPolicy(LoggerContext context) {

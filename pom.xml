@@ -21,7 +21,7 @@
 
 	<properties>
 		<guice-version>4.0</guice-version>
-		<bootique-version>0.15-SNAPSHOT</bootique-version>
+		<bootique-version>0.15</bootique-version>
 	</properties>
 
 	<scm>

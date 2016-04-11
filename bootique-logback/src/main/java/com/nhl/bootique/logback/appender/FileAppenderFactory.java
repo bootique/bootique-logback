@@ -64,7 +64,8 @@ public class FileAppenderFactory extends AppenderFactory {
 	 * @param maxFileSize
 	 *            Max size of a single log file expressed in bytes, kilobytes,
 	 *            megabytes or gigabytes by suffixing a numeric value with KB,
-	 *            MB and respectively GB. For example, 5000000.
+	 *            MB and respectively GB. For example: 5000000, 5000KB, 5MB and
+	 *            2GB.
 	 */
 	public void setMaxFileSize(String maxFileSize) {
 		this.maxFileSize = maxFileSize;
@@ -90,7 +91,8 @@ public class FileAppenderFactory extends AppenderFactory {
 	 * @param maxTotalFileSize
 	 *            maximum size of all log files combined expressed in bytes,
 	 *            kilobytes, megabytes or gigabytes by suffixing a numeric value
-	 *            with KB, MB and respectively GB. For example, 5000000.
+	 *            with KB, MB and respectively GB. For example: 5000000, 5000KB,
+	 *            5MB and 2GB.
 	 */
 	public void setMaxTotalFileSize(String maxTotalFileSize) {
 		this.maxTotalFileSize = maxTotalFileSize;

@@ -20,8 +20,8 @@
       file: target/logback/testRun_Debug.log</programlisting>
         </para>
         <para>"log" is a root element of the Logback configuration and is bound to a <link
-                xlink:href="https://github.com/nhl/bootique-logback/blob/master/bootique-logback/src/main/java/com/nhl/bootique/logback/LogbackFactory.java"
-                    ><code>LogbackFactory</code></link> object. It supports the following
+                xlink:href="https://github.com/nhl/bootique-logback/blob/master/bootique-logback/src/main/java/com/nhl/bootique/logback/LogbackContextFactory.java"
+                    ><code>LogbackContextFactory</code></link> object. It supports the following
             properties:</para>
     <table frame="void">
         <caption>"log" Element Property Reference</caption>
@@ -50,10 +50,153 @@
                     <td><code>loggers</code></td>
                     <td>none</td>
                     <td>A map of logger factories by logger name. Logger name is a package name
-                        (applied recursively) or class name. See logger factory config details
-                        below.</td>
+                        (applied recursively) or class name. See below.</td>
+                </tr>
+                <tr>
+                    <td><code>useLogbackConfig</code></td>
+                    <td><code>false</code></td>
+                    <td>If true, all other logback settings areignored and the user is expected to
+                        provide its own config file per <link
+                            xlink:href="http://logback.qos.ch/manual/configuration.html">Logback
+                            documentation</link>. This is only needed for a few advanced options not
+                        directly available via Bootique config. </td>
                 </tr>
         </tbody>
     </table>
+    </section>
+    <section>
+        <title>log.appenders</title>
+        <para><programlisting language="python">log:
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: target/logback/testRun_Debug.log
+    - type: console
+      logFormat: '%c{20}: %m%n'</programlisting>Lists
+            appenders to sends the logs to. If the list is empty, console appender is used with
+            default settings. Currently available appenders are "console" and "file":</para>
+        <table frame="void">
+            <caption>"console" Appender Property Reference</caption>
+            <col width="20%"/>
+            <col width="53%"/>
+            <col width="27%"/>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>logFormat</code></td>
+                    <td><code>%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx</code></td>
+                    <td>A format of the log lines. See Logback <link
+                            xlink:href="http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout"
+                            >PatternLayout</link> for details.</td>
+                </tr>
+            </tbody>
+        </table>
+        <table frame="void">
+            <caption>"file" Appender Property Reference</caption>
+            <col width="20%"/>
+            <col width="53%"/>
+            <col width="27%"/>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>logFormat</code></td>
+                    <td><code>%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx</code></td>
+                    <td>A format of the log lines. See Logback <link
+                            xlink:href="http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout"
+                            >PatternLayout</link> for details.</td>
+                </tr>
+                <tr>
+                    <td><code>file</code></td>
+                    <td>none</td>
+                    <td>A filename or a filename pattern for the log file. If <code>"rotate"</code>
+                        is true, the filename can be a pattern per <link
+                            xlink:href="http://logback.qos.ch/manual/appenders.html#RollingFileAppender"
+                            >Logback documentation</link> that determines time-based rotation
+                        interval. Additional settings allow to also cap individual and total files
+                        sizes and how many total log files can be kept.</td>
+                </tr>
+                <tr>
+                    <td><code>maxFiles</code></td>
+                    <td><code>0</code></td>
+                    <td>A maximum number of log archive files to keep. Older files in excess of this
+                        number will be deleted. Ignored if <code>"rotate"</code> is false.</td>
+                </tr>
+                <tr>
+                    <td><code>maxFileSize</code></td>
+                    <td>unlimited</td>
+                    <td>A maximum size of a single log file. Exceeding this size causes file
+                        rotation. This option is ignored if <code>"rotate"</code> is false. The size
+                        can be expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a
+                        numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB,
+                        5MB and 2GB.</td>
+                </tr>
+                <tr>
+                    <td><code>maxTotalFileSize</code></td>
+                    <td>unlimited</td>
+                    <td>A maximum size of all log files combined. Equivalent to Logback
+                        'totalSizeCap' property. Ignored if <code>"rotate"</code> is false or
+                            <code>"maxFiles"</code> is zero. The size can be expressed in bytes,
+                        kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB
+                        and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.</td>
+                </tr>
+                <tr>
+                    <td><code>rotate</code></td>
+                    <td><code>false</code></td>
+                    <td>Enables or disables file rotation. By default rotation is disabled. If
+                        "true", time-based rotation is enabled. Rotation interval is derived from
+                        the file name pattern (you will need to turn <code>file</code> into a
+                        pattern). Additionally you can add size-based rotation using
+                            <code>maxFileSize</code> property.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    <section>
+        <title>log.loggers</title>
+        <para><programlisting language="python">log:
+  loggers:
+    com.foo:
+      level: debug
+    com.example:
+      level: debug</programlisting>This
+            is a map of <link
+                xlink:href="https://github.com/nhl/bootique-logback/blob/master/bootique-logback/src/main/java/com/nhl/bootique/logback/LoggerFactory.java"
+                >logger factories</link> by logger name. Logger name is either a package name
+            (applied recursively to subpackages and their classes) or a class name. Each
+            LoggerFactory has the following properties:</para>
+        <table frame="void">
+            <caption>Logger Property Reference</caption>
+            <col width="20%"/>
+            <col width="53%"/>
+            <col width="27%"/>
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>level</code></td>
+                    <td><code>INFO</code> (actually by default the level is inherited from the
+                        parent log context configuration) </td>
+                    <td>Log level for a particular logger. Can be OFF, ERROR, WARN, INFO, DEBUG,
+                        TRACE, ALL</td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 </chapter>

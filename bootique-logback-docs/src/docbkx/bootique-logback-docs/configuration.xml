@@ -191,8 +191,7 @@
             <tbody>
                 <tr>
                     <td><code>level</code></td>
-                    <td><code>INFO</code> (actually by default the level is inherited from the
-                        parent log context configuration) </td>
+                    <td><code>INFO</code></td>
                     <td>Log level for a particular logger. Can be OFF, ERROR, WARN, INFO, DEBUG,
                         TRACE, ALL</td>
                 </tr>

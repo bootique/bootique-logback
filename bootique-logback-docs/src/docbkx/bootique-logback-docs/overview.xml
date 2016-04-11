@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
     version="5.0" xml:id="overview">
-    <title>Bootique Integration with Jetty</title>
- 
-   
-    <para><link xlink:href="https://github.com/nhl/bootique-jetty"
-            ><code>bootique-jetty</code></link> module embeds a <link
-            xlink:href="http://www.eclipse.org/jetty/">Jetty web server</link> in your application,
-        allowing you to run servlets, or serve static files.</para>
+    <title>Bootique Integration with Logback</title>
+    <para>As mentioned in Bootique <link
+            xlink:href="http://bootique.io/docs/0/bootique-docs/index.html#logging">general
+            documentation on logging</link>, standard modules rely on SLF4J loggers that can be
+        easily bridged to various  advanced logging frameworks. Same maximally neutral logging
+        approach is reasonable to apply in the user modules as well.</para>
+    <para><link xlink:href="https://github.com/nhl/bootique-logback"
+            ><code>bootique-logback</code></link> is a "drag-and-drop" module integrating Bootique
+        logging with <link xlink:href="http://logback.qos.ch/">Logback logging framework</link>.
+        Just like any other module, <code>bootique-logback</code> can be enabled by simply adding it
+        to the <code>pom.xml</code> dependencies, assuming <code>autoLoadModules()</code> is in
+        effect:<programlisting language="xml">&lt;dependency>
+	&lt;groupId>com.nhl.bootique.logback&lt;/groupId>
+	&lt;artifactId>bootique-logback&lt;/artifactId>
+&lt;/dependency></programlisting></para>
+    <para>Without further configuration it would log everything to console using INFO level.
+        Configuration can be provided via YAML, as shown in the following section. Configuration
+        options include per class and package log levels configuration, a choice of appenders,
+        etc.</para>
 </chapter>

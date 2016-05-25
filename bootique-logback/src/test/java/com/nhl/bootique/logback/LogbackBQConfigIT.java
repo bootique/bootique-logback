@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Map;
@@ -14,6 +15,11 @@ import org.junit.Test;
 import ch.qos.logback.classic.Logger;
 
 public class LogbackBQConfigIT {
+
+	final String LOGFILE_PREFIX = "logfile-";
+	final String CURRENT_LOGFILE_NAME = LOGFILE_PREFIX + "current.log";
+	final String HELLO_WORLD_VALUE = "Hello World!";
+	final String CONTENT_VALUE_FORMAT = "%s." + HELLO_WORLD_VALUE;
 
 	@Rule
 	public LogbackTestFactory LOGGER_STACK = new LogbackTestFactory();
@@ -37,95 +43,289 @@ public class LogbackBQConfigIT {
 		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
 	}
 
+	/**
+	 * Checks file appender with rolling policy "time" (TimeBasedRollingPolicy)
+	 *
+	 * This test makes 5 attempts of printing one log row each second.
+	 * Logback configuration defines rollover by seconds with help of file name pattern and
+	 * no any restrictions of total history size.
+	 *
+	 * Expected following results:
+	 * 	- 9 archived files + 1 current log-file;
+	 * 	- 10 total rows in all log file
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	@Test
-	public void testFileAppender_Rotate_ByTime() throws InterruptedException, IOException {
+	public void testFileAppender_Rotate_By_Time() throws InterruptedException, IOException {
 
-		LOGGER_STACK.prepareLogDir("target/logs/rotate-by-time");
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time",
+				"classpath:com/nhl/bootique/logback/test-file-appender-time-rotation.yml", 10, 1000, 1);
 
-		Logger logger = LOGGER_STACK
-				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-10sec-rotation.yml");
-		logger.info("info-log-to-file1");
-		logger.info("info-log-to-file2");
+		// Checks file numbers: Expected 9 archived files + 1 current log-file
+		assertEquals(10, logfileContents.size());
 
-		// file rotation happens every second... so wait at least that long
-		Thread.sleep(1001);
+		// Checks current file exists
+		assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
 
-		logger.info("info-log-to-file3");
-		logger.info("info-log-to-file4");
+		// Checks file names: each file must start with "logfile-"
+		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
-		// must stop to ensure logs are flushed...
-		LOGGER_STACK.stop();
-
-		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-by-time", "logfile-");
-
-		assertTrue(logfileContents.size() > 1);
-		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));
-		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
-				.filter(s -> s.contains("info-log-to-file")).count());
+		// Check total rows number in all log files
+		assertEquals(10, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
+	/**
+	 * Checks file appender with rolling policy "time" (TimeBasedRollingPolicy)
+	 *
+	 * This test makes 10 attempts of printing log row each second.
+	 * Logback configuration defines rollover by seconds with help of file name pattern and
+	 * 5 seconds of total history.
+	 *
+	 * As result, 5 archived files + 1 current log-file are expected; 6 rows are expected in all log files
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	@Test
-	public void testFileAppender_Rotate_BySize() throws InterruptedException, IOException {
+	public void testFileAppender_Rotate_By_Time_And_History() throws InterruptedException, IOException {
 
-		LOGGER_STACK.prepareLogDir("target/logs/rotate-by-size");
 
-		Logger logger = LOGGER_STACK
-				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-size-rotation.yml");
-		logger.info("10bytelog1");
-		logger.info("10bytelog2");
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time-and-history",
+				"classpath:com/nhl/bootique/logback/test-file-appender-time-and-history-rotation.yml", 10, 1000, 1);
 
-		// add a wait period to let size rotation to happen
-		Thread.sleep(1001);
+		// Checks file numbers: Expected 5 archived files + 1 current log-file
+		assertEquals(6, logfileContents.size());
 
-		logger.info("10bytelog3");
-		logger.info("10bytelog4");
+		// Checks current file exists
+		assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
 
-		// must stop to ensure logs are flushed...
-		LOGGER_STACK.stop();
+		// Checks file names: each file must start with "logfile-"
+		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
-		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-by-size", "logfile-");
-
-		assertTrue(logfileContents.size() > 1);
-		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));
-		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
-				.filter(s -> s.contains("10bytelog")).count());
+		// Check total rows number in all log files
+		assertEquals(6, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
+	/**
+	 * Checks file appender with rolling policy "time" (TimeBasedRollingPolicy)
+	 *
+	 * This test makes 10 attempts of printing log row each second.
+	 * Logback configuration defines rollover by seconds with help of file name pattern;
+	 * 5 seconds of total history and 50 bytes of total files size
+	 *
+	 * As result, 3 archived files (63 bytes) + 1 current log-file are expected; 4 rows are expected in all log files
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
 	@Test
-	public void testFileAppender_Rotate_MaxFiles() throws InterruptedException, IOException {
+	public void testFileAppender_Rotate_By_Time_And_History_And_TotalSize() throws InterruptedException, IOException {
 
-		LOGGER_STACK.prepareLogDir("target/logs/rotate-maxfiles");
 
-		Logger logger = LOGGER_STACK
-				.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender-maxfiles-rotation.yml");
-		logger.info("log1");
-		logger.info("log2");
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time-and-history-and-totalsize",
+				"classpath:com/nhl/bootique/logback/test-file-appender-time-and-history-and-totalsize-rotation.yml", 10, 1000, 1);
 
-		// file rotation happens every second... so wait at least that long
-		Thread.sleep(1001);
+		// Checks file numbers: Expected 3 archived files + 1 current log-file
+		assertEquals(4, logfileContents.size());
 
-		logger.info("log3");
-		logger.info("log4");
+		// Checks current file exists
+		assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
 
-		// file rotation happens every second... so wait at least that long
-		Thread.sleep(1001);
+		// Checks file names: each file must start with "logfile-"
+		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
-		logger.info("log5");
-		logger.info("log6");
+		// Check total rows number in all log files
+		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+	}
 
-		// file rotation happens every second... so wait at least that long
-		Thread.sleep(1001);
+	/**
+	 * Checks file appender with rolling policy "size" (SizeAndTimeBasedRollingPolicy)
+	 *
+	 * This test makes 10 attempts of printing 2 log rows each second.
+	 * Logback configuration defines rollover by seconds with help of file name pattern and
+	 * size of each file is 40 bytes.
+	 *
+	 * Expected following results:
+	 * 	- 9 archived files + 1 current log-file;
+	 * 	- More than 1 row in each log-file
+	 * 	- 20 total rows in all log file
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Test
+	public void testFileAppender_Rotate_By_Size() throws InterruptedException, IOException {
 
-		logger.info("log7");
-		logger.info("log8");
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size",
+				"classpath:com/nhl/bootique/logback/test-file-appender-size-rotation.yml", 10, 1000, 2);
+
+		// Checks file numbers: Expected 9 archived files + 1 current log-file
+		assertEquals(10, logfileContents.size());
+
+		// Checks current file exists
+		assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
+
+		// Checks file names: each file must start with "logfile-"
+		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
+
+		// Check total rows number in all log files
+		assertEquals(20, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+	}
+
+	/**
+	 * Checks file appender with rolling policy "size" (SizeAndTimeBasedRollingPolicy)
+	 *
+	 * This test makes 10 attempts of printing 2 log rows each second.
+	 * Logback configuration defines rollover by seconds with help of file name pattern;
+	 * 5 seconds of total history and size of each file is 40 bytes.
+	 *
+	 * As result, 5 archived files + 1 current log-file are expected; 12 rows are expected in all log files
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Test
+	public void testFileAppender_Rotate_By_Size_And_History() throws InterruptedException, IOException {
+
+
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size-and-history",
+				"classpath:com/nhl/bootique/logback/test-file-appender-size-and-history-rotation.yml", 10, 1000, 2);
+
+		// Checks file numbers: Expected 5 archived files + 1 current log-file
+		assertEquals(6, logfileContents.size());
+
+		// Checks current file exists
+		assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
+
+		// Checks file names: each file must start with "logfile-"
+		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
+
+		// Check total rows number in all log files
+		assertEquals(12, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+	}
+
+	/**
+	 * Checks file appender with rolling policy "size" (SizeAndTimeBasedRollingPolicy)
+	 *
+	 * This test makes 10 attempts of printing 2 log rows each second.
+	 * Logback configuration defines rollover by seconds with help of file name pattern;
+	 * 5 seconds of total history; 50 bytes in each file; 150 bytes of total files size
+	 *
+	 * As result, 3 archived files (135 bytes) + 1 current log-file are expected; 8 rows are expected in all log files
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Test
+	public void testFileAppender_Rotate_By_Size_And_History_And_TotalSize() throws InterruptedException, IOException {
+
+
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size-and-history-and-totalsize",
+				"classpath:com/nhl/bootique/logback/test-file-appender-size-and-history-and-totalsize-rotation.yml", 10, 1000, 2);
+
+		// Checks file numbers: Expected 3 archived files + 1 current log-file
+		assertEquals(4, logfileContents.size());
+
+		// Checks current file exists
+		assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
+
+		// Checks file names: each file must start with "logfile-"
+		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
+
+		// Check total rows number in all log files
+		assertEquals(8, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+	}
+
+	/**
+	 * Checks file appender with rolling policy "fixed" (FixedWindowRollingPolicy)
+	 *
+	 * This test makes 10 attempts of printing 1 log row each second.
+	 * Logback configuration defines rollover by index with help of file name pattern;
+	 * 5 files of total history; 20 bytes in each file;
+	 *
+	 * As result, 5 archived files + 1 current log-file are expected;
+	 *
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	@Test
+	public void testFileAppender_Rotate_Fixed() throws InterruptedException, IOException {
+
+
+		Map<String, String[]> logfileContents = rotate("target/logs/rotate-fixed",
+				"classpath:com/nhl/bootique/logback/test-file-appender-fixed-rotation.yml", 10, 1000, 1);
+
+		// Check file numbers: Expected 6 files = 1 current file + 5 archived files
+		assertEquals(6, logfileContents.size());
+
+		// Check file names and file content
+		final String EXPECTED_VALUE_FORMAT = "ROOT: " + CONTENT_VALUE_FORMAT;
+		logfileContents.forEach((key, value) -> {
+			String expectedValue = null;
+			switch (key) {
+				case "logfile-current.log": {
+					expectedValue = String.format(EXPECTED_VALUE_FORMAT, "10");
+					break;
+				}
+				case "logfile-1.log": {
+					expectedValue = String.format(EXPECTED_VALUE_FORMAT, "9");
+					break;
+				}
+				case "logfile-2.log": {
+					expectedValue = String.format(EXPECTED_VALUE_FORMAT, "8");
+					break;
+				}
+				case "logfile-3.log": {
+					expectedValue = String.format(EXPECTED_VALUE_FORMAT, "7");
+					break;
+				}
+				case "logfile-4.log": {
+					expectedValue = String.format(EXPECTED_VALUE_FORMAT, "6");
+					break;
+				}
+				case "logfile-5.log": {
+					expectedValue = String.format(EXPECTED_VALUE_FORMAT, "5");
+					break;
+				}
+				default: {
+					fail("Detected unexpected file name \"" + key + "\"");
+				}
+			}
+			// Check file content
+			assertEquals("Check expected file content \"" + expectedValue + "\" in the current file \"" + key + "\"",
+					expectedValue, value[0]);
+		});
+	}
+
+	private Map<String, String[]> rotate(String logDir, String configFile, int attempts, int period, int rowsCount)
+			throws InterruptedException, IOException {
+		LOGGER_STACK.prepareLogDir(logDir);
+
+		Logger logger = LOGGER_STACK.newRootLogger(configFile);
+
+		printLog(logger, attempts, period, rowsCount);
 
 		// must stop to ensure logs are flushed...
 		LOGGER_STACK.stop();
+		return LOGGER_STACK.loglines(logDir, LOGFILE_PREFIX);
+	}
 
-		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-maxfiles", "logfile-");
-
-		// 3 = 1 current file + 2 archived
-		assertEquals(3, logfileContents.size());
-		logfileContents.forEach((f, lines) -> assertTrue(lines.length > 0));
+	private void printLog(Logger logger, int attempts, int period, int rowsCount) throws InterruptedException, IOException {
+		int index = 1;
+		for (int i = 1; i <= attempts; i++) {
+			for (int j = 0; j < rowsCount; j++) {
+				logger.info(String.format(CONTENT_VALUE_FORMAT, String.valueOf(index)));
+				index++;
+			}
+			Thread.sleep(period+1);
+		}
 	}
 }

@@ -1,0 +1,11 @@
+log:
+  level: debug
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: 'target/logs/rotate-fixed/logfile-current.log'
+      rollingPolicy:
+        type: fixed
+        fileNamePattern: 'target/logs/rotate-fixed/logfile-%i.log'
+        historySize: 5
+        fileSize: 20

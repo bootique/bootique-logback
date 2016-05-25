@@ -1,0 +1,11 @@
+log:
+  level: debug
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: 'target/logs/rotate-by-time-and-history-and-totalsize/logfile-current.log'
+      rollingPolicy:
+        type: time
+        fileNamePattern: 'target/logs/rotate-by-time-and-history-and-totalsize/logfile-%d{yyyyMMDDHHmmss}.log'
+        historySize: 5
+        totalSize: 65

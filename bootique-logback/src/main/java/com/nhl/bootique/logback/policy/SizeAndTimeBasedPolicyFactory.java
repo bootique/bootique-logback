@@ -18,7 +18,7 @@ import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
  *
  * @since 0.10
  */
-@JsonTypeName("size")
+@JsonTypeName("sizeAndTime")
 public class SizeAndTimeBasedPolicyFactory extends TimeBasedPolicyFactory {
 
 	private String fileSize;

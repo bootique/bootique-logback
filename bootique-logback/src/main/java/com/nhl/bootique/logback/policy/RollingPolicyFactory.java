@@ -22,7 +22,7 @@ public abstract class RollingPolicyFactory {
 
 	private String fileNamePattern;
 	private int historySize;
-
+	
 	/**
 	 * Sets a filename pattern for the archived log files. The filename can be a
 	 * pattern per <a href=

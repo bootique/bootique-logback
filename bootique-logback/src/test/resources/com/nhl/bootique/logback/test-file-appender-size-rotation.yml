@@ -5,6 +5,6 @@ log:
       logFormat: '%c{20}: %m%n'
       file: 'target/logs/rotate-by-size/logfile-current.log'
       rollingPolicy:
-        type: size
+        type: sizeAndTime
         fileNamePattern: 'target/logs/rotate-by-size/logfile-%d{yyyyMMDDHHmmss}.%i.log'
         fileSize: 40

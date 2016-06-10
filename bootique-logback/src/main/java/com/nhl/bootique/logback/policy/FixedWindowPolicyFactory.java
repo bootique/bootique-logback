@@ -1,13 +1,13 @@
 package com.nhl.bootique.logback.policy;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
-import ch.qos.logback.core.rolling.helper.FileNamePattern;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * A factory what defines rules for creation fixed-window rolling policy.

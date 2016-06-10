@@ -1,15 +1,13 @@
 package com.nhl.bootique.logback.policy;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
-import ch.qos.logback.core.rolling.helper.DateTokenConverter;
-import ch.qos.logback.core.rolling.helper.FileNamePattern;
 import ch.qos.logback.core.util.FileSize;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * A factory what defines rules for creation time-based rolling policy.
@@ -39,7 +37,7 @@ public class TimeBasedPolicyFactory extends RollingPolicyFactory {
     }
 
     @Override
-    public TimeBasedRollingPolicy instantiatePolicy(LoggerContext context) {
+    protected TimeBasedRollingPolicy<ILoggingEvent> instantiatePolicy(LoggerContext context) {
 		TimeBasedRollingPolicy<ILoggingEvent> policy = new TimeBasedRollingPolicy<>();
         setupBasePolicySettings(policy);
 		policy.setContext(context);

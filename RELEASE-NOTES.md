@@ -1,3 +1,7 @@
+## 0.10
+
+* #14 Support rolling policies in FileAppenderFactory
+
 ## 0.9: 
 
 * #7 Log file rotation configuration

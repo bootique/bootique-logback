@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.nhl.bootique.logback</groupId>
 		<artifactId>bootique-logback-parent</artifactId>
-		<version>0.10</version>
+		<version>0.11-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>bootique-logback</artifactId>
@@ -19,7 +19,7 @@
 	<scm>
 		<developerConnection>scm:git:ssh://git@github.com/nhl/bootique-logback</developerConnection>
 		<url>https://github.com/nhl/bootique-logback</url>
-		<tag>bootique-logback-parent-0.10</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<dependencyManagement>

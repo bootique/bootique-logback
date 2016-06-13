@@ -24,61 +24,16 @@
 	</modules>
 
 	<properties>
-		<jetty-version>9.3.6.v20151106</jetty-version>
+		<guice-version>4.0</guice-version>
 		<bootique-version>0.17</bootique-version>
-		<bootique-metrics-version>0.6</bootique-metrics-version>
 	</properties>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/nhl/bootique-jetty</developerConnection>
-		<url>https://github.com/nhl/bootique-jetty</url>
+		<developerConnection>scm:git:ssh://git@github.com/nhl/bootique-logback</developerConnection>
+		<url>https://github.com/nhl/bootique-logback</url>
 		<tag>HEAD</tag>
 	</scm>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-server</artifactId>
-				<version>${jetty-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-servlet</artifactId>
-				<version>${jetty-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.nhl.bootique</groupId>
-				<artifactId>bootique</artifactId>
-				<version>${bootique-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.nhl.bootique</groupId>
-				<artifactId>bootique-test</artifactId>
-				<version>${bootique-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.nhl.bootique.metrics</groupId>
-				<artifactId>bootique-metrics</artifactId>
-				<version>${bootique-metrics-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.13</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-simple</artifactId>
-				<version>1.7.13</version>
-			</dependency>
-			<dependency>
-				<groupId>org.glassfish.jersey.core</groupId>
-				<artifactId>jersey-client</artifactId>
-				<version>2.21</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>

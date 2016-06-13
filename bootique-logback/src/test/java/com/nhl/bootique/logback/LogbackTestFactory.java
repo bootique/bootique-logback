@@ -19,49 +19,49 @@ import ch.qos.logback.classic.Logger;
 
 public class LogbackTestFactory extends BQTestFactory {
 
-	public Logger newRootLogger(String config) {
-		String arg0 = "--config=" + Objects.requireNonNull(config);
-		BQRuntime runtime = newRuntime().configurator(bootique -> bootique.module(LogbackModule.class)).build(arg0);
-		return runtime.getInstance(Logger.class);
-	}
+    public Logger newRootLogger(String config) {
+        String arg0 = "--config=" + Objects.requireNonNull(config);
+        BQRuntime runtime = newRuntime().configurator(bootique -> bootique.module(LogbackModule.class)).build(arg0).getRuntime();
+        return runtime.getInstance(Logger.class);
+    }
 
-	public void stop() {
-		after();
-	}
+    public void stop() {
+        after();
+    }
 
-	public void prepareLogDir(String dir) {
-		File parent = new File(dir);
-		if (parent.exists()) {
-			assertTrue(parent.isDirectory());
-			asList(parent.list()).stream().forEach(name -> {
-				File file = new File(parent, name);
-				file.delete();
-				assertFalse(file.exists());
-			});
-		} else {
-			parent.mkdirs();
-			assertTrue(parent.isDirectory());
-		}
-	}
+    public void prepareLogDir(String dir) {
+        File parent = new File(dir);
+        if (parent.exists()) {
+            assertTrue(parent.isDirectory());
+            asList(parent.list()).stream().forEach(name -> {
+                File file = new File(parent, name);
+                file.delete();
+                assertFalse(file.exists());
+            });
+        } else {
+            parent.mkdirs();
+            assertTrue(parent.isDirectory());
+        }
+    }
 
-	public Map<String, String[]> loglines(String dir, String expectedLogFilePrefix) {
+    public Map<String, String[]> loglines(String dir, String expectedLogFilePrefix) {
 
-		File parent = new File(dir);
-		assertTrue(parent.isDirectory());
+        File parent = new File(dir);
+        assertTrue(parent.isDirectory());
 
-		Map<String, String[]> linesByFile = new HashMap<>();
+        Map<String, String[]> linesByFile = new HashMap<>();
 
-		asList(parent.list()).stream().filter(name -> name.startsWith(expectedLogFilePrefix)).forEach(name -> {
+        asList(parent.list()).stream().filter(name -> name.startsWith(expectedLogFilePrefix)).forEach(name -> {
 
-			Path p = Paths.get(parent.getAbsolutePath(), name);
-			try {
-				linesByFile.put(name, Files.lines(p).toArray(String[]::new));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		});
+            Path p = Paths.get(parent.getAbsolutePath(), name);
+            try {
+                linesByFile.put(name, Files.lines(p).toArray(String[]::new));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-		return linesByFile;
-	}
+        return linesByFile;
+    }
 
 }

@@ -16,11 +16,6 @@
 		Provides Logback integration with Bootique 
 	</description>
 
-	<properties>
-		<guice-version>4.0</guice-version>
-		<bootique-version>0.15</bootique-version>
-	</properties>
-
 	<scm>
 		<developerConnection>scm:git:ssh://git@github.com/nhl/bootique-logback</developerConnection>
 		<url>https://github.com/nhl/bootique-logback</url>

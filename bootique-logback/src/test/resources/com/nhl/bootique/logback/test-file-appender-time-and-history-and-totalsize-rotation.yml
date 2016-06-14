@@ -8,4 +8,4 @@ log:
         type: time
         fileNamePattern: 'target/logs/rotate-by-time-and-history-and-totalsize/logfile-%d{yyyyMMDDHHmmss}.log'
         historySize: 5
-        totalSize: 65
+        totalSize: 66

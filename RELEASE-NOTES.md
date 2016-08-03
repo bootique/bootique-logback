@@ -1,6 +1,7 @@
 ## 0.11
 
-* #17  A la carte overrides of log levels
+* #17 A la carte overrides of log levels
+* #18 Upgrade to bootique 0.19
 
 ## 0.10
 

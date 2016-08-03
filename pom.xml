@@ -13,7 +13,7 @@
 	<version>0.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Parent of Logback Integration Module for Bootique</name>
+	<name>bootique-logback-parent: Parent of Logback integration modules for Bootique</name>
 	<description>
 		Parent POM of Logback-related Bootique modules.
 	</description>
@@ -24,7 +24,6 @@
 	</modules>
 
 	<properties>
-		<guice-version>4.0</guice-version>
 		<bootique-version>0.17</bootique-version>
 	</properties>
 

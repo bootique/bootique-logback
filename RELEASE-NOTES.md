@@ -1,3 +1,7 @@
+## 0.11
+
+* #17  A la carte overrides of log levels
+
 ## 0.10
 
 * #14 Support rolling policies in FileAppenderFactory

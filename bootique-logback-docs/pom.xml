@@ -11,14 +11,14 @@
 	<artifactId>bootique-logback-docs</artifactId>
 	<packaging>pom</packaging>
 
-	<name>Bootique Logback Module Documentation</name>
+	<name>bootique-logback-docs: Bootique Logback Module Documentation</name>
 	<description>
 		Documentation for Bootique Logback Integration.
 	</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- This property allows to only expose major version in the docs metadata to avoid confusing SEO -->
+        <!-- This annotation allows to only expose major version in the docs metadata to avoid confusing SEO -->
         <bootique.version.major>0</bootique.version.major>	
 	</properties>
 

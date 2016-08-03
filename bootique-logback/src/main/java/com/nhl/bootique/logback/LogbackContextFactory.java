@@ -32,7 +32,7 @@ public class LogbackContextFactory {
         this.useLogbackConfig = false;
     }
 
-    public Logger createRootLogger(ShutdownManager shutdownManager, Map<String, Level> defaultLevels) {
+    public Logger createRootLogger(ShutdownManager shutdownManager, Map<String, java.util.logging.Level> defaultLevels) {
 
         LoggerContext context = createLogbackContext();
         shutdownManager.addShutdownHook(() -> {
@@ -81,7 +81,7 @@ public class LogbackContextFactory {
      * @param levels a map of levels keyed by logger name.
      * @return a new map that is combination of factory loggers config and provided set of levels.
      */
-    protected Map<String, LoggerFactory> mergeLevels(Map<String, Level> levels) {
+    protected Map<String, LoggerFactory> mergeLevels(Map<String, java.util.logging.Level> levels) {
 
         if (levels.isEmpty()) {
             return this.loggers;
@@ -92,14 +92,20 @@ public class LogbackContextFactory {
         levels.forEach((name, level) -> {
 
             LoggerFactory factory = loggers.get(name);
-            if(factory == null) {
+            if (factory == null) {
                 factory = new LoggerFactory();
-                factory.setLevel(level.toString());
+                factory.setLevel(mapJULLevel(level));
+
+
                 merged.put(name, factory);
             }
         });
 
         return merged;
+    }
+
+    protected String mapJULLevel(java.util.logging.Level level) {
+        return JulLevel.valueOf(level.getName()).getLevel().toString();
     }
 
     // inspired by Dropwizard. See DW DefaultLoggingFactory and
@@ -155,5 +161,28 @@ public class LogbackContextFactory {
      */
     public void setUseLogbackConfig(boolean useLogbackConfig) {
         this.useLogbackConfig = useLogbackConfig;
+    }
+
+    private static enum JulLevel {
+
+        ALL(Level.ALL),
+        CONFIG(Level.DEBUG),
+        FINE(Level.DEBUG),
+        FINER(Level.DEBUG),
+        FINEST(Level.TRACE),
+        INFO(Level.INFO),
+        OFF(Level.OFF),
+        SEVERE(Level.ERROR),
+        WARNING(Level.WARN);
+
+        private Level level;
+
+        JulLevel(Level level) {
+            this.level = level;
+        }
+
+        public Level getLevel() {
+            return level;
+        }
     }
 }

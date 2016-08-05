@@ -7,5 +7,5 @@ log:
       rollingPolicy:
         type: sizeAndTime
         fileNamePattern: 'target/logs/rotate-by-size-and-history/logfile-%d{yyyyMMDDHHmmss}.%i.log'
-        historySize: 5
+        historySize: 2
         fileSize: 40

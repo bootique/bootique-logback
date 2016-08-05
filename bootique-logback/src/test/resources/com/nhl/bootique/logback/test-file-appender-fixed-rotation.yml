@@ -7,5 +7,5 @@ log:
       rollingPolicy:
         type: fixedWindow
         fileNamePattern: 'target/logs/rotate-fixed/logfile-%i.log'
-        historySize: 5
+        historySize: 2
         fileSize: 20

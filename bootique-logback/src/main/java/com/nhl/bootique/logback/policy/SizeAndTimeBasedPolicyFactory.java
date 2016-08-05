@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 
 /**
@@ -49,7 +48,12 @@ public class SizeAndTimeBasedPolicyFactory extends TimeBasedPolicyFactory {
 	}
 
 	@Override
-	protected Class<? extends RollingPolicy> getRollingPolicyType() {
-		return SizeAndTimeBasedRollingPolicy.class;
+	protected FileNamePatternValidator getFileNamePatternValidator(LoggerContext context) {
+		return new FileNamePatternValidator(context, getFileNamePattern(), SizeAndTimeBasedRollingPolicy.class.getSimpleName()) {
+			@Override
+			protected void validate() {
+				checkPattern(true, true);
+			}
+		};
 	}
 }

@@ -80,7 +80,7 @@ public abstract class RollingPolicyFactory {
 	 *             if rolling policy properties are incorrect
 	 */
 	public RollingPolicy createRollingPolicy(LoggerContext context) {
-		FileNamePatternValidator.validate(fileNamePattern, context, getRollingPolicyType());
+		getFileNamePatternValidator(context).validate();
 		return instantiatePolicy(context);
 	}
 
@@ -102,5 +102,5 @@ public abstract class RollingPolicyFactory {
 	 */
 	protected abstract RollingPolicy instantiatePolicy(LoggerContext context);
 
-	protected abstract Class<? extends RollingPolicy> getRollingPolicyType();
+	protected abstract FileNamePatternValidator getFileNamePatternValidator(LoggerContext context);
 }

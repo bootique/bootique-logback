@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
 import ch.qos.logback.core.util.FileSize;
@@ -50,8 +49,13 @@ public class TimeBasedPolicyFactory extends RollingPolicyFactory {
     }
 
     @Override
-    protected Class<? extends RollingPolicy> getRollingPolicyType() {
-        return TimeBasedRollingPolicy.class;
+    protected FileNamePatternValidator getFileNamePatternValidator(LoggerContext context) {
+        return new FileNamePatternValidator(context, getFileNamePattern(), TimeBasedRollingPolicy.class.getSimpleName()) {
+            @Override
+            protected void validate() {
+                checkPattern(true, false);
+            }
+        };
     }
 
     protected void setupBasePolicySettings(TimeBasedRollingPolicy<ILoggingEvent> policy) {

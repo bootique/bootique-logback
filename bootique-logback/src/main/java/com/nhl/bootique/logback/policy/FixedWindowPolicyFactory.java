@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
-import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
 
@@ -63,7 +62,13 @@ public class FixedWindowPolicyFactory extends RollingPolicyFactory {
 	}
 
 	@Override
-	protected Class<? extends RollingPolicy> getRollingPolicyType() {
-		return FixedWindowRollingPolicy.class;
+	protected FileNamePatternValidator getFileNamePatternValidator(LoggerContext context) {
+
+		return new FileNamePatternValidator(context, getFileNamePattern(), FixedWindowRollingPolicy.class.getSimpleName()) {
+			@Override
+			protected void validate() {
+				checkPattern(false, true);
+			}
+		};
 	}
 }

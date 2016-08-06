@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.nhl.bootique.parent</groupId>
+		<groupId>io.bootique.parent</groupId>
 		<artifactId>bootique-parent</artifactId>
-		<version>0.10</version>
+		<version>0.12</version>
 	</parent>
 
-	<groupId>com.nhl.bootique.logback</groupId>
+	<groupId>io.bootique.logback</groupId>
 	<artifactId>bootique-logback-parent</artifactId>
 	<version>0.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -28,8 +28,8 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/nhl/bootique-logback</developerConnection>
-		<url>https://github.com/nhl/bootique-logback</url>
+		<developerConnection>scm:git:ssh://git@github.com/bootique/bootique-logback</developerConnection>
+		<url>https://github.com/bootique/bootique-logback</url>
 		<tag>HEAD</tag>
 	</scm>
 

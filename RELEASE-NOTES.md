@@ -3,6 +3,7 @@
 * #15 Support rolling policies in FileAppenderFactory - cleanup 
 * #17 A la carte overrides of log levels
 * #18 Upgrade to bootique 0.19
+* #20 Move to io.bootique namespace
 
 ## 0.10
 

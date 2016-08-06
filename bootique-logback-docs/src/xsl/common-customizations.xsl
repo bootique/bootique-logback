@@ -4,7 +4,19 @@
 	<xsl:param name="keep.relative.image.uris" select="1"/>
 	<xsl:param name="toc.section.depth">1</xsl:param>
 
-	<!-- disable TOC for each part -->
-	<xsl:template name="generate.part.toc" />
+	<!-- control which TOC's are generated -->
+	<xsl:param name="generate.toc">
+		appendix  nop
+		book      toc,title
+		chapter   nop
+		part      nop
+		preface   nop
+		qandadiv  nop
+		qandaset  nop
+		reference nop
+		section   nop
+		set       nop
+	</xsl:param>
+
 
 </xsl:stylesheet>

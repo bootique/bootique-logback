@@ -41,6 +41,9 @@
 
     <xsl:param name="navig.showtitles">1</xsl:param>
 
+    <!-- make sure we are using "ul", not "dt" -->
+    <xsl:param name="toc.list.type">ul</xsl:param>
+
     <!--
         BODY > HEAD Customization
         Customized template for generate meta tags with framework version in head of

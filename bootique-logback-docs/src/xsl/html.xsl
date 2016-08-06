@@ -106,23 +106,7 @@
                 </meta>
             </xsl:if>
         </xsl:if>
-
-        <xsl:if test="($draft.mode = 'yes' or
-                ($draft.mode = 'maybe' and
-                ancestor-or-self::*[@status][1]/@status = 'draft'))
-                and $draft.watermark.image != ''">
-            <style type="text/css"><xsl:text>
-body { background-image: url('</xsl:text>
-                <xsl:value-of select="$draft.watermark.image"/><xsl:text>');
-       background-repeat: no-repeat;
-       background-position: top left;
-       /* The following properties make the watermark "fixed" on the page. */
-       /* I think that's just a bit too distracting for the reader... */
-       /* background-attachment: fixed; */
-       /* background-position: center center; */
-     }</xsl:text>
-            </style>
-        </xsl:if>
+        
         <xsl:apply-templates select="." mode="head.keywords.content"/>
     </xsl:template>
 
@@ -137,101 +121,6 @@ body { background-image: url('</xsl:text>
   ga('create', 'UA-73654436-1', 'auto');
   ga('send', 'pageview');
         </script>
-    </xsl:template>
-
-    <!--
-        TOP NAVIGATION
-    -->
-    <xsl:template name="header.navigation">
-        <xsl:param name="prev" select="/d:foo"/>
-        <xsl:param name="next" select="/d:foo"/>
-        <xsl:param name="nav.context"/>
-
-        <xsl:variable name="home" select="/*[1]"/>
-        <xsl:variable name="up" select="parent::*"/>
-
-        <xsl:variable name="row1" select="$navig.showtitles != 0"/>
-        <xsl:variable name="row2" select="count($prev) &gt; 0
-                                    or (count($up) &gt; 0
-                                        and generate-id($up) != generate-id($home)
-                                        and $navig.showtitles != 0)
-                                    or count($next) &gt; 0"/>
-
-        <xsl:if test="$suppress.navigation = '0' and $suppress.header.navigation = '0'">
-            <div class="navheader">
-                <xsl:if test="$row1 or $row2">
-                    <table width="100%" summary="Navigation header">
-                      
-                        <!-- Add LinkRest version info -->
-                        <xsl:if test="$row1">
-                            <tr>
-                                <th class="versioninfo">v.${bootique.version.major} (${pom.version})</th>
-                                <th align="center">
-                                    <xsl:apply-templates select="." mode="object.title.markup"/>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </xsl:if>
-
-                        <xsl:if test="$row2">
-
-                            <tr>
-                                <td width="20%" align="{$direction.align.start}">
-                                    <xsl:if test="count($prev)>0">
-                                        <a accesskey="p">
-                                            <xsl:attribute name="href">
-                                                <xsl:call-template name="href.target">
-                                                    <xsl:with-param name="object" select="$prev"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </a>
-                                    </xsl:if>
-                                    <xsl:text>&#160;</xsl:text>
-                                </td>
-
-                                <!-- Make parent caption as link -->
-                                <th width="60%" align="center">
-                                    <xsl:choose>
-                                        <xsl:when test="count($up) > 0
-                                  and generate-id($up) != generate-id($home)
-                                  and $navig.showtitles != 0">
-                                            <a accesskey="u">
-                                                <xsl:attribute name="href">
-                                                    <xsl:call-template name="href.target">
-                                                        <xsl:with-param name="object" select="$up"/>
-                                                    </xsl:call-template>
-                                                </xsl:attribute>
-                                                <xsl:apply-templates select="$up" mode="object.title.markup"/>
-                                            </a>
-                                        </xsl:when>
-                                        <xsl:otherwise>&#160;</xsl:otherwise>
-                                    </xsl:choose>
-                                </th>
-
-
-                                <td width="20%" align="{$direction.align.end}">
-                                    <xsl:text>&#160;</xsl:text>
-                                    <xsl:if test="count($next)>0">
-                                        <a accesskey="n">
-                                            <xsl:attribute name="href">
-                                                <xsl:call-template name="href.target">
-                                                    <xsl:with-param name="object" select="$next"/>
-                                                </xsl:call-template>
-                                            </xsl:attribute>
-                                        </a>
-                                    </xsl:if>
-                                </td>
-                            </tr>
-
-                        </xsl:if>
-
-                    </table>
-                </xsl:if>
-                <xsl:if test="$header.rule != 0">
-                    <hr/>
-                </xsl:if>
-            </div>
-        </xsl:if>
     </xsl:template>
 
 </xsl:stylesheet>

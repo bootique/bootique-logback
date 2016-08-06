@@ -1,14 +1,14 @@
-package com.nhl.bootique.logback;
+package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
-import com.nhl.bootique.ConfigModule;
-import com.nhl.bootique.annotation.LogLevels;
-import com.nhl.bootique.config.ConfigurationFactory;
-import com.nhl.bootique.shutdown.ShutdownManager;
+import io.bootique.ConfigModule;
+import io.bootique.annotation.LogLevels;
+import io.bootique.config.ConfigurationFactory;
+import io.bootique.shutdown.ShutdownManager;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
-package com.nhl.bootique.logback;
+package io.bootique.logback;
 
 import com.google.inject.Module;
-import com.nhl.bootique.BQModuleProvider;
+import io.bootique.BQModuleProvider;
 
 public class LogbackModuleProvider implements BQModuleProvider {
 

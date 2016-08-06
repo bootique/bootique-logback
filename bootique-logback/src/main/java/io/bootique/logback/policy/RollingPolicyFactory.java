@@ -1,4 +1,4 @@
-package com.nhl.bootique.logback.policy;
+package io.bootique.logback.policy;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -41,8 +41,8 @@ public abstract class RollingPolicyFactory {
 	 * Sets a size of rolling history. This property controls the maximum number
 	 * of archive files to keep, asynchronously deleting older files.
 	 *
-	 * In case of {@link com.nhl.bootique.logback.policy.TimeBasedPolicyFactory}
-	 * and {@link com.nhl.bootique.logback.policy.SizeAndTimeBasedPolicyFactory}
+	 * In case of {@link TimeBasedPolicyFactory}
+	 * and {@link SizeAndTimeBasedPolicyFactory}
 	 * , for example, if you specify monthly rollover (fileNamePattern is
 	 * "logfile-%d{yyyy-MM}.log"), and set historySize to 6, then 6 months worth
 	 * of archives files will be kept with files older than 6 months deleted.
@@ -51,7 +51,7 @@ public abstract class RollingPolicyFactory {
 	 * appropriate.
 	 *
 	 * In case of
-	 * {@link com.nhl.bootique.logback.policy.FixedWindowPolicyFactory}, for
+	 * {@link FixedWindowPolicyFactory}, for
 	 * example, if you set historySize to 6 then 6 archived files will be kept
 	 *
 	 * @param historySize

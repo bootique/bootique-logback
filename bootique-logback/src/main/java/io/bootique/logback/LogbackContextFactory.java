@@ -1,12 +1,12 @@
-package com.nhl.bootique.logback;
+package io.bootique.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
-import com.nhl.bootique.logback.appender.AppenderFactory;
-import com.nhl.bootique.logback.appender.ConsoleAppenderFactory;
-import com.nhl.bootique.shutdown.ShutdownManager;
+import io.bootique.logback.appender.AppenderFactory;
+import io.bootique.logback.appender.ConsoleAppenderFactory;
+import io.bootique.shutdown.ShutdownManager;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
@@ -28,7 +28,7 @@ public class LogbackContextFactory {
         this.appenders = Collections.emptyList();
 
         // TODO: to write unit tests for this flag we are waiting for
-        // https://github.com/nhl/bootique/issues/52 to be implemented.
+        // https://github.com/bootique/bootique/issues/52 to be implemented.
         this.useLogbackConfig = false;
     }
 

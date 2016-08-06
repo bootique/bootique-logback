@@ -1,4 +1,4 @@
-package com.nhl.bootique.logback;
+package io.bootique.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;

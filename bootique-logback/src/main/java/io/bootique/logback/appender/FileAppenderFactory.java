@@ -1,10 +1,4 @@
-package com.nhl.bootique.logback.appender;
-
-import java.util.Objects;
-
-import ch.qos.logback.core.rolling.RollingPolicy;
-import ch.qos.logback.core.rolling.TriggeringPolicy;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+package io.bootique.logback.appender;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -13,7 +7,14 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.rolling.RollingFileAppender;
-import com.nhl.bootique.logback.policy.RollingPolicyFactory;
+import ch.qos.logback.core.rolling.RollingPolicy;
+import ch.qos.logback.core.rolling.TriggeringPolicy;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.bootique.logback.policy.FixedWindowPolicyFactory;
+import io.bootique.logback.policy.RollingPolicyFactory;
+import io.bootique.logback.policy.TimeBasedPolicyFactory;
+
+import java.util.Objects;
 
 /**
  * A configuration object that sets up a file appender in Logback, potentially
@@ -40,9 +41,9 @@ public class FileAppenderFactory extends AppenderFactory {
 	 * Rolling policy factory what defines rolling policy for rotation.
 	 * If rolling policy factory is not defined the rotation is not used
 	 *
-	 * @see com.nhl.bootique.logback.policy.RollingPolicyFactory
-	 * @see com.nhl.bootique.logback.policy.FixedWindowPolicyFactory
-	 * @see com.nhl.bootique.logback.policy.TimeBasedPolicyFactory
+	 * @see RollingPolicyFactory
+	 * @see FixedWindowPolicyFactory
+	 * @see TimeBasedPolicyFactory
 	 * @see ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy
 	 *
 	 * @since 0.10

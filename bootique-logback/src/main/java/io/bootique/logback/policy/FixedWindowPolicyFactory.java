@@ -1,4 +1,4 @@
-package com.nhl.bootique.logback.policy;
+package io.bootique.logback.policy;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 

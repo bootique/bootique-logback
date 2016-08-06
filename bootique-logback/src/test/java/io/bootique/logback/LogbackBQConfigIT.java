@@ -1,18 +1,17 @@
-package com.nhl.bootique.logback;
+package io.bootique.logback;
+
+import ch.qos.logback.classic.Logger;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.util.Map;
-
-import org.junit.Rule;
-import org.junit.Test;
-
-import ch.qos.logback.classic.Logger;
 
 public class LogbackBQConfigIT {
 
@@ -28,7 +27,7 @@ public class LogbackBQConfigIT {
 	public void testFileAppender() {
 
 		LOGGER_STACK.prepareLogDir("target/logs/rotate");
-		Logger logger = LOGGER_STACK.newRootLogger("classpath:com/nhl/bootique/logback/test-file-appender.yml");
+		Logger logger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appender.yml");
 		logger.info("info-log-to-file");
 
 		// must stop to ensure logs are flushed...
@@ -61,7 +60,7 @@ public class LogbackBQConfigIT {
 	public void testFileAppender_Rotate_By_Time() throws InterruptedException, IOException {
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time",
-				"classpath:com/nhl/bootique/logback/test-file-appender-time-rotation.yml", 3, 1000, 1);
+				"classpath:io/bootique/logback/test-file-appender-time-rotation.yml", 3, 1000, 1);
 
 		// Checks file numbers: Expected 2 archived files + 1 current log-file
 		assertEquals(3, logfileContents.size());
@@ -94,7 +93,7 @@ public class LogbackBQConfigIT {
 
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time-and-history",
-				"classpath:com/nhl/bootique/logback/test-file-appender-time-and-history-rotation.yml", 4, 1000, 1);
+				"classpath:io/bootique/logback/test-file-appender-time-and-history-rotation.yml", 4, 1000, 1);
 
 		// Checks file numbers: Expected 2 archived files + 1 current log-file
 		assertEquals(3, logfileContents.size());
@@ -127,7 +126,7 @@ public class LogbackBQConfigIT {
 
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time-and-history-and-totalsize",
-				"classpath:com/nhl/bootique/logback/test-file-appender-time-and-history-and-totalsize-rotation.yml", 5, 1000, 1);
+				"classpath:io/bootique/logback/test-file-appender-time-and-history-and-totalsize-rotation.yml", 5, 1000, 1);
 
 		// Checks file numbers: Expected 3 archived files + 1 current log-file
 		assertEquals(4, logfileContents.size());
@@ -162,7 +161,7 @@ public class LogbackBQConfigIT {
 	public void testFileAppender_Rotate_By_Size() throws InterruptedException, IOException {
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size",
-				"classpath:com/nhl/bootique/logback/test-file-appender-size-rotation.yml", 3, 1000, 2);
+				"classpath:io/bootique/logback/test-file-appender-size-rotation.yml", 3, 1000, 2);
 
 		// Checks file numbers: Expected 2 archived files + 1 current log-file
 		assertEquals(3, logfileContents.size());
@@ -195,7 +194,7 @@ public class LogbackBQConfigIT {
 
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size-and-history",
-				"classpath:com/nhl/bootique/logback/test-file-appender-size-and-history-rotation.yml", 4, 1000, 2);
+				"classpath:io/bootique/logback/test-file-appender-size-and-history-rotation.yml", 4, 1000, 2);
 
 		// Checks file numbers: Expected 2 archived files + 1 current log-file
 		assertEquals(3, logfileContents.size());
@@ -228,7 +227,7 @@ public class LogbackBQConfigIT {
 
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size-and-history-and-totalsize",
-				"classpath:com/nhl/bootique/logback/test-file-appender-size-and-history-and-totalsize-rotation.yml", 5, 1000, 2);
+				"classpath:io/bootique/logback/test-file-appender-size-and-history-and-totalsize-rotation.yml", 5, 1000, 2);
 
 		// Checks file numbers: Expected 3 archived files + 1 current log-file
 		assertEquals(4, logfileContents.size());
@@ -261,7 +260,7 @@ public class LogbackBQConfigIT {
 
 
 		Map<String, String[]> logfileContents = rotate("target/logs/rotate-fixed",
-				"classpath:com/nhl/bootique/logback/test-file-appender-fixed-rotation.yml", 4, 800, 1);
+				"classpath:io/bootique/logback/test-file-appender-fixed-rotation.yml", 4, 800, 1);
 
 		// Check file numbers: Expected 3 files = 1 current file + 2 archived files
 		assertEquals(3, logfileContents.size());

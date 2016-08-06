@@ -1,0 +1,7 @@
+io.bootique.logback.appender.AppenderFactory
+io.bootique.logback.appender.ConsoleAppenderFactory
+io.bootique.logback.appender.FileAppenderFactory
+io.bootique.logback.policy.RollingPolicyFactory
+io.bootique.logback.policy.FixedWindowPolicyFactory
+io.bootique.logback.policy.TimeBasedPolicyFactory
+io.bootique.logback.policy.SizeAndTimeBasedPolicyFactory

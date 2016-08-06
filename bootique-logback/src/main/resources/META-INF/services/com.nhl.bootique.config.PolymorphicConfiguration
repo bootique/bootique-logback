@@ -1,7 +1,0 @@
-com.nhl.bootique.logback.appender.AppenderFactory
-com.nhl.bootique.logback.appender.ConsoleAppenderFactory
-com.nhl.bootique.logback.appender.FileAppenderFactory
-com.nhl.bootique.logback.policy.RollingPolicyFactory
-com.nhl.bootique.logback.policy.FixedWindowPolicyFactory
-com.nhl.bootique.logback.policy.TimeBasedPolicyFactory
-com.nhl.bootique.logback.policy.SizeAndTimeBasedPolicyFactory

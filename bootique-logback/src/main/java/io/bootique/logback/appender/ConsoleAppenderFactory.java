@@ -1,4 +1,4 @@
-package com.nhl.bootique.logback.appender;
+package io.bootique.logback.appender;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 

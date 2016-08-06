@@ -1,8 +1,8 @@
-package com.nhl.bootique.logback;
+package io.bootique.logback;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import ch.qos.logback.classic.Logger;
+import io.bootique.BQRuntime;
+import io.bootique.test.junit.BQTestFactory;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -12,10 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.nhl.bootique.BQRuntime;
-import com.nhl.bootique.test.junit.BQTestFactory;
-
-import ch.qos.logback.classic.Logger;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class LogbackTestFactory extends BQTestFactory {
 

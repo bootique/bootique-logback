@@ -7,13 +7,13 @@
             documentation on logging</link>, standard modules rely on SLF4J loggers that can be
         easily bridged to various  advanced logging frameworks. Same maximally neutral logging
         approach is reasonable to apply in the user modules as well.</para>
-    <para><link xlink:href="https://github.com/nhl/bootique-logback"
+    <para><link xlink:href="https://github.com/bootique/bootique-logback"
             ><code>bootique-logback</code></link> is a "drag-and-drop" module integrating Bootique
         logging with <link xlink:href="http://logback.qos.ch/">Logback logging framework</link>.
         Just like any other module, <code>bootique-logback</code> can be enabled by simply adding it
         to the <code>pom.xml</code> dependencies, assuming <code>autoLoadModules()</code> is in
         effect:<programlisting language="xml">&lt;dependency>
-	&lt;groupId>com.nhl.bootique.logback&lt;/groupId>
+	&lt;groupId>io.bootique.logback&lt;/groupId>
 	&lt;artifactId>bootique-logback&lt;/artifactId>
 &lt;/dependency></programlisting></para>
     <para>Without further configuration it would log everything to console using INFO level.

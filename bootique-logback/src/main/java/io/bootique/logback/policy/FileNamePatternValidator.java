@@ -1,4 +1,4 @@
-package com.nhl.bootique.logback.policy;
+package io.bootique.logback.policy;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.rolling.helper.DateTokenConverter;

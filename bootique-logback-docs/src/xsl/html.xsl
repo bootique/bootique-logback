@@ -106,7 +106,7 @@
                 </meta>
             </xsl:if>
         </xsl:if>
-        
+
         <xsl:apply-templates select="." mode="head.keywords.content"/>
     </xsl:template>
 

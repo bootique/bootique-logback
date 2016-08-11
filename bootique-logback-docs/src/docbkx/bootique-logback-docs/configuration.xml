@@ -95,6 +95,12 @@
                             xlink:href="http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout"
                             >PatternLayout</link> for details.</td>
                 </tr>
+                <tr>
+                    <td><code>target</code></td>
+                    <td><code>stdout</code></td>
+                    <td>Whether to log to standard output or standard error. Possible values are
+                            <code>stdout</code> and <code>stderr</code></td>
+                </tr>
             </tbody>
         </table>
         <table frame="void">

@@ -1,7 +1,8 @@
-package io.bootique.logback;
+package io.bootique.logback.unit;
 
 import ch.qos.logback.classic.Logger;
 import io.bootique.BQRuntime;
+import io.bootique.logback.LogbackModule;
 import io.bootique.test.junit.BQTestFactory;
 
 import java.io.File;
@@ -19,9 +20,12 @@ import static org.junit.Assert.assertTrue;
 public class LogbackTestFactory extends BQTestFactory {
 
     public Logger newRootLogger(String config) {
+        return newBQRuntime(config).getInstance(Logger.class);
+    }
+
+    public BQRuntime newBQRuntime(String config) {
         String arg0 = "--config=" + Objects.requireNonNull(config);
-        BQRuntime runtime = newRuntime().configurator(bootique -> bootique.module(LogbackModule.class)).build(arg0).getRuntime();
-        return runtime.getInstance(Logger.class);
+        return newRuntime().configurator(bootique -> bootique.module(LogbackModule.class)).build(arg0).getRuntime();
     }
 
     public void stop() {

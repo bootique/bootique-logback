@@ -1,3 +1,7 @@
+## 0.12
+
+* #21  Allow redirecting console logging to stderr
+
 ## 0.11
 
 * #15 Support rolling policies in FileAppenderFactory - cleanup 

@@ -38,6 +38,14 @@ public class FileAppenderFactory extends AppenderFactory {
 	}
 
 	/**
+	 * @since 0.12
+	 * @return name of the log file.
+	 */
+	public String getFile() {
+		return file;
+	}
+
+	/**
 	 * Rolling policy factory what defines rolling policy for rotation.
 	 * If rolling policy factory is not defined the rotation is not used
 	 *
@@ -51,6 +59,14 @@ public class FileAppenderFactory extends AppenderFactory {
 	 */
 	public void setRollingPolicy(RollingPolicyFactory rollingPolicy) {
 		this.rollingPolicy = rollingPolicy;
+	}
+
+	/**
+	 * @since 0.12
+	 * @return factory for log file rotation policy
+	 */
+	public RollingPolicyFactory getRollingPolicy() {
+		return rollingPolicy;
 	}
 
 	@Override

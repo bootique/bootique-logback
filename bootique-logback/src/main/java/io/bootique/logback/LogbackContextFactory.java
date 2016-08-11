@@ -137,12 +137,36 @@ public class LogbackContextFactory {
         SLF4JBridgeHandler.install();
     }
 
+    /**
+     * @return default log level.
+     * @since 0.12
+     */
+    public Level getLevel() {
+        return level;
+    }
+
     public void setLevel(String level) {
         this.level = Level.toLevel(level, Level.INFO);
     }
 
+    /**
+     * @return collection of log level configurations.
+     * @since 0.12
+     */
+    public Map<String, LoggerFactory> getLoggers() {
+        return loggers;
+    }
+
     public void setLoggers(Map<String, LoggerFactory> loggers) {
         this.loggers = loggers;
+    }
+
+    /**
+     * @return collection of appender configurations.
+     * @since 0.12
+     */
+    public Collection<AppenderFactory> getAppenders() {
+        return appenders;
     }
 
     public void setAppenders(Collection<AppenderFactory> appenders) {

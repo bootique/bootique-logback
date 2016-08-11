@@ -1,6 +1,7 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
+import io.bootique.logback.unit.LogbackTestFactory;
 import org.junit.Rule;
 import org.junit.Test;
 

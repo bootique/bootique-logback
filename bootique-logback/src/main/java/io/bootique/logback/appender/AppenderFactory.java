@@ -13,40 +13,48 @@ import ch.qos.logback.core.Context;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
 public abstract class AppenderFactory {
 
-	private String logFormat;
+    private String logFormat;
 
-	public AppenderFactory() {
-		this.logFormat = "%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx";
-	}
+    public AppenderFactory() {
+        this.logFormat = "%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx";
+    }
 
-	public void setLogFormat(String logFormat) {
-		this.logFormat = logFormat;
-	}
+    public void setLogFormat(String logFormat) {
+        this.logFormat = logFormat;
+    }
 
-	public abstract Appender<ILoggingEvent> createAppender(LoggerContext context);
+    /**
+     * @since 0.12
+     * @return configured log format
+     */
+    public String getLogFormat() {
+        return logFormat;
+    }
 
-	protected PatternLayout createLayout(LoggerContext context) {
-		PatternLayout layout = new PatternLayout();
-		layout.setPattern(logFormat);
-		layout.setContext(context);
+    public abstract Appender<ILoggingEvent> createAppender(LoggerContext context);
 
-		layout.start();
-		return layout;
-	}
+    protected PatternLayout createLayout(LoggerContext context) {
+        PatternLayout layout = new PatternLayout();
+        layout.setPattern(logFormat);
+        layout.setContext(context);
 
-	protected Appender<ILoggingEvent> asAsync(Appender<ILoggingEvent> appender) {
-		return asAsync(appender, appender.getContext());
-	}
+        layout.start();
+        return layout;
+    }
 
-	protected Appender<ILoggingEvent> asAsync(Appender<ILoggingEvent> appender, Context context) {
-		final AsyncAppender asyncAppender = new AsyncAppender();
-		asyncAppender.setIncludeCallerData(false);
-		asyncAppender.setQueueSize(AsyncAppenderBase.DEFAULT_QUEUE_SIZE);
-		asyncAppender.setDiscardingThreshold(-1);
-		asyncAppender.setContext(context);
-		asyncAppender.setName(appender.getName());
-		asyncAppender.addAppender(appender);
-		asyncAppender.start();
-		return asyncAppender;
-	}
+    protected Appender<ILoggingEvent> asAsync(Appender<ILoggingEvent> appender) {
+        return asAsync(appender, appender.getContext());
+    }
+
+    protected Appender<ILoggingEvent> asAsync(Appender<ILoggingEvent> appender, Context context) {
+        AsyncAppender asyncAppender = new AsyncAppender();
+        asyncAppender.setIncludeCallerData(false);
+        asyncAppender.setQueueSize(AsyncAppenderBase.DEFAULT_QUEUE_SIZE);
+        asyncAppender.setDiscardingThreshold(-1);
+        asyncAppender.setContext(context);
+        asyncAppender.setName(appender.getName());
+        asyncAppender.addAppender(appender);
+        asyncAppender.start();
+        return asyncAppender;
+    }
 }

@@ -1,11 +1,11 @@
 package io.bootique.logback.policy;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.bootique.config.PolymorphicConfiguration;
 
 /**
  * A base abstract factory for defining of the rolling policy for rotation. This
@@ -18,7 +18,7 @@ import ch.qos.logback.core.rolling.TriggeringPolicy;
  *      Logback documentation</a>
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-public abstract class RollingPolicyFactory {
+public abstract class RollingPolicyFactory implements PolymorphicConfiguration {
 
 	private String fileNamePattern;
 	private int historySize;

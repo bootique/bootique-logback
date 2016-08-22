@@ -1,7 +1,5 @@
 package io.bootique.logback.appender;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
@@ -9,9 +7,11 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.AsyncAppenderBase;
 import ch.qos.logback.core.Context;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.bootique.config.PolymorphicConfiguration;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
-public abstract class AppenderFactory {
+public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     private String logFormat;
 

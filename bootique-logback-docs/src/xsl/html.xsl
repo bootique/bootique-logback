@@ -17,7 +17,7 @@
 	specific language governing permissions and limitations
 	under the License.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:d="http://docbook.org/ns/docbook">
 
     <xsl:import href="urn:docbkx:stylesheet"/>
     <xsl:include href="common-customizations.xsl"/>
@@ -59,7 +59,31 @@
                 <xsl:call-template name="user.header.content">
                     <xsl:with-param name="node" select="$doc"/>
                 </xsl:call-template>
-                <xsl:apply-templates select="."/>
+
+                <div class="container content docbook">
+
+                    <!-- Title -->
+                    <xsl:call-template name="book.titlepage"/>
+
+                    <div class="pure-g">
+
+                        <!-- Main Content -->
+                        <div class="docs-main pure-u-sm-16-24">
+                            <xsl:apply-templates select="*"/>
+                        </div>
+
+                        <!-- TOC -->
+                        <div class="docs-side offset-sm-1-12 pure-u-sm-6-24">
+                            <xsl:variable name="toc.params">
+                                <xsl:call-template name="find.path.params">
+                                    <xsl:with-param name="table" select="normalize-space($generate.toc)"/>
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <xsl:call-template name="division.toc"/>
+                        </div>
+                    </div>
+                </div>
+
                 <xsl:call-template name="user.footer.content">
                     <xsl:with-param name="node" select="$doc"/>
                 </xsl:call-template>
@@ -151,7 +175,8 @@
                                 <i class="fa fa-github"></i>
                                 <span>Code</span>
                             </a>
-                            <a href="http://github.com/bootique/bootique/stargazers" class="pure-menu-link github-btn star">
+                            <a href="http://github.com/bootique/bootique/stargazers"
+                               class="pure-menu-link github-btn star">
                                 <i class="fa fa-github"></i>
                                 <i class="fa fa-star"></i>
                                 <span class="star-counter"></span>
@@ -171,7 +196,8 @@
     </xsl:template>
 
     <xsl:template name="user.footer.content">
-        <p class="footer-p">&#169; <span class="current-year">2016</span> NHL, ObjectStyle and individual authors</p>
+        <p class="footer-p">&#169; <span class="current-year">2016</span> NHL, ObjectStyle and individual authors
+        </p>
 
         <script src="../../../scripts/vendor.js"></script>
         <script src="../../../scripts/main.js"></script>
@@ -184,6 +210,56 @@
             ga('create', 'UA-73654436-1', 'auto');
             ga('send', 'pageview');
         </script>
+    </xsl:template>
+
+    <!-- called from division.toc template... -->
+    <xsl:template name="make.toc">
+        <xsl:param name="toc-context" select="."/>
+        <xsl:param name="toc.title.p" select="true()"/>
+        <xsl:param name="nodes" select="/NOT-AN-ELEMENT"/>
+
+        <xsl:variable name="nodes.plus" select="$nodes | qandaset"/>
+
+        <xsl:variable name="toc.title">
+            <xsl:if test="$toc.title.p">
+                <h2 class="toc-title">
+                    <xsl:call-template name="gentext">
+                        <xsl:with-param name="key">TableofContents</xsl:with-param>
+                    </xsl:call-template>
+                </h2>
+            </xsl:if>
+        </xsl:variable>
+
+        <xsl:if test="$nodes">
+
+            <nav class="bs-docs-sidebar">
+
+                <xsl:copy-of select="$toc.title"/>
+                <ul class="nav bs-docs-sidenav">
+                    <xsl:apply-templates select="$nodes" mode="toc">
+                        <xsl:with-param name="toc-context" select="$toc-context"/>
+                    </xsl:apply-templates>
+                </ul>
+            </nav>
+        </xsl:if>
+
+    </xsl:template>
+
+    <xsl:template name="book.titlepage">
+        <div class="titlepage">
+            <xsl:choose>
+                <xsl:when test="d:bookinfo/d:title">
+                    <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:title"/>
+                </xsl:when>
+                <xsl:when test="d:info/d:title">
+                    <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:info/d:title"/>
+                </xsl:when>
+                <xsl:when test="d:title">
+                    <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:title"/>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:call-template name="book.titlepage.separator"/>
+        </div>
     </xsl:template>
 
 </xsl:stylesheet>

@@ -78,7 +78,6 @@
 				<artifactId>docbkx-maven-plugin</artifactId>
 				<configuration>
 					<xincludeSupported>true</xincludeSupported>
-					<highlightSource>true</highlightSource>
 					<targetDirectory>${basedir}/target/site</targetDirectory>
 					<includes>bootique-logback-docs/index.xml</includes>
 				</configuration>
@@ -88,11 +87,6 @@
 						<configuration>
 							<htmlCustomization>${project.build.outputDirectory}/xsl/html.xsl</htmlCustomization>
 							<chunkedOutput>false</chunkedOutput>
-							<postProcess>
-								<copy todir="${basedir}/target/site/bootique-logback-docs/css">
-									<fileset dir="${basedir}/src/docbkx/css" />
-								</copy>
-							</postProcess>
 						</configuration>
 						<phase>process-resources</phase>
 						<goals>

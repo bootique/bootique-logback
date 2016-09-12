@@ -1,6 +1,7 @@
 ## 0.12
 
 * #21  Allow redirecting console logging to stderr
+* #23  Upgrade to Bootique 0.20
 
 ## 0.11
 

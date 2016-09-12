@@ -23,7 +23,7 @@
 	</modules>
 
 	<properties>
-		<bootique-version>0.19</bootique-version>
+		<bootique-version>0.20-SNAPSHOT</bootique-version>
 	</properties>
 
 	<scm>

@@ -9,7 +9,7 @@
 
 	<groupId>io.bootique.logback</groupId>
 	<artifactId>bootique-logback-parent</artifactId>
-	<version>0.12</version>
+	<version>0.13-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>bootique-logback-parent: Parent of Logback integration modules for Bootique</name>
@@ -29,7 +29,7 @@
 	<scm>
         <developerConnection>scm:git:ssh://git@github.com/bootique/bootique-logback</developerConnection>
         <url>https://github.com/bootique/bootique-logback</url>
-        <tag>bootique-logback-parent-0.12</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>

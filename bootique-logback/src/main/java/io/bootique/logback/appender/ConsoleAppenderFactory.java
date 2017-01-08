@@ -7,6 +7,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 
 import java.util.Objects;
 
@@ -14,6 +16,7 @@ import java.util.Objects;
  * @since 0.8
  */
 @JsonTypeName("console")
+@BQConfig("Appender that prints its output to stdout or stderr.")
 public class ConsoleAppenderFactory extends AppenderFactory {
 
     private ConsoleTarget target;
@@ -23,21 +26,22 @@ public class ConsoleAppenderFactory extends AppenderFactory {
     }
 
     /**
+     * @return configured target (stdout or stderr).
+     * @since 0.12
+     */
+    public ConsoleTarget getTarget() {
+        return target;
+    }
+
+    /**
      * Sets whether the appender should log to stderr or stdout. "stdout" is the default.
      *
      * @param target either "stdout" or "stderr".
      * @since 0.12
      */
+    @BQConfigProperty("Log target. Default is 'stdout'")
     public void setTarget(ConsoleTarget target) {
         this.target = Objects.requireNonNull(target);
-    }
-
-    /**
-     * @since 0.12
-     * @return configured target (stdout or stderr).
-     */
-    public ConsoleTarget getTarget() {
-        return target;
     }
 
     @Override

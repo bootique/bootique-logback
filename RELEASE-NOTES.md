@@ -1,3 +1,7 @@
+## 0.13
+
+* #26 Upgrade to Bootique 0.21 and annotate configs
+
 ## 0.12
 
 * #21  Allow redirecting console logging to stderr

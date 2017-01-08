@@ -8,8 +8,11 @@ import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.AsyncAppenderBase;
 import ch.qos.logback.core.Context;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 import io.bootique.config.PolymorphicConfiguration;
 
+@BQConfig("Appender of a given type.")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
 public abstract class AppenderFactory implements PolymorphicConfiguration {
 
@@ -19,6 +22,8 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         this.logFormat = "%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx";
     }
 
+    @BQConfigProperty("Log format specification compatible with Logback framework. The default is " +
+            "'%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx'")
     public void setLogFormat(String logFormat) {
         this.logFormat = logFormat;
     }

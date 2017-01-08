@@ -9,4 +9,9 @@ public class LogbackModuleProviderIT {
 	public void testPresentInJar() {
 		BQModuleProviderChecker.testPresentInJar(LogbackModuleProvider.class);
 	}
+
+	@Test
+	public void testMetadata() {
+		BQModuleProviderChecker.testMetadata(LogbackModuleProvider.class);
+	}
 }

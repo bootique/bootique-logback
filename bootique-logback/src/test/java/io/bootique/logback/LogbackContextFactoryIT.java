@@ -1,7 +1,6 @@
 package io.bootique.logback;
 
 
-import ch.qos.logback.classic.Level;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.logback.appender.AppenderFactory;
 import io.bootique.logback.appender.ConsoleAppenderFactory;
@@ -29,7 +28,7 @@ public class LogbackContextFactoryIT {
 
         LogbackContextFactory rootFactory = configFactory.config(LogbackContextFactory.class, "log");
 
-        assertEquals(Level.DEBUG, rootFactory.getLevel());
+        assertEquals(LogbackLevel.debug, rootFactory.getLevel());
 
         assertNotNull(rootFactory.getAppenders());
         assertEquals(2, rootFactory.getAppenders().size());

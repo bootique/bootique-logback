@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 import io.bootique.logback.appender.AppenderFactory;
 import io.bootique.logback.appender.ConsoleAppenderFactory;
 import io.bootique.shutdown.ShutdownManager;
@@ -15,15 +17,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+@BQConfig
 public class LogbackContextFactory {
 
-    private Level level;
+    private LogbackLevel level;
     private Map<String, LoggerFactory> loggers;
     private Collection<AppenderFactory> appenders;
     private boolean useLogbackConfig;
 
     public LogbackContextFactory() {
-        this.level = Level.INFO;
+        this.level = LogbackLevel.info;
         this.loggers = Collections.emptyMap();
         this.appenders = Collections.emptyList();
 
@@ -62,7 +65,7 @@ public class LogbackContextFactory {
 
         context.addListener(propagator);
 
-        root.setLevel(level);
+        root.setLevel(Level.toLevel(level.name(), Level.INFO));
 
         loggers.forEach((name, lf) -> lf.configLogger(name, context));
 
@@ -139,14 +142,15 @@ public class LogbackContextFactory {
 
     /**
      * @return default log level.
-     * @since 0.12
+     * @since 0.13
      */
-    public Level getLevel() {
+    public LogbackLevel getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
-        this.level = Level.toLevel(level, Level.INFO);
+    @BQConfigProperty("Root log level. Can be overridden by individual loggers. The default is 'info'.")
+    public void setLevel(LogbackLevel level) {
+        this.level = level;
     }
 
     /**
@@ -157,6 +161,7 @@ public class LogbackContextFactory {
         return loggers;
     }
 
+    @BQConfigProperty("Per-package or per-class loggers. Keys in the map are logger names.")
     public void setLoggers(Map<String, LoggerFactory> loggers) {
         this.loggers = loggers;
     }
@@ -169,6 +174,8 @@ public class LogbackContextFactory {
         return appenders;
     }
 
+    @BQConfigProperty("One or more appenders that will render the logs to console, file, etc. If the list is empty, " +
+            "console appender is used with default settings.")
     public void setAppenders(Collection<AppenderFactory> appenders) {
         this.appenders = appenders;
     }
@@ -183,6 +190,9 @@ public class LogbackContextFactory {
      *                         ignored.
      * @since 0.9
      */
+    @BQConfigProperty("If true, all Bootique logback settings are ignored and the user is expected to provide its own " +
+            "config file per Logback documentation. This is only needed for a few advanced options not directly " +
+            "available via Bootique config. So the value should stay false (which is the default).")
     public void setUseLogbackConfig(boolean useLogbackConfig) {
         this.useLogbackConfig = useLogbackConfig;
     }

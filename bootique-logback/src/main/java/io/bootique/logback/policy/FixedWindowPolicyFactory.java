@@ -1,12 +1,13 @@
 package io.bootique.logback.policy;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 
 /**
  * A factory that can be used to setup "fixed window" log rolling policy. The
@@ -21,6 +22,7 @@ import ch.qos.logback.core.rolling.TriggeringPolicy;
  * @since 0.10
  */
 @JsonTypeName("fixedWindow")
+@BQConfig
 public class FixedWindowPolicyFactory extends RollingPolicyFactory {
 
 	private String fileSize;
@@ -35,6 +37,7 @@ public class FixedWindowPolicyFactory extends RollingPolicyFactory {
 	 *            with KB, MB and respectively GB. For example: 5000000, 5000KB,
 	 *            5MB and 2GB.
 	 */
+	@BQConfigProperty
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}

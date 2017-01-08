@@ -5,6 +5,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 import io.bootique.config.PolymorphicConfiguration;
 
 /**
@@ -18,6 +20,7 @@ import io.bootique.config.PolymorphicConfiguration;
  *      Logback documentation</a>
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@BQConfig
 public abstract class RollingPolicyFactory implements PolymorphicConfiguration {
 
 	private String fileNamePattern;
@@ -33,6 +36,7 @@ public abstract class RollingPolicyFactory implements PolymorphicConfiguration {
 	 * @param fileNamePattern
 	 *            a filename pattern for the archived log files.
 	 */
+	@BQConfigProperty
 	public void setFileNamePattern(String fileNamePattern) {
 		this.fileNamePattern = fileNamePattern;
 	}
@@ -57,6 +61,7 @@ public abstract class RollingPolicyFactory implements PolymorphicConfiguration {
 	 * @param historySize
 	 *            a size of rolling history
 	 */
+    @BQConfigProperty
 	public void setHistorySize(int historySize) {
 		this.historySize = historySize;
 	}

@@ -39,7 +39,7 @@ public class ConsoleAppenderFactory extends AppenderFactory {
      * @param target either "stdout" or "stderr".
      * @since 0.12
      */
-    @BQConfigProperty("Log target. Default is 'stdout'")
+    @BQConfigProperty("Whether the log should be sent to stdout or stderr. The default is 'stdout'")
     public void setTarget(ConsoleTarget target) {
         this.target = Objects.requireNonNull(target);
     }

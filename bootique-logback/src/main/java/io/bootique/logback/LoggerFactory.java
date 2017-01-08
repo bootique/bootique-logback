@@ -3,22 +3,26 @@ package io.bootique.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 
+@BQConfig
 public class LoggerFactory {
 
-	private Level level;
+	private LogbackLevel level;
 
 	public LoggerFactory() {
-		this.level = Level.INFO;
+		this.level = LogbackLevel.info;
 	}
 
-	public void setLevel(String level) {
-		this.level = Level.toLevel(level, Level.INFO);
+	@BQConfigProperty("Logging level of a given logger and its children.")
+	public void setLevel(LogbackLevel level) {
+		this.level = level;
 	}
 
 	public void configLogger(String loggerName, LoggerContext context) {
 		Logger logger = context.getLogger(loggerName);
-		logger.setLevel(this.level);
+		logger.setLevel(Level.toLevel(level.name(), Level.INFO));
 		
 		// TODO: appenders
 	}

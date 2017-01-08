@@ -107,8 +107,8 @@ public class LogbackContextFactory {
         return merged;
     }
 
-    protected String mapJULLevel(java.util.logging.Level level) {
-        return JulLevel.valueOf(level.getName()).getLevel().toString();
+    protected LogbackLevel mapJULLevel(java.util.logging.Level level) {
+        return JulLevel.valueOf(level.getName()).getLevel();
     }
 
     // inspired by Dropwizard. See DW DefaultLoggingFactory and
@@ -197,25 +197,25 @@ public class LogbackContextFactory {
         this.useLogbackConfig = useLogbackConfig;
     }
 
-    private static enum JulLevel {
+    private enum JulLevel {
 
-        ALL(Level.ALL),
-        CONFIG(Level.DEBUG),
-        FINE(Level.DEBUG),
-        FINER(Level.DEBUG),
-        FINEST(Level.TRACE),
-        INFO(Level.INFO),
-        OFF(Level.OFF),
-        SEVERE(Level.ERROR),
-        WARNING(Level.WARN);
+        ALL(LogbackLevel.all),
+        CONFIG(LogbackLevel.debug),
+        FINE(LogbackLevel.debug),
+        FINER(LogbackLevel.debug),
+        FINEST(LogbackLevel.trace),
+        INFO(LogbackLevel.info),
+        OFF(LogbackLevel.off),
+        SEVERE(LogbackLevel.error),
+        WARNING(LogbackLevel.warn);
 
-        private Level level;
+        private LogbackLevel level;
 
-        JulLevel(Level level) {
+        JulLevel(LogbackLevel level) {
             this.level = level;
         }
 
-        public Level getLevel() {
+        public LogbackLevel getLevel() {
             return level;
         }
     }

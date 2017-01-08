@@ -10,6 +10,7 @@ import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.bootique.annotation.BQConfigProperty;
 import io.bootique.logback.policy.FixedWindowPolicyFactory;
 import io.bootique.logback.policy.RollingPolicyFactory;
 import io.bootique.logback.policy.TimeBasedPolicyFactory;
@@ -33,6 +34,7 @@ public class FileAppenderFactory extends AppenderFactory {
 	 * 
 	 * @param file a filename for the current log file.
 	 */
+	@BQConfigProperty
 	public void setFile(String file) {
 		this.file = file;
 	}
@@ -57,6 +59,7 @@ public class FileAppenderFactory extends AppenderFactory {
 	 * @since 0.10
 	 * @param rollingPolicy a rolling policy factory
 	 */
+	@BQConfigProperty
 	public void setRollingPolicy(RollingPolicyFactory rollingPolicy) {
 		this.rollingPolicy = rollingPolicy;
 	}

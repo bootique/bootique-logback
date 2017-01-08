@@ -7,6 +7,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
 import ch.qos.logback.core.util.FileSize;
+import io.bootique.annotation.BQConfig;
+import io.bootique.annotation.BQConfigProperty;
 
 /**
  * A factory what defines rules for creation time-based rolling policy.
@@ -17,6 +19,7 @@ import ch.qos.logback.core.util.FileSize;
  * @since 0.10
  */
 @JsonTypeName("time")
+@BQConfig
 public class TimeBasedPolicyFactory extends RollingPolicyFactory {
 
     private String totalSize;
@@ -31,6 +34,7 @@ public class TimeBasedPolicyFactory extends RollingPolicyFactory {
      *            with KB, MB and respectively GB. For example: 5000000, 5000KB,
      *            5MB and 2GB.
      */
+    @BQConfigProperty
     public void setTotalSize(String totalSize) {
         this.totalSize = totalSize;
     }

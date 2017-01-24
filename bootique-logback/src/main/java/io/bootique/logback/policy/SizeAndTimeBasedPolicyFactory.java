@@ -1,10 +1,10 @@
 package io.bootique.logback.policy;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
+import ch.qos.logback.core.util.FileSize;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * A factory what defines rules for creation size-and-time-based rolling policy.
@@ -41,7 +41,7 @@ public class SizeAndTimeBasedPolicyFactory extends TimeBasedPolicyFactory {
 		SizeAndTimeBasedRollingPolicy<ILoggingEvent> policy = new SizeAndTimeBasedRollingPolicy<>();
 		setupBasePolicySettings(policy);
 		if (fileSize != null && fileSize.length() > 0) {
-			policy.setMaxFileSize(fileSize);
+			policy.setMaxFileSize(FileSize.valueOf(fileSize));
 		}
 		policy.setContext(context);
 		return policy;

@@ -5,6 +5,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
+import ch.qos.logback.core.util.FileSize;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
@@ -58,7 +59,7 @@ public class FixedWindowPolicyFactory extends RollingPolicyFactory {
 	public TriggeringPolicy<ILoggingEvent> createTriggeringPolicy(LoggerContext context) {
 		SizeBasedTriggeringPolicy<ILoggingEvent> policy = new SizeBasedTriggeringPolicy<ILoggingEvent>();
 		if (fileSize != null && fileSize.length() > 0) {
-			policy.setMaxFileSize(fileSize);
+			policy.setMaxFileSize(FileSize.valueOf(fileSize));
 		}
 		policy.setContext(context);
 		return policy;

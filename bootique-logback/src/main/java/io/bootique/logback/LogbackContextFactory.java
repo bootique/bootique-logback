@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
+import ch.qos.logback.core.status.OnConsoleStatusListener;
+import ch.qos.logback.core.util.StatusListenerConfigHelper;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import io.bootique.logback.appender.AppenderFactory;
@@ -24,6 +26,7 @@ public class LogbackContextFactory {
     private Map<String, LoggerFactory> loggers;
     private Collection<AppenderFactory> appenders;
     private boolean useLogbackConfig;
+    private boolean debugLogback;
 
     public LogbackContextFactory() {
         this.level = LogbackLevel.info;
@@ -59,7 +62,11 @@ public class LogbackContextFactory {
     protected void configLogbackContext(LoggerContext context, Logger root, Map<String, LoggerFactory> loggers) {
         context.reset();
 
-        final LevelChangePropagator propagator = new LevelChangePropagator();
+        if(debugLogback) {
+            StatusListenerConfigHelper.addOnConsoleListenerInstance(context, new OnConsoleStatusListener());
+        }
+
+        LevelChangePropagator propagator = new LevelChangePropagator();
         propagator.setContext(context);
         propagator.setResetJUL(true);
 
@@ -195,6 +202,18 @@ public class LogbackContextFactory {
             "available via Bootique config. So the value should stay false (which is the default).")
     public void setUseLogbackConfig(boolean useLogbackConfig) {
         this.useLogbackConfig = useLogbackConfig;
+    }
+
+    /**
+     * Sets whether to debug Logback startup and configuration loading.
+     *
+     * @param debugLogback if true, turns on tracing of Logback startup.
+     * @since 0.13
+     */
+    @BQConfigProperty("If true, Logback configuration debugging information will be printed to console. Helps to deal" +
+            " with Logback configuration issues.")
+    public void setDebugLogback(boolean debugLogback) {
+        this.debugLogback = debugLogback;
     }
 
     private enum JulLevel {

@@ -1,5 +1,6 @@
 ## 0.13
 
+* #24 "Debug" mode support
 * #25 Upgrade to LogBack 1.1.9 #25
 * #26 Upgrade to Bootique 0.21 and annotate configs
 

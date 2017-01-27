@@ -26,6 +26,6 @@ public class LogbackModuleProvider implements BQModuleProvider {
 	public BQModule.Builder moduleBuilder() {
 		return BQModuleProvider.super
 				.moduleBuilder()
-				.description("Provides logging configuration.");
+				.description("Provides logging based on Logback library.");
 	}
 }

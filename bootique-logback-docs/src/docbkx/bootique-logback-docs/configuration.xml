@@ -199,7 +199,7 @@
       file: /var/log/myapp.log
       rollingPolicy:
         type: time
-        fileNamePattern: '/var/log/myapp-%d{yyyyMMDDHHmmss}.log'</programlisting>"time"
+        fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.log'</programlisting>"time"
                 policy rotates the main log file at a fixed time interval determined by the file
                 name pattern.<table frame="void">
                     <caption>"time" rolling policy Property Reference</caption>
@@ -222,7 +222,7 @@
                                 conversion specifier may contain a date-and-time pattern as
                                 specified by the <code>java.text.SimpleDateFormat</code> class. If
                                 the date-and-time pattern is omitted, then the default pattern
-                                    <code>yyyy-MM-dd</code>is assumed. The rollover interval is
+                                    <code>yyyy-MM-dd</code> is assumed. The rollover interval is
                                 inferred from the value of the pattern.</td>
                         </tr>
                         <tr>
@@ -249,7 +249,7 @@
       file: /var/log/myapp.log
       rollingPolicy:
         type: sizeAndTime
-        fileNamePattern: '/var/log/myapp-%d{yyyyMMDDHHmmss}.%i.log'
+        fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.%i.log'
         historySize: 5
         fileSize: 50
         totalSize: 150</programlisting>"sizeAndTime"
@@ -275,7 +275,7 @@
                                 conversion specifier may contain a date-and-time pattern as
                                 specified by the <code>java.text.SimpleDateFormat</code> class. If
                                 the date-and-time pattern is omitted, then the default pattern
-                                    <code>yyyy-MM-dd</code>is assumed. The rollover interval is
+                                    <code>yyyy-MM-dd</code> is assumed. The rollover interval is
                                 inferred from the value of the pattern.</td>
                         </tr>
                         <tr>

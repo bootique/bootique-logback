@@ -1,3 +1,7 @@
+## 0.14
+
+* #30 Bootique Logback Sentry module 
+
 ## 0.13
 
 * #24 "Debug" mode support

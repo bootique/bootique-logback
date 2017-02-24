@@ -1,3 +1,7 @@
+## 0.14
+
+* #32 Upgrade SLF4J from 1.7.13 to 1.7.22
+
 ## 0.13
 
 * #24 "Debug" mode support

@@ -24,6 +24,7 @@
 
 	<properties>
 		<bootique-version>0.21</bootique-version>
+		<slf4j-version>1.7.22</slf4j-version>
 	</properties>
 
 	<scm>

@@ -68,23 +68,23 @@ public class LogbackSentryFactory extends AppenderFactory {
         return sentryAppender;
     }
 
-    @BQConfigProperty("Your Sentry DSN (client key), if left blank Raven will no-op. Can be set thought environment " +
-            "variable SENTRY_DSN.")
+    @BQConfigProperty("Your Sentry DSN (client key). If left blank, Raven will not perform logging. " +
+            "Alternatively can be set via environment variable SENTRY_DSN.")
     public void setDsn(String dsn) {
         this.dsn = dsn;
     }
 
-    @BQConfigProperty("Optional, override the server name (rather than looking it up dynamically)")
+    @BQConfigProperty("Optional. Sets fixed server name, rather than looking it up dynamically.")
     public void setServerName(String serverName) {
         this.serverName = serverName;
     }
 
-    @BQConfigProperty("Optional, provide environment your application is running in. Example: production")
+    @BQConfigProperty("Optional. Sets environment your application is running in. Example: production")
     public void setEnvironment(String environment) {
         this.environment = environment;
     }
 
-    @BQConfigProperty("Optional, provide release version of your application. Example: 1.0.0")
+    @BQConfigProperty("Optional. Sets release version of your application. Example: 1.0.0")
     public void setRelease(String release) {
         this.release = release;
     }
@@ -95,19 +95,21 @@ public class LogbackSentryFactory extends AppenderFactory {
     }
 
     @BQConfigProperty("By default all MDC parameters are sent under the Additional Data Tab. " +
-            "By specify the extraTags parameter in your configuration file. " +
-            "You can specify MDC keys to send as tags instead of including them in Additional Data. " +
+            "By setting \"extraTags\" in your configuration you can define MDC keys to send as tags instead of " +
+            "including them in Additional Data. " +
             "This allows them to be filtered within Sentry. Example: foo,bar,baz")
     public void setExtraTags(List<String> extraTags) {
         this.extraTags = extraTags;
     }
 
-    @BQConfigProperty("Optional, select the ravenFactory class. Example: com.getsentry.raven.DefaultRavenFactory")
+    @BQConfigProperty("Optional. Sets com.getsentry.raven.RavenFactory class. Example: com.getsentry.raven.DefaultRavenFactory")
+    // TODO: should factory classe be managed in DI?
     public void setRavenFactory(String ravenFactory) {
         this.ravenFactory = ravenFactory;
     }
 
     @BQConfigProperty("Default minimal level for logging event. Example: error")
+    // TODO: Can we eliminate this?. We can already set log level at the top of the common "log" config.
     public void setMinLevel(String minLevel) {
         this.minLevel = minLevel;
     }

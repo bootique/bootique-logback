@@ -1,6 +1,3 @@
-[![Build Status](https://travis-ci.org/bootique/bootique-logback.svg)](https://travis-ci.org/bootique/bootique-logback)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.bootique.logback/bootique-logback-sentry/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.bootique.logback/bootique-logback-sentry/)
-
 # Bootique Logback Sentry
 
 Provides [Sentry](https://docs.sentry.io/clients/java/modules/logback/) integration with [Bootique-Logback](https://github.com/bootique/bootique-logback).

@@ -10,10 +10,22 @@ Get DSN from [sentry.io](https://sentry.io/) or from your own instance of [Sentr
 
 **Maven**
 ```xml
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.bootique.bom</groupId>
+            <artifactId>bootique-bom</artifactId>
+            <version>0.22</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+...
 <dependency>
     <groupId>io.bootique.logback</groupId>
     <artifactId>bootique-logback-sentry</artifactId>
-    <version>0.14</version>
 </dependency>
 ```
 

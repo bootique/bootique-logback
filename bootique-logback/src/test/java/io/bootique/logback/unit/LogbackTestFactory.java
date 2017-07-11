@@ -25,7 +25,7 @@ public class LogbackTestFactory extends BQTestFactory {
 
     public BQRuntime newBQRuntime(String config) {
         String arg0 = "--config=" + Objects.requireNonNull(config);
-        return app(arg0).module(LogbackModule.class).createRuntime().getRuntime();
+        return app(arg0).module(LogbackModule.class).createRuntime();
     }
 
     public void stop() {

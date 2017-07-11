@@ -1,3 +1,7 @@
+## 0.15
+
+* #34 Upgrade to BQ 0.23 
+
 ## 0.14
 
 * #30 Bootique Logback Sentry module 

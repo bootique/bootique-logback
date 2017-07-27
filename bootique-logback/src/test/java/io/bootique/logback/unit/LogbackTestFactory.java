@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
@@ -20,12 +19,11 @@ import static org.junit.Assert.assertTrue;
 public class LogbackTestFactory extends BQTestFactory {
 
     public Logger newRootLogger(String config) {
-        return newBQRuntime(config).getInstance(Logger.class);
+        return newBQRuntime("--config=" + config).getInstance(Logger.class);
     }
 
-    public BQRuntime newBQRuntime(String config) {
-        String arg0 = "--config=" + Objects.requireNonNull(config);
-        return app(arg0).module(LogbackModule.class).createRuntime();
+    public BQRuntime newBQRuntime(String... args) {
+        return app(args).module(LogbackModule.class).createRuntime();
     }
 
     public void stop() {

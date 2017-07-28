@@ -23,7 +23,7 @@ public class LogbackContextFactoryIT {
     public void testInitFromConfig() {
 
         ConfigurationFactory configFactory = LOGGER_STACK
-                .newBQRuntime("classpath:io/bootique/logback/test-multi-appender.yml")
+                .newBQRuntime("--config=classpath:io/bootique/logback/test-multi-appender.yml")
                 .getInstance(ConfigurationFactory.class);
 
         LogbackContextFactory rootFactory = configFactory.config(LogbackContextFactory.class, "log");
@@ -43,5 +43,16 @@ public class LogbackContextFactoryIT {
         FileAppenderFactory a2 = (FileAppenderFactory) appenders[1];
         assertEquals("%c{10}: %m%n", a2.getLogFormat());
         assertEquals("target/logs/rotate/logfile123.log", a2.getFile());
+    }
+
+    @Test
+    public void testVerboseOption() {
+        ConfigurationFactory configFactory = LOGGER_STACK
+                .newBQRuntime("--config=classpath:io/bootique/logback/test-multi-appender.yml", "--verbose")
+                .getInstance(ConfigurationFactory.class);
+
+        LogbackContextFactory rootFactory = configFactory.config(LogbackContextFactory.class, "log");
+
+        assertEquals(LogbackLevel.debug, rootFactory.getLevel());
     }
 }

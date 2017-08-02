@@ -51,12 +51,16 @@ log:
       serverName: aurora
       environment: development
       release: 42.0
-      extraTags: foo,bar,baz
+      extra: 
+        extra1: value1
+        extra2: value2
+        extra3: value3
       minLevel: error
-      ravenFactory: com.getsentry.raven.DefaultRavenFactory
       tags:
         tag1: value1
         tag2: value2
 ```
+
+`SentryClientFactory` can be provided by overriding `SentryClientFactory` bean from `LogbackSentryModule`.
 
 Also DSN can be provided via environment variable [SENTRY_DSN](https://github.com/getsentry/raven-java/tree/master/raven-logback).

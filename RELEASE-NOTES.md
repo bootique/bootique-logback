@@ -1,3 +1,7 @@
+## 0.16
+
+* #39 Update Logback Sentry module. 
+
 ## 0.15
 
 * #34 Upgrade to BQ 0.23 

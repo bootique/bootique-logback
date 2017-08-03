@@ -25,7 +25,7 @@
 	</modules>
 
 	<properties>
-		<bootique-version>0.23</bootique-version>
+		<bootique-version>0.24-SNAPSHOT</bootique-version>
 	</properties>
 
 	<scm>

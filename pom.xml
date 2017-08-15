@@ -25,7 +25,7 @@
 	</modules>
 
 	<properties>
-		<bootique-version>0.23</bootique-version>
+		<bootique-version>${project.version}</bootique-version>
 	</properties>
 
 	<scm>

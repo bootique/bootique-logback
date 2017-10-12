@@ -1,4 +1,4 @@
-## 0.16
+## 0.24
 
 * #39 Update Logback Sentry module. 
 

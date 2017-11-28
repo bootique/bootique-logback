@@ -1,3 +1,7 @@
+## 0.25
+
+* #41 Support appender-independent default log format
+
 ## 0.24
 
 * #39 Update Logback Sentry module. 

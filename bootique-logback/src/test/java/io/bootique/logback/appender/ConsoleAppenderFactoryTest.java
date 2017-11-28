@@ -21,7 +21,7 @@ public class ConsoleAppenderFactoryTest {
     @Test
     public void testCreateConsoleAppenderTarget_Default() {
         ConsoleAppenderFactory factory = new ConsoleAppenderFactory();
-        ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext);
+        ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext, "");
 
         assertEquals(ch.qos.logback.core.joran.spi.ConsoleTarget.SystemOut.getName(), appender.getTarget());
     }
@@ -30,7 +30,7 @@ public class ConsoleAppenderFactoryTest {
     public void testCreateConsoleAppenderTarget_Stderr() {
         ConsoleAppenderFactory factory = new ConsoleAppenderFactory();
         factory.setTarget(ConsoleTarget.stderr);
-        ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext);
+        ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext, "");
 
         assertEquals(ch.qos.logback.core.joran.spi.ConsoleTarget.SystemErr.getName(), appender.getTarget());
     }
@@ -39,7 +39,7 @@ public class ConsoleAppenderFactoryTest {
     public void testCreateConsoleAppenderTarget_Stdout() {
         ConsoleAppenderFactory factory = new ConsoleAppenderFactory();
         factory.setTarget(ConsoleTarget.stdout);
-        ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext);
+        ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext, "");
 
         assertEquals(ch.qos.logback.core.joran.spi.ConsoleTarget.SystemOut.getName(), appender.getTarget());
     }

@@ -35,7 +35,8 @@ public class LogbackSentryFactory extends AppenderFactory {
     }
 
     @Override
-    public Appender<ILoggingEvent> createAppender(LoggerContext context) {
+    public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
+
         final SentryAppender sentryAppender = new SentryAppender();
 
         final ThresholdFilter thresholdFilter = new ThresholdFilter();

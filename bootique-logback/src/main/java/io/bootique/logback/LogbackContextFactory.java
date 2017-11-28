@@ -23,6 +23,7 @@ import java.util.Map;
 public class LogbackContextFactory {
 
     private LogbackLevel level;
+    private String logFormat;
     private Map<String, LoggerFactory> loggers;
     private Collection<AppenderFactory> appenders;
     private boolean useLogbackConfig;
@@ -62,7 +63,7 @@ public class LogbackContextFactory {
     protected void configLogbackContext(LoggerContext context, Logger root, Map<String, LoggerFactory> loggers) {
         context.reset();
 
-        if(debugLogback) {
+        if (debugLogback) {
             StatusListenerConfigHelper.addOnConsoleListenerInstance(context, new OnConsoleStatusListener());
         }
 
@@ -80,7 +81,11 @@ public class LogbackContextFactory {
             setAppenders(Collections.singletonList(new ConsoleAppenderFactory()));
         }
 
-        appenders.forEach(a -> root.addAppender(a.createAppender(context)));
+        appenders.forEach(a -> root.addAppender(a.createAppender(context, getLogFormat())));
+    }
+
+    private String getLogFormat() {
+        return logFormat != null ? logFormat : "%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx";
     }
 
     /**
@@ -214,6 +219,17 @@ public class LogbackContextFactory {
             " with Logback configuration issues.")
     public void setDebugLogback(boolean debugLogback) {
         this.debugLogback = debugLogback;
+    }
+
+    /**
+     * @param logFormat Log format specification used by all appenders unless redefined for a given appender.
+     * @since 0.25
+     */
+    @BQConfigProperty("Log format specification used by child appenders unless redefined at the appender level, or not " +
+            "relevant for a given type of appender. The spec is " +
+            "compatible with Logback framework. The default is '%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx'")
+    public void setLogFormat(String logFormat) {
+        this.logFormat = logFormat;
     }
 
     private enum JulLevel {

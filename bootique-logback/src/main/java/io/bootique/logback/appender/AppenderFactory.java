@@ -18,27 +18,25 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     private String logFormat;
 
-    public AppenderFactory() {
-        this.logFormat = "%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx";
-    }
-
-    @BQConfigProperty("Log format specification compatible with Logback framework. The default is " +
-            "'%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx'")
-    public void setLogFormat(String logFormat) {
-        this.logFormat = logFormat;
-    }
-
     /**
-     * @since 0.12
      * @return configured log format
+     * @since 0.12
      */
     public String getLogFormat() {
         return logFormat;
     }
 
-    public abstract Appender<ILoggingEvent> createAppender(LoggerContext context);
+    @BQConfigProperty("Log format specification compatible with Logback framework. If not set, the value is propagated " +
+            "from the parent configuration.")
+    public void setLogFormat(String logFormat) {
+        this.logFormat = logFormat;
+    }
 
-    protected PatternLayout createLayout(LoggerContext context) {
+    public abstract Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat);
+
+    protected PatternLayout createLayout(LoggerContext context, String defaultLogFormat) {
+        String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;
+
         PatternLayout layout = new PatternLayout();
         layout.setPattern(logFormat);
         layout.setContext(context);

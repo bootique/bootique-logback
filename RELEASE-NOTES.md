@@ -1,6 +1,7 @@
 ## 0.25
 
 * #41 Support appender-independent default log format
+* #42 Update sentry-logback 
 
 ## 0.24
 

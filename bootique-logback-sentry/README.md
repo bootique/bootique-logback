@@ -9,7 +9,7 @@ Get DSN from [sentry.io](https://sentry.io/) or from your own instance of [Sentr
 ## Add bootique-logback-sentry to your build tool:
 
 **Maven**
-```xml
+
 ```xml
 <dependencyManagement>
     <dependencies>
@@ -22,7 +22,7 @@ Get DSN from [sentry.io](https://sentry.io/) or from your own instance of [Sentr
         </dependency>
     </dependencies>
 </dependencyManagement>
-...
+<!--...-->
 <dependency>
     <groupId>io.bootique.logback</groupId>
     <artifactId>bootique-logback-sentry</artifactId>
@@ -56,6 +56,11 @@ log:
         extra2: value2
         extra3: value3
       minLevel: error
+      distribution: x86
+      applicationPackages:
+        - "io.bootique.logback"
+        - "com.myapp.package"
+      commonFramesEnabled: true
       tags:
         tag1: value1
         tag2: value2

@@ -10,8 +10,14 @@ import io.bootique.annotation.BQConfigProperty;
 import io.bootique.logback.appender.AppenderFactory;
 import io.sentry.logback.SentryAppender;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO: Add child factory for some advanced configuration like buffers, async and exception handler
+ * https://docs.sentry.io/clients/java/config/#in-application-stack-frames
+ */
 @JsonTypeName("sentry")
 @BQConfig("Appender that sends errors to Sentry.")
 public class LogbackSentryFactory extends AppenderFactory {
@@ -25,6 +31,12 @@ public class LogbackSentryFactory extends AppenderFactory {
     private String release;
 
     private String minLevel;
+
+    private String distribution;
+
+    private List<String> applicationPackages = new ArrayList<>();
+
+    private boolean commonFramesEnabled = true;
 
     private Map<String, String> tags;
 
@@ -109,6 +121,34 @@ public class LogbackSentryFactory extends AppenderFactory {
 
     public String getMinLevel() {
         return minLevel;
+    }
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    @BQConfigProperty("To set the application distribution that will be sent with each event. " +
+        "Note that the distribution is only useful (and used) if the release is also set.")
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
+    }
+
+    public List<String> getApplicationPackages() {
+        return applicationPackages;
+    }
+
+    @BQConfigProperty("Sentry differentiates stack frames that are directly related to your application (\"in application\") from stack frames that come from other packages such as the standard library, frameworks, or other dependencies. The difference is visible in the Sentry web interface where only the \"in application\" frames are displayed by default.")
+    public void setApplicationPackages(List<String> applicationPackages) {
+        this.applicationPackages = applicationPackages;
+    }
+
+    public boolean isCommonFramesEnabled() {
+        return commonFramesEnabled;
+    }
+
+    @BQConfigProperty("Allow/Disallow Sentry replacing common frames by the ... N more line.")
+    public void setCommonFramesEnabled(boolean commonFramesEnabled) {
+        this.commonFramesEnabled = commonFramesEnabled;
     }
 
     @BQConfigProperty("Default minimal level for logging event. Example: error")

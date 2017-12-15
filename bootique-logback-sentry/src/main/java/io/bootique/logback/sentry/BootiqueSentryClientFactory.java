@@ -4,6 +4,7 @@ import io.sentry.DefaultSentryClientFactory;
 import io.sentry.SentryClient;
 import io.sentry.dsn.Dsn;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -43,6 +44,20 @@ public class BootiqueSentryClientFactory extends DefaultSentryClientFactory {
             sentryClient.setExtra(new HashMap<>(logbackSentryFactory.getExtra()));
         }
 
+        if (logbackSentryFactory.getDistribution() != null) {
+            sentryClient.setDist(logbackSentryFactory.getDistribution());
+        }
+
         return sentryClient;
+    }
+
+    @Override
+    protected Collection<String> getInAppFrames(Dsn dsn) {
+        return logbackSentryFactory.getApplicationPackages();
+    }
+
+    @Override
+    protected boolean getHideCommonFramesEnabled(Dsn dsn) {
+        return logbackSentryFactory.isCommonFramesEnabled();
     }
 }

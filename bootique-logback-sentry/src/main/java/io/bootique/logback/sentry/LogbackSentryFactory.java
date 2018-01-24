@@ -7,7 +7,9 @@ import ch.qos.logback.core.Appender;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import io.bootique.logback.LogbackLevel;
 import io.bootique.logback.appender.AppenderFactory;
+import io.sentry.Sentry;
 import io.sentry.logback.SentryAppender;
 
 import java.util.ArrayList;
@@ -43,11 +45,13 @@ public class LogbackSentryFactory extends AppenderFactory {
     private Map<String, String> extra;
 
     public LogbackSentryFactory() {
-        this.minLevel = "error";
+        this.minLevel = LogbackLevel.error.name();
     }
 
     @Override
     public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
+        final BootiqueSentryClientFactory sentryClientFactory = new BootiqueSentryClientFactory(this);
+        Sentry.init(this.getDsn(), sentryClientFactory);
 
         final SentryAppender sentryAppender = new SentryAppender();
 

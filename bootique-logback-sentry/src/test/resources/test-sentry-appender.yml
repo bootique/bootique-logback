@@ -1,0 +1,19 @@
+log:
+  level: debug
+  appenders:
+    - type: sentry
+      minLevel: warn
+      serverName: testServerName
+      distribution: testDistribution
+      dsn: "https://public:private@sentry.io/123456?options"
+      environment: tests
+      release: 4.2.0
+      tags:
+        tag1: value1
+        tag2: value2
+      applicationPackages:
+        - "io.bootique.logback"
+        - "com.myapp.package"
+      extra:
+        extra1: value1
+        extra2: value2

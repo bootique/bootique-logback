@@ -1,7 +1,6 @@
 package io.bootique.logback.sentry;
 
 import io.sentry.DefaultSentryClientFactory;
-import io.sentry.SentryClient;
 import io.sentry.dsn.Dsn;
 
 import java.util.Collection;
@@ -21,8 +20,8 @@ public class BootiqueSentryClientFactory extends DefaultSentryClientFactory {
     }
 
     @Override
-    public SentryClient createSentryClient(Dsn dsn) {
-        SentryClient sentryClient = new SentryClient(createConnection(dsn), getContextManager(dsn));
+    public BootiqueSentryClient createSentryClient(Dsn dsn) {
+        BootiqueSentryClient sentryClient = new BootiqueSentryClient(createConnection(dsn), getContextManager(dsn));
 
         if (logbackSentryFactory.getRelease() != null) {
             sentryClient.setRelease(logbackSentryFactory.getRelease());

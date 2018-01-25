@@ -57,6 +57,7 @@ public class LogbackSentryFactory extends AppenderFactory {
 
         final ThresholdFilter thresholdFilter = new ThresholdFilter();
         thresholdFilter.setLevel(minLevel);
+        thresholdFilter.start();
 
         sentryAppender.addFilter(thresholdFilter);
         sentryAppender.start();

@@ -6,8 +6,8 @@ import org.junit.Test;
 public class LogbackModuleProviderIT {
 
 	@Test
-	public void testPresentInJar() {
-		BQModuleProviderChecker.testPresentInJar(LogbackModuleProvider.class);
+	public void testAutoLoadable() {
+		BQModuleProviderChecker.testAutoLoadable(LogbackModuleProvider.class);
 	}
 
 	@Test

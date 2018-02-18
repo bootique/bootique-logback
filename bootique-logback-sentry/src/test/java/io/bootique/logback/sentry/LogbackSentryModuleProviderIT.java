@@ -14,8 +14,8 @@ public class LogbackSentryModuleProviderIT {
     public BQTestFactory testFactory = new BQTestFactory();
 
     @Test
-    public void testPresentInJar() {
-        BQModuleProviderChecker.testPresentInJar(LogbackSentryModuleProvider.class);
+    public void testAutoLoadable() {
+        BQModuleProviderChecker.testAutoLoadable(LogbackSentryModuleProvider.class);
     }
 
     @Test

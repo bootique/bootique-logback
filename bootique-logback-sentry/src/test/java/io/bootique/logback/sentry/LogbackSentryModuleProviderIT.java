@@ -3,11 +3,10 @@ package io.bootique.logback.sentry;
 import io.bootique.BQRuntime;
 import io.bootique.logback.LogbackModule;
 import io.bootique.test.junit.BQModuleProviderChecker;
+import io.bootique.test.junit.BQRuntimeChecker;
 import io.bootique.test.junit.BQTestFactory;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static com.google.common.collect.ImmutableList.of;
 
 public class LogbackSentryModuleProviderIT {
 
@@ -27,6 +26,6 @@ public class LogbackSentryModuleProviderIT {
     @Test
     public void testModuleDeclaresDependencies() {
         final BQRuntime bqRuntime = testFactory.app().module(new LogbackSentryModuleProvider()).createRuntime();
-        BQModuleProviderChecker.testModulesLoaded(bqRuntime, of(LogbackSentryModule.class, LogbackModule.class));
+        BQRuntimeChecker.testModulesLoaded(bqRuntime, LogbackSentryModule.class, LogbackModule.class);
     }
 }

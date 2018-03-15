@@ -9,7 +9,7 @@
 
 	<groupId>io.bootique.logback</groupId>
 	<artifactId>bootique-logback-parent</artifactId>
-	<version>0.26-SNAPSHOT</version>
+	<version>0.25-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>bootique-logback-parent: Parent of Logback integration modules for Bootique</name>

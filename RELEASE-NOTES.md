@@ -2,6 +2,7 @@
 
 * #41 Support appender-independent default log format
 * #42 Update sentry-logback 
+* #43 Upgrade to bootique-modules-parent 0.8
 
 ## 0.24
 

@@ -16,7 +16,7 @@ Get DSN from [sentry.io](https://sentry.io/) or from your own instance of [Sentr
         <dependency>
             <groupId>io.bootique.bom</groupId>
             <artifactId>bootique-bom</artifactId>
-            <version>0.24</version>
+            <version>0.25</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -31,7 +31,7 @@ Get DSN from [sentry.io](https://sentry.io/) or from your own instance of [Sentr
 
 **Gradle**
 ```groovy
-compile("io.bootique.logback:bootique-logback-sentry:0.24")
+compile("io.bootique.logback:bootique-logback-sentry:0.25")
 ```
 
 *Note:* **bootique-logback-sentry** is a part of [bootique-bom](https://github.com/bootique/bootique-bom), and version can be 

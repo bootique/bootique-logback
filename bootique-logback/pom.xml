@@ -21,44 +21,22 @@
 			<dependency>
 				<groupId>io.bootique</groupId>
 				<artifactId>bootique</artifactId>
-				<version>${bootique-version}</version>
+				<version>${bootique.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.bootique</groupId>
 				<artifactId>bootique-test</artifactId>
-				<version>${bootique-version}</version>
+				<version>${bootique.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>1.1.9</version>
 			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jul-to-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- Unit test dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.bootique</groupId>
-			<artifactId>bootique-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Compile dependencies -->
 		<dependency>
 			<groupId>io.bootique</groupId>
@@ -74,6 +52,23 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<scope>compile</scope>
+		</dependency>
+
+		<!-- Unit test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.bootique</groupId>
+			<artifactId>bootique-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

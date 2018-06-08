@@ -21,17 +21,17 @@
             <dependency>
                 <groupId>io.bootique</groupId>
                 <artifactId>bootique</artifactId>
-                <version>${bootique-version}</version>
+                <version>${bootique.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.bootique</groupId>
                 <artifactId>bootique-test</artifactId>
-                <version>${bootique-version}</version>
+                <version>${bootique.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.bootique.logback</groupId>
                 <artifactId>bootique-logback</artifactId>
-                <version>${project.version}</version>
+                <version>${bootique.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.sentry</groupId>
@@ -42,23 +42,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Unit test dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.bootique</groupId>
-            <artifactId>bootique-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Compile dependencies -->
         <dependency>
             <groupId>io.bootique</groupId>
@@ -75,7 +58,39 @@
             <artifactId>sentry-logback</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Unit test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.bootique</groupId>
+            <artifactId>bootique-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <!-- Intentionally downgrading version of failsafe...
+                    * 2.21.0 (current standard) causes java.lang.IndexOutOfBoundsException.
+                    * 2.20.1 (this version) fails with NPE on Java 10.
+                    TODO: Update to 2.22.0 after it is released released  -->
+                    <version>2.20.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <!-- Optional profile used to sign artifacts -->
     <profiles>

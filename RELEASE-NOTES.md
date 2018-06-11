@@ -1,3 +1,7 @@
+## 0.26
+
+* #44 Update sentry-logback
+
 ## 0.25
 
 * #41 Support appender-independent default log format

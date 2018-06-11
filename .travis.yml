@@ -1,6 +1,8 @@
 language: java
 
 jobs:
+  allow_failures:
+    - jdk: oraclejdk10
   include:
     - stage: build
       if: branch != master OR type IN (pull_request)

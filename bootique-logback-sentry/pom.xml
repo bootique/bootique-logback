@@ -101,11 +101,10 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <!-- Intentionally downgrading version of failsafe...
-                    * 2.21.0 (current standard) causes java.lang.IndexOutOfBoundsException.
-                    * 2.20.1 (this version) fails with NPE on Java 10.
-                    TODO: Update to 2.22.0 after it is released released  -->
-                    <version>2.20.1</version>
+                    <!--
+                        TODO: Remove this section after parent update
+                    -->
+                    <version>2.22.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

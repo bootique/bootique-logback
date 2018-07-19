@@ -20,9 +20,11 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
+import io.bootique.BQRuntime;
 import io.bootique.logback.unit.LogbackTestFactory;
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
@@ -60,6 +62,66 @@ public class LogbackBQConfigIT {
 		String oneLine = asList(lines).stream().collect(joining("\n"));
 
 		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
+	}
+
+	/**
+	 * Checks multi appender for child Loggers.
+	 * Should log to different files.
+	 *
+	 * It has three different cases:
+	 * 1 - If appender has no name it will be added to root logger and it will write logs from all sources.
+	 * 2 - If child appender has name, child has link to this appender and root has not, this appender will be added to this logger.
+	 * 3 - If appender has name and root logger has reference to this name it will be added to root logger and it will be newer added to child,
+	 * 	eaven if it will have reference to the same appender.
+	 */
+	@Test
+	public void testFileMultiAppender_Root() {
+        LOGGER_STACK.prepareLogDir("target/logs/multi-file");
+		Logger rootLogger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-multi-file-appender.yml");
+        rootLogger.info("info-log-to-file");
+
+        LOGGER_STACK.stop();
+
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/multi-file", "multi-");
+
+		assertEquals(4, logfileContents.size());
+
+		String rootLogLine = "ROOT: info-log-to-file";
+		checkContainsLog(logfileContents, "multi-one.log", rootLogLine);
+		checkContainsLog(logfileContents, "multi-three.log", rootLogLine);
+		checkContainsLog(logfileContents, "multi-noname.log", rootLogLine);
+		assertEquals(0,logfileContents.get("multi-two.log").length);
+	}
+
+	@Test
+	public void testFileMultiAppender_Child() {
+
+		LOGGER_STACK.prepareLogDir("target/logs/multi-file");
+        LOGGER_STACK.newBQRuntime("classpath:io/bootique/logback/test-multi-file-appender.yml");
+
+        org.slf4j.Logger one = LoggerFactory.getLogger("one");
+
+        one.info("info-log-to-file");
+
+        LOGGER_STACK.stop();
+
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/multi-file", "multi-");
+
+		assertEquals(4, logfileContents.size());
+
+		String logLine = "one: info-log-to-file";
+		checkContainsLog(logfileContents, "multi-one.log", logLine);
+		checkContainsLog(logfileContents, "multi-two.log", logLine);
+		checkContainsLog(logfileContents, "multi-three.log", logLine);
+		checkContainsLog(logfileContents, "multi-noname.log", logLine);
+
+	}
+
+	private void checkContainsLog(Map<String, String[]> logfileContents, String fileName, String logLine) {
+		String[] lines = logfileContents.get(fileName);
+		String oneLine = asList(lines).stream().collect(joining("\n"));
+
+		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith(logLine));
 	}
 
 	/**

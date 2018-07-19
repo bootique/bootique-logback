@@ -23,6 +23,7 @@ import ch.qos.logback.classic.Logger;
 import io.bootique.BQRuntime;
 import io.bootique.logback.LogbackModule;
 import io.bootique.test.junit.BQTestFactory;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;

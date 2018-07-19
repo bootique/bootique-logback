@@ -25,12 +25,18 @@ import ch.qos.logback.classic.LoggerContext;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
 @BQConfig
 public class LoggerFactory {
 
 	private LogbackLevel level;
+	private Collection<String> appenderRefs;
 
 	public LoggerFactory() {
+		this.appenderRefs = Collections.emptyList();
 		this.level = LogbackLevel.info;
 	}
 
@@ -39,11 +45,32 @@ public class LoggerFactory {
 		this.level = level;
 	}
 
+	/**
+	 * @deprecated since 0.26 now use {{@link #configLogger(String, LoggerContext, Map)}}
+	 */
+	@Deprecated
 	public void configLogger(String loggerName, LoggerContext context) {
+		configLogger(loggerName, context, Collections.emptyMap());
+	}
+
+	public void configLogger(String loggerName, LoggerContext context, Map<String, LogbackContextFactory.AppenderWithFlag> appendersWithFlag) {
 		Logger logger = context.getLogger(loggerName);
 		logger.setLevel(Level.toLevel(level.name(), Level.INFO));
-		
-		// TODO: appenders
+
+		appendersWithFlag.entrySet().stream().filter(a -> appenderRefs.contains(a.getKey()))
+				.forEach(a -> {
+					logger.addAppender(a.getValue().getAppender());
+					a.getValue().setUsed(true);
+				});
+	}
+
+	public Collection<String> getAppenderRefs() {
+		return appenderRefs;
+	}
+
+	@BQConfigProperty("Collection of references to named appenders")
+	public void setAppenderRefs(Collection<String> appenderRefs) {
+		this.appenderRefs = appenderRefs;
 	}
 
 }

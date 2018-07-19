@@ -100,6 +100,7 @@ public class FileAppenderFactory extends AppenderFactory {
                 ? createSingleFileAppender(encoder, context)
                 : createRollingFileAppender(encoder, context, rollingPolicy);
 
+        appender.setName(getName());
         return asAsync(appender);
     }
 

@@ -19,7 +19,6 @@
 
 package io.bootique.logback;
 
-
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.logback.appender.AppenderFactory;
 import io.bootique.logback.appender.ConsoleAppenderFactory;

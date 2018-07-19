@@ -36,6 +36,7 @@ import io.bootique.config.PolymorphicConfiguration;
 public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     private String logFormat;
+    private String name;
 
     /**
      * @return configured log format
@@ -52,6 +53,20 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
     }
 
     public abstract Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat);
+
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @since 0.26
+     */
+    @BQConfigProperty("Appender name.")
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     protected PatternLayout createLayout(LoggerContext context, String defaultLogFormat) {
         String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;

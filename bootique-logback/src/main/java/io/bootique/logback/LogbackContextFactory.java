@@ -23,6 +23,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
+import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.status.OnConsoleStatusListener;
 import ch.qos.logback.core.util.StatusListenerConfigHelper;
 import io.bootique.annotation.BQConfig;
@@ -37,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @BQConfig
 public class LogbackContextFactory {
@@ -45,6 +47,7 @@ public class LogbackContextFactory {
     private String logFormat;
     private Map<String, LoggerFactory> loggers;
     private Collection<AppenderFactory> appenders;
+    private Collection<String> appenderRefs;
     private boolean useLogbackConfig;
     private boolean debugLogback;
 
@@ -52,6 +55,7 @@ public class LogbackContextFactory {
         this.level = LogbackLevel.info;
         this.loggers = Collections.emptyMap();
         this.appenders = Collections.emptyList();
+        this.appenderRefs = Collections.emptyList();
 
         // TODO: to write unit tests for this flag we are waiting for
         // https://github.com/bootique/bootique/issues/52 to be implemented.
@@ -61,9 +65,7 @@ public class LogbackContextFactory {
     public Logger createRootLogger(ShutdownManager shutdownManager, Map<String, java.util.logging.Level> defaultLevels) {
 
         LoggerContext context = createLogbackContext();
-        shutdownManager.addShutdownHook(() -> {
-            context.stop();
-        });
+        shutdownManager.addShutdownHook(() -> context.stop());
 
         rerouteJUL();
 
@@ -94,13 +96,35 @@ public class LogbackContextFactory {
 
         root.setLevel(Level.toLevel(level.name(), Level.INFO));
 
-        loggers.forEach((name, lf) -> lf.configLogger(name, context));
-
         if (appenders.isEmpty()) {
             setAppenders(Collections.singletonList(new ConsoleAppenderFactory()));
         }
 
-        appenders.forEach(a -> root.addAppender(a.createAppender(context, getLogFormat())));
+        Map<String, AppenderWithFlag> appenderMap =
+                appenders.stream().filter(a -> a.getName() != null && !appenderRefs.contains(a.getName()))
+                .collect(Collectors.toMap(AppenderFactory::getName,
+                        a -> new AppenderWithFlag(a.createAppender(context, getLogFormat()))));
+
+        appenders.forEach(a -> {
+            if (a.getName() == null || appenderRefs.contains(a.getName())) {
+                root.addAppender(a.createAppender(context, getLogFormat()));
+            }
+        });
+
+        Map<String, Appender> appenderToAdd =
+        appenderMap.entrySet().stream()
+                .filter(a -> appenderRefs.contains(a.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, a -> a.getValue().getAppender()));
+
+        loggers.forEach((name, lf) -> lf.configLogger(name, context, appenderMap));
+
+        appenderMap.entrySet().forEach(a -> {
+            if(!(a.getValue().isUsed() || appenderToAdd.containsKey(a.getKey()))) {
+                appenderToAdd.put(a.getKey(), a.getValue().getAppender());
+            }
+        });
+
+        appenderToAdd.values().forEach(root::addAppender);
     }
 
     private String getLogFormat() {
@@ -251,6 +275,18 @@ public class LogbackContextFactory {
         this.logFormat = logFormat;
     }
 
+    public Collection<String> getAppenderRefs() {
+        return appenderRefs;
+    }
+
+    /**
+     * @since 0.26
+     */
+    @BQConfigProperty("Collection of appender names which should be added to root Logger.")
+    public void setAppenderRefs(Collection<String> appenderRefs) {
+        this.appenderRefs = appenderRefs;
+    }
+
     private enum JulLevel {
 
         ALL(LogbackLevel.all),
@@ -271,6 +307,33 @@ public class LogbackContextFactory {
 
         public LogbackLevel getLevel() {
             return level;
+        }
+    }
+
+    static class AppenderWithFlag {
+
+        private Appender appender;
+        private boolean isUsed;
+
+        public AppenderWithFlag(Appender appender) {
+            this.appender = appender;
+            this.isUsed = false;
+        }
+
+        public Appender getAppender() {
+            return appender;
+        }
+
+        public void setAppender(Appender appender) {
+            this.appender = appender;
+        }
+
+        public boolean isUsed() {
+            return isUsed;
+        }
+
+        public void setUsed(boolean used) {
+            isUsed = used;
         }
     }
 }

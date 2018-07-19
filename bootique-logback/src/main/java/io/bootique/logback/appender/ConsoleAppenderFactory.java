@@ -65,7 +65,9 @@ public class ConsoleAppenderFactory extends AppenderFactory {
 
     @Override
     public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
-        return asAsync(createConsoleAppender(context, defaultLogFormat));
+        ConsoleAppender<ILoggingEvent> consoleAppender = createConsoleAppender(context, defaultLogFormat);
+        consoleAppender.setName(getName());
+        return asAsync(consoleAppender);
     }
 
     protected ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext context, String defaultLogFormat) {

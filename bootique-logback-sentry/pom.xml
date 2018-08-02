@@ -96,20 +96,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <!--
-                        TODO: Remove this section after parent update
-                    -->
-                    <version>2.22.0</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
     <!-- Optional profile used to sign artifacts -->
     <profiles>
         <profile>

@@ -1,0 +1,275 @@
+// Licensed to ObjectStyle LLC under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ObjectStyle LLC licenses
+// this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+= Bootique Logback Documentation
+:bootique_version: 0.25
+:bootique_snapshot_version: 1.0.RC1-SNAPSHOT
+
+== Bootique Integration with Logback
+
+As mentioned in Bootique http://bootique.io/docs/0/bootique-docs/index.html#logging[general documentation on logging], standard modules rely on SLF4J loggers that can be easily bridged to various advanced logging frameworks. Same maximally neutral logging approach is reasonable to apply in the user modules as well.
+
+https://github.com/bootique/bootique-logback[`bootique-logback`] is a "drag-and-drop" module integrating Bootique logging with http://logback.qos.ch/[Logback logging framework]. Just like any other module, `bootique-logback` can be enabled by simply adding it to the `pom.xml` dependencies, assuming `autoLoadModules()` is in effect:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.bootique.logback</groupId>
+    <artifactId>bootique-logback</artifactId>
+</dependency>
+----
+
+Without further configuration it would log everything to console using INFO level. Configuration can be provided via YAML, as shown in the following section. Configuration options include per class and package log levels configuration, a choice of appenders, etc.
+
+== Configuration Reference
+
+=== log
+
+[source,yaml]
+----
+log:
+  level: warn
+  loggers:
+    com.foo:
+      level: debug
+    com.example:
+      level: debug
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: target/logback/testRun_Debug.log
+----
+"log" is a root element of the Logback configuration and is bound to a https://github.com/bootique/bootique-logback/blob/master/bootique-logback/src/main/java/io/bootique/logback/LogbackContextFactory.java[`LogbackContextFactory`] object. It supports the following properties:
+
+_"log" Element Property Reference_
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`appenders`
+|console appender
+|A list of appenders to output logs to. See below.
+
+|`level`
+|`INFO`
+|A default logging level. Can be overridden per logger.
+
+|`loggers`
+|none
+|A map of logger factories by logger name. Logger name is a package name (applied recursively) or class name. See below.
+
+|`useLogbackConfig`
+|`false`
+|If true, all other logback settings areignored and the user is expected to provide its own config file per http://logback.qos.ch/manual/configuration.html[Logback documentation]. This is only needed for a few advanced options not directly available via Bootique config.
+|===
+
+=== log.appenders
+
+[source,yaml]
+----
+log:
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: /var/log/myapp.log
+    - type: console
+      logFormat: '%c{20}: %m%n'
+----
+Lists appenders to sends the logs to. If the list is empty, console appender is used with default settings. Currently available appenders are "console" and "file":
+
+_"console" Appender Property Reference_
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`logFormat`
+|`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
+|A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout] for details.
+
+|`target`
+|`stdout`
+|Whether to log to standard output or standard error. Possible values are `stdout` and `stderr`
+|===
+
+_"file" Appender Property Reference_
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`logFormat`
+|`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
+|A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout] for details.
+
+|`file`
+|none
+|A name of a file to send the log to.
+
+|`rollingPolicy`
+|none
+|An object that defines a log rotation policy. Examples are given below.
+|===
+
+There are a few ways log file rotation can be configured for the "file" appender, as defined by the `rollingPolicy`. Out of the box the following Logback policies are supported: http://logback.qos.ch/manual/appenders.html#FixedWindowRollingPolicy[`fixedWindow`], http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy[`time`], `sizeAndTime`.
+
+==== "fixedWindow" Rolling Policy
+
+[source,yaml]
+----
+log:
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: /var/log/myapp.log
+      rollingPolicy:
+        type: fixedWindow
+        fileNamePattern: '/var/log/myapp-%i.log'
+        historySize: 5
+        fileSize: 20
+----
+"fixedWindow" policy rotates the main log file when it reaches a certain size, keeping one or more rotated files.
+
+_"fixedWindow" rolling policy Property Reference_
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`fileNamePattern`
+|none
+|A pattern of rotated file name. Must contain `%i` somewhere in the pattern (replaced by a number during rotation).
+
+|`historySize`
+|none (unlimited)
+|A max number of rotated files to keep.
+
+|`fileSize`
+|none
+|Max file size that causes rotation. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
+|===
+
+==== "time" Rolling Policy
+
+[source,yaml]
+----
+log:
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: /var/log/myapp.log
+      rollingPolicy:
+        type: time
+        fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.log'
+----
+"time" policy rotates the main log file at a fixed time interval determined by the file name pattern.
+
+_"time" rolling policy Property Reference_
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`fileNamePattern`
+|none
+|A pattern of rotated file name. Its value should consist of the name of the file, plus a suitably placed %d conversion specifier. The %d conversion specifier may contain a date-and-time pattern as specified by the `java.text.SimpleDateFormat` class. If the date-and-time pattern is omitted, then the default pattern `yyyy-MM-dd` is assumed. The rollover interval is inferred from the value of the pattern.
+
+|`historySize`
+|none (unlimited)
+|A max number of rotated files to keep.
+
+|`totalSize`
+|none
+|Max size of all log files combined. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
+|===
+
+==== "sizeAndTime" Rolling Policy
+
+[source,yaml]
+----
+log:
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: /var/log/myapp.log
+      rollingPolicy:
+        type: sizeAndTime
+        fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.%i.log'
+        historySize: 5
+        fileSize: 50
+        totalSize: 150
+----
+"sizeAndTime" policy rotates the main log file either at a fixed time interval determined by the file name pattern or when the log file reaches a certain size.
+
+_"sizeAndTime" rolling policy Property Reference_
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`fileNamePattern`
+|none
+|A pattern of rotated file name. Its value should consist of the name of the file, plus a suitably placed %d conversion specifier. The %d conversion specifier may contain a date-and-time pattern as specified by the `java.text.SimpleDateFormat` class. If the date-and-time pattern is omitted, then the default pattern `yyyy-MM-dd` is assumed. The rollover interval is inferred from the value of the pattern.
+
+|`historySize`
+|none (unlimited)
+|A max number of rotated files to keep.
+
+|`totalSize`
+|none
+|Max size of all log files combined. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
+
+|`fileSize`
+|none
+|Max file size that causes rotation. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
+|===
+
+=== log.loggers
+
+[source,yaml]
+----
+log:
+  loggers:
+    com.foo:
+      level: debug
+    com.example:
+      level: debug
+----
+This is a map of https://github.com/bootique/bootique-logback/blob/master/bootique-logback/src/main/java/io/bootique/logback/LoggerFactory.java[logger factories] by logger name. Logger name is either a package name (applied recursively to subpackages and their classes) or a class name. Each LoggerFactory has the following properties:
+
+_Logger Property Reference_
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`level`
+|`INFO`
+|Log level for a particular logger. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+|===
+
+include::sentry.adoc[]

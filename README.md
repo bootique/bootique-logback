@@ -18,8 +18,7 @@
   -->
 
 [![Build Status](https://travis-ci.org/bootique/bootique-logback.svg)](https://travis-ci.org/bootique/bootique-logback)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.bootique.logback/bootique-logback/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.bootique.logback/bootique-logback/)
-
+[![Maven Central](https://img.shields.io/maven-central/v/io.bootique.logback/bootique-logback.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.logback/bootique-logback/)
 
 # bootique-logback
 Provides Logback integration with [Bootique](http://bootique.io). Documentation and configuration reference is 

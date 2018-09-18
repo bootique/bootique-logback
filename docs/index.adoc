@@ -56,7 +56,7 @@ log:
 ----
 "log" is a root element of the Logback configuration and is bound to a https://github.com/bootique/bootique-logback/blob/master/bootique-logback/src/main/java/io/bootique/logback/LogbackContextFactory.java[`LogbackContextFactory`] object. It supports the following properties:
 
-_"log" Element Property Reference_
+."log" Element Property Reference
 [cols=3*,options=header]
 |===
 |Property
@@ -94,7 +94,7 @@ log:
 ----
 Lists appenders to sends the logs to. If the list is empty, console appender is used with default settings. Currently available appenders are "console" and "file":
 
-_"console" Appender Property Reference_
+."console" Appender Property Reference
 [cols=3*,options=header]
 |===
 |Property
@@ -110,7 +110,7 @@ _"console" Appender Property Reference_
 |Whether to log to standard output or standard error. Possible values are `stdout` and `stderr`
 |===
 
-_"file" Appender Property Reference_
+."file" Appender Property Reference
 [cols=3*,options=header]
 |===
 |Property
@@ -149,7 +149,7 @@ log:
 ----
 "fixedWindow" policy rotates the main log file when it reaches a certain size, keeping one or more rotated files.
 
-_"fixedWindow" rolling policy Property Reference_
+."fixedWindow" rolling policy Property Reference
 [cols=3*,options=header]
 |===
 |Property
@@ -184,8 +184,7 @@ log:
 ----
 "time" policy rotates the main log file at a fixed time interval determined by the file name pattern.
 
-_"time" rolling policy Property Reference_
-
+."time" rolling policy Property Reference
 [cols=3*,options=header]
 |===
 |Property
@@ -223,8 +222,7 @@ log:
 ----
 "sizeAndTime" policy rotates the main log file either at a fixed time interval determined by the file name pattern or when the log file reaches a certain size.
 
-_"sizeAndTime" rolling policy Property Reference_
-
+."sizeAndTime" rolling policy Property Reference
 [cols=3*,options=header]
 |===
 |Property
@@ -261,7 +259,7 @@ log:
 ----
 This is a map of https://github.com/bootique/bootique-logback/blob/master/bootique-logback/src/main/java/io/bootique/logback/LoggerFactory.java[logger factories] by logger name. Logger name is either a package name (applied recursively to subpackages and their classes) or a class name. Each LoggerFactory has the following properties:
 
-_Logger Property Reference_
+.Logger Property Reference
 [cols=3*,options=header]
 |===
 |Property

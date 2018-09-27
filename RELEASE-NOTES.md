@@ -1,4 +1,4 @@
-## 0.26
+## 1.0.RC1
 
 * #40 Support loggers.appender to route different loggers to different files
 * #44 Update sentry-logback

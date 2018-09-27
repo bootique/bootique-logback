@@ -1,0 +1,81 @@
+// Licensed to ObjectStyle LLC under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ObjectStyle LLC licenses
+// this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+== Logback Sentry Module
+
+Provides https://docs.sentry.io/clients/java/modules/logback/[Sentry] integration with https://github.com/bootique/bootique-logback[Bootique-Logback].
+
+=== Setup
+
+Get DSN from https://sentry.io/[sentry.io] or from your own instance of https://github.com/getsentry/sentry[Sentry].
+
+=== Add bootique-logback-sentry to your build tool:
+
+*Maven*
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.bootique.logback</groupId>
+    <artifactId>bootique-logback-sentry</artifactId>
+</dependency>
+----
+
+*Gradle*
+
+[source,kotlin]
+----
+compile("io.bootique.logback:bootique-logback-sentry:$bootiqueVersion")
+----
+
+NOTE: *bootique-logback-sentry* is a part of https://github.com/bootique/bootique-bom[bootique-bom], and version can be
+imported from there.
+
+=== Write Configuration
+
+*config.yml:*
+
+[source,yaml]
+----
+log:
+  level: warn
+  appenders:
+    - type: console
+      logFormat: '[%d{dd/MMM/yyyy:HH:mm:ss}] %t %-5p %c{1}: %m%n'
+    - type: sentry
+      dsn: 'your_dsn_here'
+      serverName: aurora
+      environment: development
+      release: 42.0
+      extra:
+        extra1: value1
+        extra2: value2
+        extra3: value3
+      minLevel: error
+      distribution: x86
+      applicationPackages:
+        - "io.bootique.logback"
+        - "com.myapp.package"
+      commonFramesEnabled: true
+      tags:
+        tag1: value1
+        tag2: value2
+----
+
+`SentryClientFactory` can be provided by overriding `SentryClientFactory` bean from `LogbackSentryModule`.
+
+Also DSN can be provided via environment variable https://github.com/getsentry/raven-java/tree/master/raven-logback[SENTRY_DSN].

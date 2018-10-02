@@ -23,6 +23,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.status.OnConsoleStatusListener;
 import ch.qos.logback.core.util.StatusListenerConfigHelper;
@@ -37,7 +38,9 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @BQConfig
@@ -65,7 +68,7 @@ public class LogbackContextFactory {
     public Logger createRootLogger(ShutdownManager shutdownManager, Map<String, java.util.logging.Level> defaultLevels) {
 
         LoggerContext context = createLogbackContext();
-        shutdownManager.addShutdownHook(() -> context.stop());
+        shutdownManager.addShutdownHook(context::stop);
 
         rerouteJUL();
 
@@ -100,31 +103,31 @@ public class LogbackContextFactory {
             setAppenders(Collections.singletonList(new ConsoleAppenderFactory()));
         }
 
-        Map<String, AppenderWithFlag> appenderMap =
-                appenders.stream().filter(a -> a.getName() != null && !appenderRefs.contains(a.getName()))
-                .collect(Collectors.toMap(AppenderFactory::getName,
-                        a -> new AppenderWithFlag(a.createAppender(context, getLogFormat()))));
+        Set<String> uniqueAppenderRefs = new HashSet<>(appenderRefs);
+        loggers.values().forEach(f -> uniqueAppenderRefs.addAll(f.getAppenderRefs()));
+
+        Map<String, Appender<ILoggingEvent>> refAppenderMap = appenders.stream().filter(a -> uniqueAppenderRefs.contains(a.getName()))
+                .collect(Collectors.toMap(AppenderFactory::getName, a -> a.createAppender(context, getLogFormat())));
+
+        loggers.forEach((name, lf) -> lf.configLogger(name, context, refAppenderMap.entrySet().stream()
+                .filter(a -> !appenderRefs.contains(a.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
+
+        addAppendersToRootLogger(context, root, refAppenderMap);
+    }
+
+    private void addAppendersToRootLogger(LoggerContext context, Logger root, Map<String, Appender<ILoggingEvent>> refAppenderMap) {
+        refAppenderMap.forEach((key, value) -> {
+            if (appenderRefs.contains(key)) {
+                root.addAppender(value);
+            }
+        });
 
         appenders.forEach(a -> {
-            if (a.getName() == null || appenderRefs.contains(a.getName())) {
+            if (a.getName() == null) {
                 root.addAppender(a.createAppender(context, getLogFormat()));
             }
         });
-
-        Map<String, Appender> appenderToAdd =
-        appenderMap.entrySet().stream()
-                .filter(a -> appenderRefs.contains(a.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, a -> a.getValue().getAppender()));
-
-        loggers.forEach((name, lf) -> lf.configLogger(name, context, appenderMap));
-
-        appenderMap.entrySet().forEach(a -> {
-            if(!(a.getValue().isUsed() || appenderToAdd.containsKey(a.getKey()))) {
-                appenderToAdd.put(a.getKey(), a.getValue().getAppender());
-            }
-        });
-
-        appenderToAdd.values().forEach(root::addAppender);
     }
 
     private String getLogFormat() {
@@ -280,7 +283,7 @@ public class LogbackContextFactory {
     }
 
     /**
-     * @since 0.26
+     * @since 1.0.RC1
      */
     @BQConfigProperty("Collection of appender names which should be added to root Logger.")
     public void setAppenderRefs(Collection<String> appenderRefs) {
@@ -307,33 +310,6 @@ public class LogbackContextFactory {
 
         public LogbackLevel getLevel() {
             return level;
-        }
-    }
-
-    static class AppenderWithFlag {
-
-        private Appender appender;
-        private boolean isUsed;
-
-        public AppenderWithFlag(Appender appender) {
-            this.appender = appender;
-            this.isUsed = false;
-        }
-
-        public Appender getAppender() {
-            return appender;
-        }
-
-        public void setAppender(Appender appender) {
-            this.appender = appender;
-        }
-
-        public boolean isUsed() {
-            return isUsed;
-        }
-
-        public void setUsed(boolean used) {
-            isUsed = used;
         }
     }
 }

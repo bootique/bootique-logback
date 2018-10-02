@@ -44,13 +44,18 @@ Without further configuration it would log everything to console using INFO leve
 ----
 log:
   level: warn
+  appenderDef:
+  - test
   loggers:
     com.foo:
       level: debug
+      appenderDef:
+      - test
     com.example:
       level: debug
   appenders:
     - type: file
+      name: test
       logFormat: '%c{20}: %m%n'
       file: target/logback/testRun_Debug.log
 ----
@@ -66,6 +71,13 @@ log:
 |`appenders`
 |console appender
 |A list of appenders to output logs to. See below.
+
+|`appenderDef`
+|none
+|A list of references to appenders. If it's added to child logger only, then the
+                         child logger will write logs with this named appender. If the appender added
+                         to the root logger, or to both root and child loggers, or none, the appender
+                         will be attached to root logger only.
 
 |`level`
 |`INFO`
@@ -87,6 +99,7 @@ log:
 log:
   appenders:
     - type: file
+      name: test
       logFormat: '%c{20}: %m%n'
       file: /var/log/myapp.log
     - type: console
@@ -120,6 +133,10 @@ Lists appenders to sends the logs to. If the list is empty, console appender is 
 |`logFormat`
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout] for details.
+
+|`name`
+|none
+|The name of the appender. If it has a name it could be added to the loggers by that name. If it has no name it will be automatically added to the root logger.
 
 |`file`
 |none

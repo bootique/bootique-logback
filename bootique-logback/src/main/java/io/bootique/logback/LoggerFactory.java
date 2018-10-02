@@ -22,6 +22,8 @@ package io.bootique.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
@@ -46,22 +48,22 @@ public class LoggerFactory {
 	}
 
 	/**
-	 * @deprecated since 0.26 now use {{@link #configLogger(String, LoggerContext, Map)}}
+	 * @deprecated since 1.0.RC1 now use {{@link #configLogger(String, LoggerContext, Map)}}
 	 */
 	@Deprecated
 	public void configLogger(String loggerName, LoggerContext context) {
 		configLogger(loggerName, context, Collections.emptyMap());
 	}
 
-	public void configLogger(String loggerName, LoggerContext context, Map<String, LogbackContextFactory.AppenderWithFlag> appendersWithFlag) {
+	/**
+	 * @since 1.0.RC1
+	 */
+	public void configLogger(String loggerName, LoggerContext context, Map<String, Appender<ILoggingEvent>> appenderMap) {
 		Logger logger = context.getLogger(loggerName);
 		logger.setLevel(Level.toLevel(level.name(), Level.INFO));
 
-		appendersWithFlag.entrySet().stream().filter(a -> appenderRefs.contains(a.getKey()))
-				.forEach(a -> {
-					logger.addAppender(a.getValue().getAppender());
-					a.getValue().setUsed(true);
-				});
+		appenderMap.entrySet().stream().filter(a -> appenderRefs.contains(a.getKey()))
+				.forEach(a -> logger.addAppender(a.getValue()));
 	}
 
 	public Collection<String> getAppenderRefs() {

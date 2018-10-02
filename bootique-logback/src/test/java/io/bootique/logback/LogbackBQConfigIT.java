@@ -20,7 +20,6 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
-import io.bootique.BQRuntime;
 import io.bootique.logback.unit.LogbackTestFactory;
 import org.junit.Rule;
 import org.junit.Test;
@@ -84,11 +83,10 @@ public class LogbackBQConfigIT {
 
 		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/multi-file", "multi-");
 
-		assertEquals(4, logfileContents.size());
+		assertEquals(3, logfileContents.size());
 
 		String rootLogLine = "ROOT: info-log-to-file";
 		checkContainsLog(logfileContents, "multi-one.log", rootLogLine);
-		checkContainsLog(logfileContents, "multi-three.log", rootLogLine);
 		checkContainsLog(logfileContents, "multi-noname.log", rootLogLine);
 		assertEquals(0,logfileContents.get("multi-two.log").length);
 	}
@@ -107,14 +105,12 @@ public class LogbackBQConfigIT {
 
 		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/multi-file", "multi-");
 
-		assertEquals(4, logfileContents.size());
+		assertEquals(3, logfileContents.size());
 
 		String logLine = "one: info-log-to-file";
 		checkContainsLog(logfileContents, "multi-one.log", logLine);
 		checkContainsLog(logfileContents, "multi-two.log", logLine);
-		checkContainsLog(logfileContents, "multi-three.log", logLine);
 		checkContainsLog(logfileContents, "multi-noname.log", logLine);
-
 	}
 
 	private void checkContainsLog(Map<String, String[]> logfileContents, String fileName, String logLine) {

@@ -19,7 +19,6 @@
 
 package io.bootique.logback;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.jul.LevelChangePropagator;
@@ -35,30 +34,28 @@ import io.bootique.shutdown.ShutdownManager;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @BQConfig
 public class LogbackContextFactory {
 
-    private LogbackLevel level;
+    private LoggerFactory rootLoggerFactory;
     private String logFormat;
     private Map<String, LoggerFactory> loggers;
     private Collection<AppenderFactory> appenders;
-    private Collection<String> appenderRefs;
     private boolean useLogbackConfig;
     private boolean debugLogback;
 
     public LogbackContextFactory() {
-        this.level = LogbackLevel.info;
+        this.rootLoggerFactory = new LoggerFactory();
         this.loggers = Collections.emptyMap();
         this.appenders = Collections.emptyList();
-        this.appenderRefs = Collections.emptyList();
 
         // TODO: to write unit tests for this flag we are waiting for
         // https://github.com/bootique/bootique/issues/52 to be implemented.
@@ -72,19 +69,15 @@ public class LogbackContextFactory {
 
         rerouteJUL();
 
-        Logger root = context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-
         if (!useLogbackConfig) {
-
             Map<String, LoggerFactory> loggers = mergeLevels(defaultLevels);
-
-            configLogbackContext(context, root, loggers);
+            configLogbackContext(context, loggers);
         }
 
-        return root;
+        return context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
     }
 
-    protected void configLogbackContext(LoggerContext context, Logger root, Map<String, LoggerFactory> loggers) {
+    protected void configLogbackContext(LoggerContext context, Map<String, LoggerFactory> loggers) {
         context.reset();
 
         if (debugLogback) {
@@ -94,46 +87,48 @@ public class LogbackContextFactory {
         LevelChangePropagator propagator = new LevelChangePropagator();
         propagator.setContext(context);
         propagator.setResetJUL(true);
-
         context.addListener(propagator);
-
-        root.setLevel(Level.toLevel(level.name(), Level.INFO));
 
         if (appenders.isEmpty()) {
             setAppenders(Collections.singletonList(new ConsoleAppenderFactory()));
         }
 
         Map<String, Appender<ILoggingEvent>> namedAppenders = createNamedAppenders(context);
+        Collection<Appender<ILoggingEvent>> anonAppenders = createAnonymousAppenders(context);
 
-        loggers.forEach((name, lf) -> lf.configLogger(name, context, namedAppenders.entrySet().stream()
-                .filter(a -> !appenderRefs.contains(a.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
-
-        addAppendersToRootLogger(context, root, namedAppenders);
+        // do not pass anonymous appenders to the child logger, only use them with the root logger
+        loggers.forEach((name, lf) -> lf.configLogger(context.getLogger(name), namedAppenders, Collections.emptyList()));
+        rootLoggerFactory.configLogger(context.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME), namedAppenders, anonAppenders);
     }
 
     private Map<String, Appender<ILoggingEvent>> createNamedAppenders(LoggerContext context) {
-        Set<String> uniqueAppenderRefs = new HashSet<>(appenderRefs);
+
+        Set<String> uniqueAppenderRefs = new HashSet<>(getAppenderRefs());
         loggers.values().forEach(f -> uniqueAppenderRefs.addAll(f.getAppenderRefs()));
 
-        return appenders
-                .stream()
-                .filter(a -> uniqueAppenderRefs.contains(a.getName()))
-                .collect(Collectors.toMap(AppenderFactory::getName, a -> a.createAppender(context, getLogFormat())));
-    }
+        Map<String, Appender<ILoggingEvent>> namedAppenders = new HashMap<>();
 
-    private void addAppendersToRootLogger(LoggerContext context, Logger root, Map<String, Appender<ILoggingEvent>> refAppenderMap) {
-        refAppenderMap.forEach((key, value) -> {
-            if (appenderRefs.contains(key)) {
-                root.addAppender(value);
+        appenders.forEach(a -> {
+            // do not create appenders that are not explicitly referenced anywhere
+            if (a.getName() != null && uniqueAppenderRefs.contains(a.getName())) {
+                namedAppenders.put(a.getName(), a.createAppender(context, getLogFormat()));
             }
         });
+
+        return namedAppenders;
+    }
+
+    private Collection<Appender<ILoggingEvent>> createAnonymousAppenders(LoggerContext context) {
+
+        Collection<Appender<ILoggingEvent>> namedAppenders = new ArrayList<>();
 
         appenders.forEach(a -> {
             if (a.getName() == null) {
-                root.addAppender(a.createAppender(context, getLogFormat()));
+                namedAppenders.add(a.createAppender(context, getLogFormat()));
             }
         });
+
+        return namedAppenders;
     }
 
     private String getLogFormat() {
@@ -220,12 +215,12 @@ public class LogbackContextFactory {
      * @since 0.13
      */
     public LogbackLevel getLevel() {
-        return level;
+        return rootLoggerFactory.getLevel();
     }
 
     @BQConfigProperty("Root log level. Can be overridden by individual loggers. The default is 'info'.")
     public void setLevel(LogbackLevel level) {
-        this.level = level;
+        rootLoggerFactory.setLevel(level);
     }
 
     /**
@@ -285,7 +280,7 @@ public class LogbackContextFactory {
     }
 
     public Collection<String> getAppenderRefs() {
-        return appenderRefs;
+        return rootLoggerFactory.getAppenderRefs();
     }
 
     /**
@@ -293,7 +288,7 @@ public class LogbackContextFactory {
      */
     @BQConfigProperty("Collection of appender names which should be added to root Logger.")
     public void setAppenderRefs(Collection<String> appenderRefs) {
-        this.appenderRefs = appenderRefs;
+        rootLoggerFactory.setAppenderRefs(appenderRefs);
     }
 
     private enum JulLevel {

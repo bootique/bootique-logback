@@ -34,45 +34,60 @@ import java.util.Map;
 @BQConfig
 public class LoggerFactory {
 
-	private LogbackLevel level;
-	private Collection<String> appenderRefs;
+    private LogbackLevel level;
+    private Collection<String> appenderRefs;
 
-	public LoggerFactory() {
-		this.appenderRefs = Collections.emptyList();
-		this.level = LogbackLevel.info;
-	}
+    public LoggerFactory() {
+        this.appenderRefs = Collections.emptyList();
+        this.level = LogbackLevel.info;
+    }
 
-	@BQConfigProperty("Logging level of a given logger and its children.")
-	public void setLevel(LogbackLevel level) {
-		this.level = level;
-	}
+    public LogbackLevel getLevel() {
+        return level;
+    }
 
-	/**
-	 * @deprecated since 1.0.RC1 now use {{@link #configLogger(String, LoggerContext, Map)}}
-	 */
-	@Deprecated
-	public void configLogger(String loggerName, LoggerContext context) {
-		configLogger(loggerName, context, Collections.emptyMap());
-	}
+    @BQConfigProperty("Logging level of a given logger and its children.")
+    public void setLevel(LogbackLevel level) {
+        this.level = level;
+    }
 
-	/**
-	 * @since 1.0.RC1
-	 */
-	public void configLogger(String loggerName, LoggerContext context, Map<String, Appender<ILoggingEvent>> appenderMap) {
-		Logger logger = context.getLogger(loggerName);
-		logger.setLevel(Level.toLevel(level.name(), Level.INFO));
+    /**
+     * @deprecated since 1.0.RC1 now use {{@link #configLogger(Logger, Map, Collection)}}
+     */
+    @Deprecated
+    public void configLogger(String loggerName, LoggerContext context) {
+        configLogger(context.getLogger(loggerName), Collections.emptyMap(), Collections.emptyList());
+    }
 
-		appenderMap.entrySet().stream().filter(a -> appenderRefs.contains(a.getKey()))
-				.forEach(a -> logger.addAppender(a.getValue()));
-	}
+    /**
+     * @since 1.0.RC1
+     */
+    public void configLogger(
+            Logger logger,
+            Map<String, Appender<ILoggingEvent>> namedAppenders,
+            Collection<Appender<ILoggingEvent>> anonymousAppenders) {
 
-	public Collection<String> getAppenderRefs() {
-		return appenderRefs;
-	}
+        logger.setLevel(Level.toLevel(level.name(), Level.INFO));
+        appenderRefs.forEach(ar -> configLoggerAppender(logger, ar, namedAppenders));
+        anonymousAppenders.forEach(logger::addAppender);
+    }
 
-	@BQConfigProperty("Collection of references to named appenders")
-	public void setAppenderRefs(Collection<String> appenderRefs) {
-		this.appenderRefs = appenderRefs;
-	}
+    private void configLoggerAppender(Logger logger, String appenderName, Map<String, Appender<ILoggingEvent>> appenders) {
+        Appender<ILoggingEvent> appender = appenders.get(appenderName);
+        if (appender == null) {
+            throw new IllegalStateException("Invalid appender reference '" + appenderName + "'. No appender configuration exists for this name");
+        }
+
+        logger.addAppender(appender);
+    }
+
+    public Collection<String> getAppenderRefs() {
+        return appenderRefs;
+    }
+
+    @BQConfigProperty("Collection of references to named appenders")
+    public void setAppenderRefs(Collection<String> appenderRefs) {
+        this.appenderRefs = appenderRefs;
+    }
 
 }

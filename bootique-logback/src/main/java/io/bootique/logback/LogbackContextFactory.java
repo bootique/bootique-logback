@@ -103,17 +103,23 @@ public class LogbackContextFactory {
             setAppenders(Collections.singletonList(new ConsoleAppenderFactory()));
         }
 
-        Set<String> uniqueAppenderRefs = new HashSet<>(appenderRefs);
-        loggers.values().forEach(f -> uniqueAppenderRefs.addAll(f.getAppenderRefs()));
+        Map<String, Appender<ILoggingEvent>> namedAppenders = createNamedAppenders(context);
 
-        Map<String, Appender<ILoggingEvent>> refAppenderMap = appenders.stream().filter(a -> uniqueAppenderRefs.contains(a.getName()))
-                .collect(Collectors.toMap(AppenderFactory::getName, a -> a.createAppender(context, getLogFormat())));
-
-        loggers.forEach((name, lf) -> lf.configLogger(name, context, refAppenderMap.entrySet().stream()
+        loggers.forEach((name, lf) -> lf.configLogger(name, context, namedAppenders.entrySet().stream()
                 .filter(a -> !appenderRefs.contains(a.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
 
-        addAppendersToRootLogger(context, root, refAppenderMap);
+        addAppendersToRootLogger(context, root, namedAppenders);
+    }
+
+    private Map<String, Appender<ILoggingEvent>> createNamedAppenders(LoggerContext context) {
+        Set<String> uniqueAppenderRefs = new HashSet<>(appenderRefs);
+        loggers.values().forEach(f -> uniqueAppenderRefs.addAll(f.getAppenderRefs()));
+
+        return appenders
+                .stream()
+                .filter(a -> uniqueAppenderRefs.contains(a.getName()))
+                .collect(Collectors.toMap(AppenderFactory::getName, a -> a.createAppender(context, getLogFormat())));
     }
 
     private void addAppendersToRootLogger(LoggerContext context, Logger root, Map<String, Appender<ILoggingEvent>> refAppenderMap) {
@@ -132,6 +138,17 @@ public class LogbackContextFactory {
 
     private String getLogFormat() {
         return logFormat != null ? logFormat : "%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx";
+    }
+
+    /**
+     * @param logFormat Log format specification used by all appenders unless redefined for a given appender.
+     * @since 0.25
+     */
+    @BQConfigProperty("Log format specification used by child appenders unless redefined at the appender level, or not " +
+            "relevant for a given type of appender. The spec is " +
+            "compatible with Logback framework. The default is '%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx'")
+    public void setLogFormat(String logFormat) {
+        this.logFormat = logFormat;
     }
 
     /**
@@ -265,17 +282,6 @@ public class LogbackContextFactory {
             " with Logback configuration issues.")
     public void setDebugLogback(boolean debugLogback) {
         this.debugLogback = debugLogback;
-    }
-
-    /**
-     * @param logFormat Log format specification used by all appenders unless redefined for a given appender.
-     * @since 0.25
-     */
-    @BQConfigProperty("Log format specification used by child appenders unless redefined at the appender level, or not " +
-            "relevant for a given type of appender. The spec is " +
-            "compatible with Logback framework. The default is '%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx'")
-    public void setLogFormat(String logFormat) {
-        this.logFormat = logFormat;
     }
 
     public Collection<String> getAppenderRefs() {

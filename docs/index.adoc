@@ -44,13 +44,13 @@ Without further configuration it would log everything to console using INFO leve
 ----
 log:
   level: warn
-  appenderDef:
-  - test
+  appenderRefs:
+    - test
   loggers:
     com.foo:
       level: debug
-      appenderDef:
-      - test
+      appenderRefs:
+        - test
     com.example:
       level: debug
   appenders:
@@ -72,7 +72,7 @@ log:
 |console appender
 |A list of appenders to output logs to. See below.
 
-|`appenderDef`
+|`appenderRefs`
 |none
 |A list of references to appenders. If it's added to child logger only, then the
                          child logger will write logs with this named appender. If the appender added
@@ -80,7 +80,7 @@ log:
                          will be attached to root logger only.
 
 |`level`
-|`INFO`
+|`info`
 |A default logging level. Can be overridden per logger.
 
 |`loggers`
@@ -89,7 +89,7 @@ log:
 
 |`useLogbackConfig`
 |`false`
-|If true, all other logback settings areignored and the user is expected to provide its own config file per http://logback.qos.ch/manual/configuration.html[Logback documentation]. This is only needed for a few advanced options not directly available via Bootique config.
+|If true, all other logback settings are ignored and the user is expected to provide its own config file per http://logback.qos.ch/manual/configuration.html[Logback documentation]. This is only needed for a few advanced options not directly available via Bootique config.
 |===
 
 === log.appenders
@@ -284,8 +284,8 @@ This is a map of https://github.com/bootique/bootique-logback/blob/master/bootiq
 |Description
 
 |`level`
-|`INFO`
-|Log level for a particular logger. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+|`info`
+|Log level for a particular logger. Can be `off`, `error`, `warn`, `info`, `debug`, `trace`, `all`
 |===
 
 include::sentry.adoc[]

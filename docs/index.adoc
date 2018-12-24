@@ -142,6 +142,10 @@ Lists appenders to sends the logs to. If the list is empty, console appender is 
 |none
 |A name of a file to send the log to.
 
+|`append`
+|true
+|If true, events are appended at the end of an existing file. Otherwise, if append is false, any existing file is truncated. The append option is set to true by default.
+
 |`rollingPolicy`
 |none
 |An object that defines a log rotation policy. Examples are given below.

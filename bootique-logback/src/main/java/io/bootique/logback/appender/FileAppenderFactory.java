@@ -47,6 +47,7 @@ public class FileAppenderFactory extends AppenderFactory {
 
     private String file;
     private RollingPolicyFactory rollingPolicy;
+    private boolean append = true;
 
     /**
      * @return name of the log file.
@@ -90,6 +91,24 @@ public class FileAppenderFactory extends AppenderFactory {
         this.rollingPolicy = rollingPolicy;
     }
 
+    /**
+     * @return append flag for the current log file.
+     * @since 1.0.RC2-SNAPSHOT
+     */
+    public boolean isAppend() {
+        return append;
+    }
+
+    /**
+     * Sets a append flag for the current log file.
+     *
+     * @param append a flag for the current log file.
+     */
+    @BQConfigProperty
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
+
     @Override
     public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
 
@@ -111,6 +130,7 @@ public class FileAppenderFactory extends AppenderFactory {
 
         appender.setContext(context);
         appender.setEncoder(encoder);
+        appender.setAppend(append);
         appender.start();
 
         return appender;
@@ -124,6 +144,7 @@ public class FileAppenderFactory extends AppenderFactory {
         appender.setFile(file);
         appender.setContext(context);
         appender.setEncoder(encoder);
+        appender.setAppend(append);
         // Setup rolling policy
         RollingPolicy policy = rollingPolicy.createRollingPolicy(context);
         appender.setRollingPolicy(policy);

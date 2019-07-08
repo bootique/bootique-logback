@@ -58,8 +58,7 @@ public class LogbackModule extends ConfigModule {
                              ShutdownManager shutdownManager,
                              @LogLevels Map<String, java.util.logging.Level> defaultLevels) {
 
-        return configFactory
-                .config(LogbackContextFactory.class, configPrefix)
+        return config(LogbackContextFactory.class, configFactory)
                 .createRootLogger(shutdownManager, defaultLevels);
     }
 

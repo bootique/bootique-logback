@@ -16,8 +16,8 @@
 // under the License.
 
 = Bootique Logback Documentation
-:bootique_version: 0.25
-:bootique_snapshot_version: 1.0.RC1-SNAPSHOT
+
+:bootique_version: 1.0
 :toc:
 
 == Bootique Integration with Logback

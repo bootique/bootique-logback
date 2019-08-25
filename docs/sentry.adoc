@@ -21,7 +21,7 @@ Provides https://docs.sentry.io/clients/java/modules/logback/[Sentry] integratio
 
 === Setup
 
-Get DSN from https://sentry.io/[sentry.io] or from your own instance of https://github.com/getsentry/sentry[Sentry].
+Get DSN (Data Source Name) from https://sentry.io/[sentry.io] or from your own instance of https://github.com/getsentry/sentry[Sentry].
 
 === Add bootique-logback-sentry to your build tool:
 
@@ -37,9 +37,9 @@ Get DSN from https://sentry.io/[sentry.io] or from your own instance of https://
 
 *Gradle*
 
-[source,kotlin]
+[source,kotlin,subs="attributes"]
 ----
-compile("io.bootique.logback:bootique-logback-sentry:$bootiqueVersion")
+compile("io.bootique.logback:bootique-logback-sentry:{bootique_version}")
 ----
 
 NOTE: *bootique-logback-sentry* is a part of https://github.com/bootique/bootique-bom[bootique-bom], and version can be

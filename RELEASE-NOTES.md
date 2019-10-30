@@ -1,6 +1,6 @@
 ## 1.1
 
-#48 'append' flag in appender config
+* #48 'append' flag in appender config
 
 ## 1.0.RC1
 

@@ -63,6 +63,28 @@ public class LogbackBQConfigIT {
 		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
 	}
 
+	@Test
+	public void testFileAppenderWithFlag() {
+		LOGGER_STACK.prepareLogDir("target/logs/rotate-flag");
+		Logger logger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appender-with-flag.yml");
+		logger.info("info-log-to-file");
+
+		// must stop to ensure logs are flushed...
+		LOGGER_STACK.stop();
+
+		Logger logger1 = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appender-with-flag.yml");
+		logger1.info("info-log-to-file");
+		LOGGER_STACK.stop();
+
+		Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate-flag", "logfile1.log");
+		assertEquals(1, logfileContents.size());
+		String[] lines = logfileContents.get("logfile1.log");
+		assertEquals(2, lines.length);
+		String oneLine = asList(lines).stream().collect(joining("\n"));
+
+		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
+	}
+
 	/**
 	 * Checks multi appender for child Loggers.
 	 * Should log to different files.

@@ -93,7 +93,7 @@ public class FileAppenderFactory extends AppenderFactory {
 
     /**
      * @return append flag for the current log file.
-     * @since 1.0.RC2-SNAPSHOT
+     * @since 1.1
      */
     public boolean isAppend() {
         return append;
@@ -103,6 +103,7 @@ public class FileAppenderFactory extends AppenderFactory {
      * Sets a append flag for the current log file.
      *
      * @param append a flag for the current log file.
+     * @since 1.1
      */
     @BQConfigProperty
     public void setAppend(boolean append) {

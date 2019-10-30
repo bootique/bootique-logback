@@ -1,3 +1,7 @@
+## 1.1
+
+#48 'append' flag in appender config
+
 ## 1.0.RC1
 
 * #40 Support loggers.appender to route different loggers to different files

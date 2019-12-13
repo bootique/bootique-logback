@@ -19,8 +19,8 @@
 
 package io.bootique.logback.sentry;
 
-import com.google.inject.Module;
 import io.bootique.BQModuleProvider;
+import io.bootique.di.BQModule;
 import io.bootique.logback.LogbackModuleProvider;
 
 import java.util.Collection;
@@ -35,7 +35,7 @@ import java.util.Collections;
 public class LogbackSentryModuleProvider implements BQModuleProvider {
 
     @Override
-    public Module module() {
+    public BQModule module() {
         return new LogbackSentryModule();
     }
 

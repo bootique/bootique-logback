@@ -19,8 +19,8 @@
 
 package io.bootique.logback.sentry;
 
-import com.google.inject.Binder;
-import com.google.inject.Module;
+import io.bootique.di.Binder;
+import io.bootique.di.BQModule;
 
 /**
  * Loads configuration for {@link io.sentry.Sentry}.
@@ -28,7 +28,7 @@ import com.google.inject.Module;
  * @author Ibragimov Ruslan
  * @since 0.16
  */
-public class LogbackSentryModule implements Module {
+public class LogbackSentryModule implements BQModule {
 
     @Override
     public void configure(Binder binder) {

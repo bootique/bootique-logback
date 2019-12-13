@@ -20,16 +20,16 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
-import com.google.inject.Binder;
-import com.google.inject.Inject;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import io.bootique.ConfigModule;
 import io.bootique.annotation.LogLevels;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.di.Binder;
+import io.bootique.di.Provides;
 import io.bootique.shutdown.ShutdownManager;
 
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 public class LogbackModule extends ConfigModule {
 
@@ -49,7 +49,7 @@ public class LogbackModule extends ConfigModule {
     public void configure(Binder binder) {
         // Binding a dummy class to trigger eager init of Logback as
         // @Provides below can not be invoked eagerly..
-        binder.bind(LogInitTrigger.class).asEagerSingleton();
+        binder.bind(LogInitTrigger.class).initOnStartup();
     }
 
     @Singleton

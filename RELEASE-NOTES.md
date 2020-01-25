@@ -1,5 +1,6 @@
 ## 2.0
 
+* Migrated from Guice to "bootique-di"
 * #49 Upgrade Logback from v1.1.9 to 1.2.3
 
 ## 1.1

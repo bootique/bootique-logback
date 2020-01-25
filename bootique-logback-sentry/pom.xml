@@ -55,7 +55,17 @@
             <dependency>
                 <groupId>io.sentry</groupId>
                 <artifactId>sentry-logback</artifactId>
-                <version>1.7.5</version>
+                <version>${logback.sentry.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

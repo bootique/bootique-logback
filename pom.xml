@@ -45,6 +45,8 @@
 
 	<properties>
 		<bootique.version>${project.version}</bootique.version>
+		<logback.version>1.2.3</logback.version>
+		<logback.sentry.version>1.7.29</logback.sentry.version>
 	</properties>
 
 	<scm>

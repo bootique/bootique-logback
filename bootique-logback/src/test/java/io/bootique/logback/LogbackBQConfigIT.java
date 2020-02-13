@@ -409,7 +409,7 @@ public class LogbackBQConfigIT {
 		int index = 1;
 		for (int i = 1; i <= attempts; i++) {
 			for (int j = 0; j < rowsCount; j++) {
-				logger.info(String.format(CONTENT_VALUE_FORMAT, String.valueOf(index)));
+				logger.warn(String.format(CONTENT_VALUE_FORMAT, index));
 				index++;
 			}
 			Thread.sleep(period+1);

@@ -14,7 +14,7 @@
 # limitations under the License.
 
 log:
-  level: debug
+  level: warn
   appenders:
     - type: file
       logFormat: '%c{20}: %m%n'

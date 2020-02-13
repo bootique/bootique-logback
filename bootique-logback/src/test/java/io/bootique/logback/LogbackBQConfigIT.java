@@ -26,10 +26,10 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -58,7 +58,7 @@ public class LogbackBQConfigIT {
 
 		assertEquals(1, logfileContents.size());
 		String[] lines = logfileContents.get("logfile1.log");
-		String oneLine = asList(lines).stream().collect(joining("\n"));
+		String oneLine = String.join("\n", lines);
 
 		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
 	}
@@ -80,7 +80,7 @@ public class LogbackBQConfigIT {
 		assertEquals(1, logfileContents.size());
 		String[] lines = logfileContents.get("logfile1.log");
 		assertEquals(2, lines.length);
-		String oneLine = asList(lines).stream().collect(joining("\n"));
+		String oneLine = String.join("\n", asList(lines));
 
 		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
 	}
@@ -137,7 +137,7 @@ public class LogbackBQConfigIT {
 
 	private void checkContainsLog(Map<String, String[]> logfileContents, String fileName, String logLine) {
 		String[] lines = logfileContents.get(fileName);
-		String oneLine = asList(lines).stream().collect(joining("\n"));
+		String oneLine = String.join("\n", asList(lines));
 
 		assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith(logLine));
 	}
@@ -152,9 +152,6 @@ public class LogbackBQConfigIT {
 	 * Expected following results:
 	 * 	- 2 archived files + 1 current log-file;
 	 * 	- 3 total rows in all log file
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_By_Time() throws InterruptedException, IOException {
@@ -172,7 +169,7 @@ public class LogbackBQConfigIT {
 		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
 		// Check total rows number in all log files
-		assertEquals(3, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+		assertEquals(3, logfileContents.values().stream().flatMap(Arrays::stream)
 				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
@@ -184,9 +181,6 @@ public class LogbackBQConfigIT {
 	 * 3 seconds of total history.
 	 *
 	 * As result, 2 archived files + 1 current log-file are expected; 4 rows are expected in all log files
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_By_Time_And_History() throws InterruptedException, IOException {
@@ -205,7 +199,7 @@ public class LogbackBQConfigIT {
 		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
 		// Check total rows number in all log files
-		assertEquals(3, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+		assertEquals(3, logfileContents.values().stream().flatMap(Arrays::stream)
 				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
@@ -217,9 +211,6 @@ public class LogbackBQConfigIT {
 	 * 5 seconds of total history and 50 bytes of total files size
 	 *
 	 * As result, 3 archived files (63 bytes) + 1 current log-file are expected; 4 rows are expected in all log files
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_By_Time_And_History_And_TotalSize() throws InterruptedException, IOException {
@@ -238,7 +229,7 @@ public class LogbackBQConfigIT {
 		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
 		// Check total rows number in all log files
-		assertEquals(4, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+		assertEquals(4, logfileContents.values().stream().flatMap(Arrays::stream)
 				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
@@ -253,9 +244,6 @@ public class LogbackBQConfigIT {
 	 * 	- 2 archived files + 1 current log-file;
 	 * 	- More than 1 row in each log-file
 	 * 	- 20 total rows in all log file
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_By_Size() throws InterruptedException, IOException {
@@ -273,7 +261,7 @@ public class LogbackBQConfigIT {
 		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
 		// Check total rows number in all log files
-		assertEquals(6, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+		assertEquals(6, logfileContents.values().stream().flatMap(Arrays::stream)
 				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
@@ -285,9 +273,6 @@ public class LogbackBQConfigIT {
 	 * 5 seconds of total history and size of each file is 40 bytes.
 	 *
 	 * As result, 2 archived files + 1 current log-file are expected; 6 rows are expected in all log files
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_By_Size_And_History() throws InterruptedException, IOException {
@@ -306,7 +291,7 @@ public class LogbackBQConfigIT {
 		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
 		// Check total rows number in all log files
-		assertEquals(6, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+		assertEquals(6, logfileContents.values().stream().flatMap(Arrays::stream)
 				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
@@ -318,9 +303,6 @@ public class LogbackBQConfigIT {
 	 * 5 seconds of total history; 50 bytes in each file; 150 bytes of total files size
 	 *
 	 * As result, 3 archived files (135 bytes) + 1 current log-file are expected; 8 rows are expected in all log files
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_By_Size_And_History_And_TotalSize() throws InterruptedException, IOException {
@@ -339,7 +321,7 @@ public class LogbackBQConfigIT {
 		logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
 
 		// Check total rows number in all log files
-		assertEquals(8, logfileContents.values().stream().flatMap(array -> asList(array).stream())
+		assertEquals(8, logfileContents.values().stream().flatMap(Arrays::stream)
 				.filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
 	}
 
@@ -351,9 +333,6 @@ public class LogbackBQConfigIT {
 	 * 2 files of total history; 20 bytes in each file;
 	 *
 	 * As result, 2 archived files + 1 current log-file are expected;
-	 *
-	 * @throws InterruptedException
-	 * @throws IOException
 	 */
 	@Test
 	public void testFileAppender_Rotate_Fixed() throws InterruptedException, IOException {
@@ -393,7 +372,7 @@ public class LogbackBQConfigIT {
 	}
 
 	private Map<String, String[]> rotate(String logDir, String configFile, int attempts, int period, int rowsCount)
-			throws InterruptedException, IOException {
+			throws InterruptedException {
 		LOGGER_STACK.prepareLogDir(logDir);
 
 		Logger logger = LOGGER_STACK.newRootLogger(configFile);
@@ -405,7 +384,7 @@ public class LogbackBQConfigIT {
 		return LOGGER_STACK.loglines(logDir, LOGFILE_PREFIX);
 	}
 
-	private void printLog(Logger logger, int attempts, int period, int rowsCount) throws InterruptedException, IOException {
+	private void printLog(Logger logger, int attempts, int period, int rowsCount) throws InterruptedException {
 		int index = 1;
 		for (int i = 1; i <= attempts; i++) {
 			for (int j = 0; j < rowsCount; j++) {

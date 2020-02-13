@@ -121,6 +121,7 @@ public class FileAppenderFactory extends AppenderFactory {
                 : createRollingFileAppender(encoder, context, rollingPolicy);
 
         appender.setName(getName());
+        createFilters(appender);
         return asAsync(appender);
     }
 

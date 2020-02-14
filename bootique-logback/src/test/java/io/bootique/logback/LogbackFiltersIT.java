@@ -55,7 +55,7 @@ public class LogbackFiltersIT {
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("threshold.log");
-        String oneLine = asList(lines).stream().collect(joining("\n"));
+        String oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: warn-log-to-file"));
     }
@@ -79,7 +79,7 @@ public class LogbackFiltersIT {
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("level.log");
-        String oneLine = asList(lines).stream().collect(joining("\n"));
+        String oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
     }
@@ -104,7 +104,7 @@ public class LogbackFiltersIT {
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("filter.log");
-        String oneLine = asList(lines).stream().collect(joining("\n"));
+        String oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: warn-log-to-file"));
     }
@@ -129,7 +129,7 @@ public class LogbackFiltersIT {
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("threshold.log");
-        String oneLine = asList(lines).stream().collect(joining("\n"));
+        String oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: warn-log-to-file"));
 
@@ -137,7 +137,7 @@ public class LogbackFiltersIT {
 
         assertEquals(1, logfileContents.size());
         lines = logfileContents.get("level.log");
-        oneLine = asList(lines).stream().collect(joining("\n"));
+        oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
     }

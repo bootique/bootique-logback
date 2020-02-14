@@ -47,9 +47,9 @@ public class LevelFilterFactory extends FilterFactory {
 
     /**
      * @since 2.0
-     * @param onMatch
+     * @param onMatch on match event policy ("accept", "deny" or "neutral")
      */
-    @BQConfigProperty
+    @BQConfigProperty("on match event policy (\"accept\", \"deny\" or \"neutral\")")
     public void setOnMatch(String onMatch) {
         this.onMatch = onMatch;
     }
@@ -60,18 +60,16 @@ public class LevelFilterFactory extends FilterFactory {
 
     /**
      * @since 2.0
-     * @param onMismatch
+     * @param onMismatch on mismatch event policy ("accept", "deny" or "neutral")
      */
-    @BQConfigProperty
+    @BQConfigProperty("on mismatch event policy (\"accept\", \"deny\" or \"neutral\")")
     public void setOnMismatch(String onMismatch) {
         this.onMismatch = onMismatch;
     }
 
     @Override
     public Filter<ILoggingEvent> createFilter() {
-        LevelFilter levelFilter = createLevelFilter();
-
-        return levelFilter;
+        return createLevelFilter();
     }
 
     protected LevelFilter createLevelFilter() {
@@ -88,12 +86,12 @@ public class LevelFilterFactory extends FilterFactory {
     }
 
     public FilterReply getFilterReply(String string) {
-        if (FilterReply.DENY.toString().equals(string) ) {
-            return FilterReply.DENY;
-        } else if (FilterReply.ACCEPT.toString().equals(string)) {
-            return FilterReply.ACCEPT;
-        } else {
-            return FilterReply.NEUTRAL;
+        string = string.toUpperCase();
+        for(FilterReply reply : FilterReply.values()) {
+            if(reply.toString().equals(string)) {
+                return reply;
+            }
         }
+        return FilterReply.NEUTRAL;
     }
 }

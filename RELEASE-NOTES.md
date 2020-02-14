@@ -1,8 +1,8 @@
 ## 2.0
 
-* #50 Logback "filters" in Bootique configurations
 * Migrated from Guice to "bootique-di"
 * #49 Upgrade Logback from v1.1.9 to 1.2.3
+* #50 Logback "filters" in Bootique configurations
 
 ## 1.1
 

@@ -37,8 +37,7 @@ public class ThresholdFilterFactory extends FilterFactory {
 
     @Override
     public Filter<ILoggingEvent> createFilter() {
-        ThresholdFilter thresholdFilter = createThresholdFilter();
-        return thresholdFilter;
+        return createThresholdFilter();
     }
 
     protected ThresholdFilter createThresholdFilter() {

@@ -78,27 +78,18 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     /**
      * @since 2.0
-     * @param filters
+     * @param filters configuration of Logabck filters
      */
-    @BQConfigProperty
+    @BQConfigProperty("Collection of Logback filters")
     public void setFilters(Collection<FilterFactory> filters) {
         this.filters = filters;
     }
 
     protected Appender<ILoggingEvent> createFilters(Appender<ILoggingEvent> appender) {
-
         if (filters != null) {
-            if (!filters.isEmpty()) {
-                filters.forEach(filter -> {
-                    if (filter != null) {
-                        appender.addFilter(filter.createFilter());
-                    }
-                });
-            }
+            filters.forEach(filter -> appender.addFilter(filter.createFilter()));
         }
-
         return appender;
-
     }
 
     protected PatternLayout createLayout(LoggerContext context, String defaultLogFormat) {

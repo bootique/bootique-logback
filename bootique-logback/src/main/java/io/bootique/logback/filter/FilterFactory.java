@@ -30,7 +30,7 @@ import io.bootique.config.PolymorphicConfiguration;
  * @since 2.0
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@BQConfig
+@BQConfig("Logging filter configuration")
 public abstract class FilterFactory implements PolymorphicConfiguration {
 
     private String type;
@@ -41,10 +41,9 @@ public abstract class FilterFactory implements PolymorphicConfiguration {
     }
 
     /**
-     * @since 2.0
-     * @param type
+     * @param type filter type
      */
-    @BQConfigProperty
+    @BQConfigProperty("filter type, available types: \"level\", \"threshold\".")
     public void setType(String type) {
         this.type = type;
     }
@@ -54,10 +53,9 @@ public abstract class FilterFactory implements PolymorphicConfiguration {
     }
 
     /**
-     * @since 2.0
-     * @param level
+     * @param level of logging
      */
-    @BQConfigProperty
+    @BQConfigProperty("logging level to filter")
     public void setLevel(String level) {
         this.level = level;
     }

@@ -30,6 +30,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import io.bootique.config.PolymorphicConfiguration;
+import io.bootique.logback.filter.FilterFactory;
+
+import java.util.Collection;
 
 @BQConfig("Appender of a given type.")
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
@@ -37,6 +40,8 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     private String logFormat;
     private String name;
+
+    private Collection<FilterFactory> filters;
 
     /**
      * @return configured log format
@@ -67,6 +72,34 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         this.name = name;
     }
 
+    public Collection<FilterFactory> getFilters() {
+        return filters;
+    }
+
+    /**
+     * @since 2.0
+     * @param filters
+     */
+    @BQConfigProperty
+    public void setFilters(Collection<FilterFactory> filters) {
+        this.filters = filters;
+    }
+
+    protected Appender<ILoggingEvent> createFilters(Appender<ILoggingEvent> appender) {
+
+        if (filters != null) {
+            if (!filters.isEmpty()) {
+                filters.forEach(filter -> {
+                    if (filter != null) {
+                        appender.addFilter(filter.createFilter());
+                    }
+                });
+            }
+        }
+
+        return appender;
+
+    }
 
     protected PatternLayout createLayout(LoggerContext context, String defaultLogFormat) {
         String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;

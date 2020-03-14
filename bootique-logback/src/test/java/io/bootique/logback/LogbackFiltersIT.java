@@ -27,14 +27,13 @@ import org.junit.Test;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LogbackFiltersIT {
 
     @Rule
-    public LogbackTestFactory LOGGER_STACK = new LogbackTestFactory();
+    public LogbackTestFactory testFactory = new LogbackTestFactory();
 
     /**
      * Checks file appender with ThresholdFilter
@@ -42,16 +41,16 @@ public class LogbackFiltersIT {
     @Test
     public void testFileAppenderThresholdFilter() {
 
-        LOGGER_STACK.prepareLogDir("target/logs/rotate");
-        Logger logger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appender-filter-threshold.yml");
+        testFactory.prepareLogDir("target/logs/rotate");
+        Logger logger = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appender-filter-threshold.yml");
         logger.debug("debug-log-to-file");
         logger.info("info-log-to-file");
         logger.warn("warn-log-to-file");
 
         // must stop to ensure logs are flushed...
-        LOGGER_STACK.stop();
+        testFactory.stop();
 
-        Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "threshold.log");
+        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/rotate", "threshold.log");
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("threshold.log");
@@ -66,16 +65,16 @@ public class LogbackFiltersIT {
     @Test
     public void testFileAppenderLevelFilter() {
 
-        LOGGER_STACK.prepareLogDir("target/logs/rotate");
-        Logger logger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appender-filter-level.yml");
+        testFactory.prepareLogDir("target/logs/rotate");
+        Logger logger = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appender-filter-level.yml");
         logger.debug("debug-log-to-file");
         logger.info("info-log-to-file");
         logger.warn("warn-log-to-file");
 
         // must stop to ensure logs are flushed...
-        LOGGER_STACK.stop();
+        testFactory.stop();
 
-        Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "level.log");
+        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/rotate", "level.log");
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("level.log");
@@ -91,16 +90,16 @@ public class LogbackFiltersIT {
     @Test
     public void testFileAppenderLevelFilterAndThresholdFilter() {
 
-        LOGGER_STACK.prepareLogDir("target/logs/rotate");
-        Logger logger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appender-filter-level-threshold.yml");
+        testFactory.prepareLogDir("target/logs/rotate");
+        Logger logger = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appender-filter-level-threshold.yml");
         logger.debug("debug-log-to-file");
         logger.info("info-log-to-file");
         logger.warn("warn-log-to-file");
 
         // must stop to ensure logs are flushed...
-        LOGGER_STACK.stop();
+        testFactory.stop();
 
-        Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "filter.log");
+        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/rotate", "filter.log");
 
         assertEquals(1, logfileContents.size());
         String[] lines = logfileContents.get("filter.log");
@@ -116,27 +115,27 @@ public class LogbackFiltersIT {
     @Test
     public void testFileAppendersLevelFilterAndThresholdFilter() {
 
-        LOGGER_STACK.prepareLogDir("target/logs/rotate");
-        Logger logger = LOGGER_STACK.newRootLogger("classpath:io/bootique/logback/test-file-appenders-filter-level-threshold.yml");
+        testFactory.prepareLogDir("target/logs/rotate");
+        Logger logger = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appenders-filter-level-threshold.yml");
         logger.debug("debug-log-to-file");
         logger.info("info-log-to-file");
         logger.warn("warn-log-to-file");
 
         // must stop to ensure logs are flushed...
-        LOGGER_STACK.stop();
+        testFactory.stop();
 
-        Map<String, String[]> logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "threshold.log");
+        Map<String, String[]> thresholdLogContents = testFactory.loglines("target/logs/rotate", "threshold.log");
 
-        assertEquals(1, logfileContents.size());
-        String[] lines = logfileContents.get("threshold.log");
+        assertEquals(1, thresholdLogContents.size());
+        String[] lines = thresholdLogContents.get("threshold.log");
         String oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: warn-log-to-file"));
 
-        logfileContents = LOGGER_STACK.loglines("target/logs/rotate", "level.log");
+        Map<String, String[]> levelLogContents = testFactory.loglines("target/logs/rotate", "level.log");
 
-        assertEquals(1, logfileContents.size());
-        lines = logfileContents.get("level.log");
+        assertEquals(1, levelLogContents.size());
+        lines = levelLogContents.get("level.log");
         oneLine = String.join("\n", asList(lines));
 
         assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));

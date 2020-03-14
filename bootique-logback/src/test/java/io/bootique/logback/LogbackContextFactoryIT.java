@@ -35,12 +35,12 @@ import static org.junit.Assert.assertTrue;
 public class LogbackContextFactoryIT {
 
     @Rule
-    public LogbackTestFactory LOGGER_STACK = new LogbackTestFactory();
+    public LogbackTestFactory testFactory = new LogbackTestFactory();
 
     @Test
     public void testInitFromConfig() {
 
-        ConfigurationFactory configFactory = LOGGER_STACK
+        ConfigurationFactory configFactory = testFactory
                 .newBQRuntime("classpath:io/bootique/logback/test-multi-appender.yml")
                 .getInstance(ConfigurationFactory.class);
 

@@ -154,16 +154,16 @@ Lists appenders to sends the logs to. If the list is empty, console appender is 
 
 |`rollingPolicy`
 |none
-|An object that defines a log rotation policy. Examples are given <<Rolling Policy,below>>.
+|An object that defines a log rotation policy. Examples are given <<log.appenders.rollingPolicy,below>>.
 
 |`filters`
 |none
-|A collection of filters to use with this appender. See <<Filters, filters>> section.
+|A collection of filters to use with this appender. See link:#_log_appenders_filters[filters] section.
 |===
 
 There are a few ways log file rotation can be configured for the "file" appender, as defined by the `rollingPolicy`. Out of the box the following Logback policies are supported: http://logback.qos.ch/manual/appenders.html#FixedWindowRollingPolicy[`fixedWindow`], http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy[`time`], `sizeAndTime`.
 
-=== Rolling Policy
+=== log.appenders.rollingPolicy
 
 ==== "fixedWindow" Rolling Policy
 
@@ -279,7 +279,7 @@ log:
 |Max file size that causes rotation. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
 |===
 
-=== Filters
+=== log.appenders.filters
 
 ==== "level" Filter
 

@@ -57,6 +57,9 @@ log:
       name: test
       logFormat: '%c{20}: %m%n'
       file: target/logback/testRun_Debug.log
+      filters:
+        - type: threshold
+          level: info
 ----
 "log" is a root element of the Logback configuration and is bound to a https://github.com/bootique/bootique-logback/blob/master/bootique-logback/src/main/java/io/bootique/logback/LogbackContextFactory.java[`LogbackContextFactory`] object. It supports the following properties:
 
@@ -120,6 +123,10 @@ Lists appenders to sends the logs to. If the list is empty, console appender is 
 |`target`
 |`stdout`
 |Whether to log to standard output or standard error. Possible values are `stdout` and `stderr`
+
+|`filters`
+|none
+|A collection of filters to use with this appender
 |===
 
 ."file" Appender Property Reference
@@ -147,10 +154,16 @@ Lists appenders to sends the logs to. If the list is empty, console appender is 
 
 |`rollingPolicy`
 |none
-|An object that defines a log rotation policy. Examples are given below.
+|An object that defines a log rotation policy. Examples are given <<Rolling Policy,below>>.
+
+|`filters`
+|none
+|A collection of filters to use with this appender. See <<Filters, filters>> section.
 |===
 
 There are a few ways log file rotation can be configured for the "file" appender, as defined by the `rollingPolicy`. Out of the box the following Logback policies are supported: http://logback.qos.ch/manual/appenders.html#FixedWindowRollingPolicy[`fixedWindow`], http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy[`time`], `sizeAndTime`.
+
+=== Rolling Policy
 
 ==== "fixedWindow" Rolling Policy
 
@@ -264,6 +277,74 @@ log:
 |`fileSize`
 |none
 |Max file size that causes rotation. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
+|===
+
+=== Filters
+
+==== "level" Filter
+
+[source,yaml]
+----
+log:
+  level: debug
+  appenders:
+    - type: file
+      logFormat: '%c{20}: %m%n'
+      file: target/logs/info-only.log
+      filters:
+        - type: level
+          level: info
+          onMatch: accept
+          onMismatch: deny
+----
+
+`level` filter filters events based on exact level matching.
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`level`
+|none
+|logging event level to filter
+
+|`onMatch`
+|neutral
+|action to take on event level match (`accept`, `deny`, `neutral`)
+
+|`onMismatch`
+|neutral
+|action to take on event level mismatch (`accept`, `deny`, `neutral`)
+|===
+
+==== "threshold" Filter
+
+[source,yaml]
+----
+log:
+  level: debug
+  appenders:
+    - type: console
+      logFormat: '%c{20}: %m%n'
+      filters:
+        - type: threshold
+          level: warn
+----
+
+`threshold` filter filters events below the specified level threshold.
+Events with a level below the threshold will be denied.
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`level`
+|none
+|logging event level to filter
 |===
 
 === log.loggers

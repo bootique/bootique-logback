@@ -39,7 +39,7 @@ Get DSN (Data Source Name) from https://sentry.io/[sentry.io] or from your own i
 
 [source,kotlin,subs="attributes"]
 ----
-compile("io.bootique.logback:bootique-logback-sentry:{bootique_version}")
+compile("io.bootique.logback:bootique-logback-sentry:{bootique.version}")
 ----
 
 NOTE: *bootique-logback-sentry* is a part of https://github.com/bootique/bootique-bom[bootique-bom], and version can be

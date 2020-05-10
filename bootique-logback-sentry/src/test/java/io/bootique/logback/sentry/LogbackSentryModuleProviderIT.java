@@ -44,7 +44,7 @@ public class LogbackSentryModuleProviderIT {
 
     @Test
     public void testModuleDeclaresDependencies() {
-        final BQRuntime bqRuntime = testFactory.app().module(new LogbackSentryModuleProvider()).createRuntime();
+        final BQRuntime bqRuntime = testFactory.app().moduleProvider(new LogbackSentryModuleProvider()).createRuntime();
         BQRuntimeChecker.testModulesLoaded(bqRuntime, LogbackSentryModule.class, LogbackModule.class);
     }
 }

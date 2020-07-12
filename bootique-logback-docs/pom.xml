@@ -50,6 +50,34 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.bootique</groupId>
+                <artifactId>bootique-junit5</artifactId>
+                <version>${bootique.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique.logback</groupId>
+                <artifactId>bootique-logback</artifactId>
+                <version>${bootique.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.bootique</groupId>
+            <artifactId>bootique-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.bootique.logback</groupId>
+            <artifactId>bootique-logback</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

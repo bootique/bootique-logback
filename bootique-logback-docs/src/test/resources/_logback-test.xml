@@ -1,0 +1,13 @@
+<!-- tag::all[] -->
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{"dd/MMM/yyyy:HH:mm:ss"}] %t %p %c{1}: %m%n%ex</pattern>
+        </encoder>
+    </appender>
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="io.bootique.metrics.health.sink.Slf4JReportSink" level="warn"/>
+</configuration>
+<!-- end::all[] -->

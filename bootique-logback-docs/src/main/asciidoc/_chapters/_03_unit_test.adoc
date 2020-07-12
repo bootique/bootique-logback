@@ -1,0 +1,39 @@
+// Licensed to ObjectStyle LLC under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ObjectStyle LLC licenses
+// this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+== Logback In Unit Tests
+
+Configuring Logback <<_configuration_reference,via Bootique>> works well for applications, as configuration loading
+happens in the `main` method before any of the loggers are started. Unit tests is a different environment though.
+When testing you'd create, start and stop multiple `BQRuntimes`, each with its own Logback configuration. To provide
+consistent logging in this situation, it would be wise to disable per-app configuration all together. This can be done
+by setting `useLogbackConfig` property to `true` for each test `BQRuntime` (thus disabling Bootique configuration). E.g.:
+
+[source,java,indent=0]
+----
+include::../../../test/java/io/bootique/logback/doc/MainTest.java[tags=useLogbackConfig]
+----
+If you need to tweak test logs further, you can use the
+https://logback.qos.ch/manual/configuration.html#auto_configuration[standard Logback approach] - create
+`logback-test.xml` file placing it on the test classpath (e.g. under `src/test/resources`). Here is an example
+`logback-test.xml`:
+
+[source,xml,indent=0]
+----
+include::../../../test/resources/_logback-test.xml[tags=all]
+----
+

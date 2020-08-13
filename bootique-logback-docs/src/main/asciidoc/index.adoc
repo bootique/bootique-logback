@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-:bq-header: _index/header.html
+:bq-header: _chapters/header.html
 
 = Bootique Logback Documentation
 

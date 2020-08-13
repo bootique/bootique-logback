@@ -25,8 +25,9 @@ Get DSN (Data Source Name) from https://sentry.io/[sentry.io] or from your own i
 
 === Add bootique-logback-sentry to your build tool:
 
-*Maven*
-
+.Maven
+[%collapsible%open]
+====
 [source,xml]
 ----
 <dependency>
@@ -34,13 +35,16 @@ Get DSN (Data Source Name) from https://sentry.io/[sentry.io] or from your own i
     <artifactId>bootique-logback-sentry</artifactId>
 </dependency>
 ----
+====
 
-*Gradle*
-
+.Gradle
+[%collapsible]
+====
 [source,kotlin,subs="attributes"]
 ----
 compile("io.bootique.logback:bootique-logback-sentry:{bootique_version}")
 ----
+====
 
 NOTE: *bootique-logback-sentry* is a part of https://github.com/bootique/bootique-bom[bootique-bom], and version can be
 imported from there.

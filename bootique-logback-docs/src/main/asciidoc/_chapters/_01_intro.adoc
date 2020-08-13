@@ -25,6 +25,9 @@ https://github.com/bootique/bootique-logback[`bootique-logback`] is a "drag-and-
 logging with http://logback.qos.ch/[Logback logging framework]. Just like any other module, `bootique-logback` can be
 enabled by simply adding it to the `pom.xml` dependencies, assuming `autoLoadModules()` is in effect:
 
+.Maven
+[%collapsible%open]
+====
 [source,xml]
 ----
 <dependency>
@@ -32,6 +35,18 @@ enabled by simply adding it to the `pom.xml` dependencies, assuming `autoLoadMod
     <artifactId>bootique-logback</artifactId>
 </dependency>
 ----
+====
+
+.Gradle
+[%collapsible]
+====
+[source,groovy]
+----
+{
+  implementation: 'io.bootique.logback:bootique-logback'
+}
+----
+====
 
 Without further configuration it would log everything to console using INFO level. Configuration can be provided via
 YAML, as shown in the <<_configuration_reference,Configuration Reference>> section. Configuration options include per

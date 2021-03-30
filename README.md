@@ -17,7 +17,7 @@
   under the License.
   -->
 
-[![Build Status](https://travis-ci.org/bootique/bootique-logback.svg)](https://travis-ci.org/bootique/bootique-logback)
+[![build test deploy](https://github.com/bootique/bootique-logback/actions/workflows/maven.yml/badge.svg)](https://github.com/bootique/bootique-logback/actions/workflows/maven.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.bootique.logback/bootique-logback.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.logback/bootique-logback/)
 
 # bootique-logback

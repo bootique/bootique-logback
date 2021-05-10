@@ -22,7 +22,7 @@
     <parent>
         <artifactId>bootique-logback-parent</artifactId>
         <groupId>io.bootique.logback</groupId>
-        <version>2.0.B1-SNAPSHOT</version>
+        <version>2.0.B1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

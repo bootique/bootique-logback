@@ -33,8 +33,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * @see <a href=
  *      "http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy">
  *      Logback documentation</a>
- *
- * @since 0.10
  */
 @JsonTypeName("sizeAndTime")
 public class SizeAndTimeBasedPolicyFactory extends TimeBasedPolicyFactory {

@@ -34,8 +34,6 @@ import io.bootique.annotation.BQConfigProperty;
  *
  * It is not needed to add any triggering policy to appender
  * @see <a href="http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy">Logback documentation</a>
- *
- * @since 0.10
  */
 @JsonTypeName("time")
 @BQConfig

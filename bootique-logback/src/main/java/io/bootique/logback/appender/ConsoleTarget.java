@@ -19,9 +19,6 @@
 
 package io.bootique.logback.appender;
 
-/**
- * @since 0.12
- */
 public enum ConsoleTarget {
 
     stdout(ch.qos.logback.core.joran.spi.ConsoleTarget.SystemOut.getName()),

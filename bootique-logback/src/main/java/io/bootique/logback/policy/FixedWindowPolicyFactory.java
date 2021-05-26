@@ -38,8 +38,6 @@ import io.bootique.annotation.BQConfigProperty;
  * @see <a href=
  *      "http://logback.qos.ch/manual/appenders.html#FixedWindowRollingPolicy">
  *      Logback documentation</a>
- *
- * @since 0.10
  */
 @JsonTypeName("fixedWindow")
 @BQConfig

@@ -137,7 +137,6 @@ public class LogbackContextFactory {
 
     /**
      * @param logFormat Log format specification used by all appenders unless redefined for a given appender.
-     * @since 0.25
      */
     @BQConfigProperty("Log format specification used by child appenders unless redefined at the appender level, or not " +
             "relevant for a given type of appender. The spec is " +
@@ -212,7 +211,6 @@ public class LogbackContextFactory {
 
     /**
      * @return default log level.
-     * @since 0.13
      */
     public LogbackLevel getLevel() {
         return rootLoggerFactory.getLevel();
@@ -225,7 +223,6 @@ public class LogbackContextFactory {
 
     /**
      * @return collection of log level configurations.
-     * @since 0.12
      */
     public Map<String, LoggerFactory> getLoggers() {
         return loggers;
@@ -238,7 +235,6 @@ public class LogbackContextFactory {
 
     /**
      * @return collection of appender configurations.
-     * @since 0.12
      */
     public Collection<AppenderFactory> getAppenders() {
         return appenders;
@@ -256,9 +252,7 @@ public class LogbackContextFactory {
      * <a href="http://logback.qos.ch/manual/configuration.html">Logback
      * documentation</a>.
      *
-     * @param useLogbackConfig if true, all other logback configuration present in YAML is
-     *                         ignored.
-     * @since 0.9
+     * @param useLogbackConfig if true, all other logback configuration present in YAML is ignored.
      */
     @BQConfigProperty("If true, all Bootique logback settings are ignored and the user is expected to provide its own " +
             "config file per Logback documentation. This is only needed for a few advanced options not directly " +
@@ -271,7 +265,6 @@ public class LogbackContextFactory {
      * Sets whether to debug Logback startup and configuration loading.
      *
      * @param debugLogback if true, turns on tracing of Logback startup.
-     * @since 0.13
      */
     @BQConfigProperty("If true, Logback configuration debugging information will be printed to console. Helps to deal" +
             " with Logback configuration issues.")
@@ -283,9 +276,6 @@ public class LogbackContextFactory {
         return rootLoggerFactory.getAppenderRefs();
     }
 
-    /**
-     * @since 1.0.RC1
-     */
     @BQConfigProperty("Collection of appender names which should be added to root Logger.")
     public void setAppenderRefs(Collection<String> appenderRefs) {
         rootLoggerFactory.setAppenderRefs(appenderRefs);

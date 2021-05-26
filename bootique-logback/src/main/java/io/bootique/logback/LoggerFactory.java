@@ -59,9 +59,6 @@ public class LoggerFactory {
         configLogger(context.getLogger(loggerName), Collections.emptyMap(), Collections.emptyList());
     }
 
-    /**
-     * @since 1.0.RC1
-     */
     public void configLogger(
             Logger logger,
             Map<String, Appender<ILoggingEvent>> namedAppenders,

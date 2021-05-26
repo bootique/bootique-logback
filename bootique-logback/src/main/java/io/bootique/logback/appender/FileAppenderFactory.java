@@ -39,8 +39,6 @@ import java.util.Objects;
 /**
  * A configuration object that sets up a file appender in Logback, potentially
  * with support for rotation, etc.
- *
- * @since 0.8
  */
 @JsonTypeName("file")
 public class FileAppenderFactory extends AppenderFactory {
@@ -51,7 +49,6 @@ public class FileAppenderFactory extends AppenderFactory {
 
     /**
      * @return name of the log file.
-     * @since 0.12
      */
     public String getFile() {
         return file;
@@ -69,7 +66,6 @@ public class FileAppenderFactory extends AppenderFactory {
 
     /**
      * @return factory for log file rotation policy
-     * @since 0.12
      */
     public RollingPolicyFactory getRollingPolicy() {
         return rollingPolicy;
@@ -84,7 +80,6 @@ public class FileAppenderFactory extends AppenderFactory {
      * @see FixedWindowPolicyFactory
      * @see TimeBasedPolicyFactory
      * @see ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy
-     * @since 0.10
      */
     @BQConfigProperty
     public void setRollingPolicy(RollingPolicyFactory rollingPolicy) {

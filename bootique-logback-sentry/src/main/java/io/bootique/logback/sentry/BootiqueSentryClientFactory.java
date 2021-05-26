@@ -29,7 +29,6 @@ import java.util.HashMap;
  * Factory for providing config to {@link io.sentry.Sentry}.
  *
  * @author Ibragimov Ruslan
- * @since 0.16
  */
 public class BootiqueSentryClientFactory extends DefaultSentryClientFactory {
     private final LogbackSentryFactory logbackSentryFactory;

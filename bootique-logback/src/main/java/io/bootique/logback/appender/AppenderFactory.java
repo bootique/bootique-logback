@@ -45,7 +45,6 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     /**
      * @return configured log format
-     * @since 0.12
      */
     public String getLogFormat() {
         return logFormat;
@@ -64,9 +63,6 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         return name;
     }
 
-    /**
-     * @since 1.0.RC1
-     */
     @BQConfigProperty("Appender name.")
     public void setName(String name) {
         this.name = name;

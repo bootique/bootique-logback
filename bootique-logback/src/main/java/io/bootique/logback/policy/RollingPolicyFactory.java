@@ -33,7 +33,6 @@ import io.bootique.config.PolymorphicConfiguration;
  * factory defines file name pattern and history size what are used in all
  * rolling policies
  *
- * @since 0.10
  * @see <a href=
  *      "http://logback.qos.ch/manual/appenders.html#RollingFileAppender">
  *      Logback documentation</a>

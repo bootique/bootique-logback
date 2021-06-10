@@ -61,8 +61,8 @@ public class TimeBasedPolicyFactory extends RollingPolicyFactory {
     @Override
     protected TimeBasedRollingPolicy<ILoggingEvent> instantiatePolicy(LoggerContext context) {
 		TimeBasedRollingPolicy<ILoggingEvent> policy = new TimeBasedRollingPolicy<>();
+        policy.setContext(context);
         setupBasePolicySettings(policy);
-		policy.setContext(context);
 		return policy;
     }
 

@@ -56,11 +56,11 @@ public class SizeAndTimeBasedPolicyFactory extends TimeBasedPolicyFactory {
 	@Override
 	protected SizeAndTimeBasedRollingPolicy<ILoggingEvent> instantiatePolicy(LoggerContext context) {
 		SizeAndTimeBasedRollingPolicy<ILoggingEvent> policy = new SizeAndTimeBasedRollingPolicy<>();
+		policy.setContext(context);
 		setupBasePolicySettings(policy);
 		if (fileSize != null && fileSize.length() > 0) {
 			policy.setMaxFileSize(FileSize.valueOf(fileSize));
 		}
-		policy.setContext(context);
 		return policy;
 	}
 

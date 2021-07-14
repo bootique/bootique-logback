@@ -40,9 +40,11 @@ Get DSN (Data Source Name) from https://sentry.io/[sentry.io] or from your own i
 .Gradle
 [%collapsible]
 ====
-[source,kotlin,subs="attributes"]
+[source,groovy,subs="attributes"]
 ----
-compile("io.bootique.logback:bootique-logback-sentry:{bootique_version}")
+dependencies {
+    implementation "io.bootique.logback:bootique-logback-sentry"
+}
 ----
 ====
 

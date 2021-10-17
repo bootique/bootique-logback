@@ -27,18 +27,11 @@ import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 import io.bootique.shutdown.ShutdownManager;
 
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 
 public class LogbackModule extends ConfigModule {
-
-    public LogbackModule(String configPrefix) {
-        super(configPrefix);
-    }
-
-    public LogbackModule() {
-    }
 
     @Override
     protected String defaultConfigPrefix() {

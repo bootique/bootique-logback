@@ -18,7 +18,7 @@ log:
   appenders:
     - type: file
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/rotate-by-time/logfile-current.log'
+      file: "target/logs/logfile-current.log"
       rollingPolicy:
         type: time
-        fileNamePattern: 'target/logs/rotate-by-time/logfile-%d{yyyyMMDDHHmmss}.log'
+        fileNamePattern: "target/logs/logfile-%d{yyyyMMDDHHmmss}.log"

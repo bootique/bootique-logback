@@ -20,4 +20,4 @@ log:
       target: stderr
     - type: file
       logFormat: '%c{10}: %m%n'
-      file: "target/logs/rotate/logfile123.log"
+      file: "target/logs/logfile123.log"

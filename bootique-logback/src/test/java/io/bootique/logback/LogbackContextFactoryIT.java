@@ -20,28 +20,33 @@
 package io.bootique.logback;
 
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.junit5.BQTest;
+import io.bootique.junit5.BQTestFactory;
+import io.bootique.junit5.BQTestTool;
 import io.bootique.logback.appender.AppenderFactory;
 import io.bootique.logback.appender.ConsoleAppenderFactory;
 import io.bootique.logback.appender.ConsoleTarget;
 import io.bootique.logback.appender.FileAppenderFactory;
-import io.bootique.logback.unit.LogbackTestFactory;
-import org.junit.Rule;
-import org.junit.Test;
+import io.bootique.logback.unit.LogTester;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+@BQTest
 public class LogbackContextFactoryIT {
 
-    @Rule
-    public LogbackTestFactory testFactory = new LogbackTestFactory();
+    @BQTestTool
+    final BQTestFactory testFactory = new BQTestFactory().autoLoadModules();
+
+    @BQTestTool
+    final LogTester logTester = new LogTester(testFactory, "target/logs");
 
     @Test
     public void testInitFromConfig() {
 
-        ConfigurationFactory configFactory = testFactory
-                .newBQRuntime("classpath:io/bootique/logback/test-multi-appender.yml")
+        ConfigurationFactory configFactory = testFactory.app("-c", "classpath:io/bootique/logback/test-multi-appender.yml")
+                .module(LogbackModule.class)
+                .createRuntime()
                 .getInstance(ConfigurationFactory.class);
 
         LogbackContextFactory rootFactory = configFactory.config(LogbackContextFactory.class, "log");
@@ -60,6 +65,6 @@ public class LogbackContextFactoryIT {
         assertTrue(appenders[1] instanceof FileAppenderFactory);
         FileAppenderFactory a2 = (FileAppenderFactory) appenders[1];
         assertEquals("%c{10}: %m%n", a2.getLogFormat());
-        assertEquals("target/logs/rotate/logfile123.log", a2.getFile());
+        assertEquals("target/logs/logfile123.log", a2.getFile());
     }
 }

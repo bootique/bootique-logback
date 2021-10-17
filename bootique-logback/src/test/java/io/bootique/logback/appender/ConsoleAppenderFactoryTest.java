@@ -22,17 +22,17 @@ package io.bootique.logback.appender;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConsoleAppenderFactoryTest {
 
     private LoggerContext mockContext;
 
-    @Before
+    @BeforeEach
     public void before() {
         mockContext = mock(LoggerContext.class);
     }

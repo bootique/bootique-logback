@@ -18,4 +18,4 @@ log:
   appenders:
     - type: file
       logFormat: '%c{20}: %m%n'
-      file: target/logs/rotate/logfile1.log
+      file: "target/logs/logfile1.log"

@@ -27,15 +27,15 @@ log:
     - type: file
       name: one
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/multi-file/multi-one.log'
+      file: "target/logs/multi-one.log"
     - type: file
       name: two
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/multi-file/multi-two.log'
+      file: "target/logs/multi-two.log"
     - type: file
       name: three
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/multi-file/multi-three.log'
+      file: "target/logs/multi-three.log"
     - type: file
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/multi-file/multi-noname.log'
+      file: "target/logs/multi-noname.log"

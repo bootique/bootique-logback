@@ -20,20 +20,20 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
-import io.bootique.logback.unit.LogbackTestFactory;
-import org.junit.Rule;
-import org.junit.Test;
+import io.bootique.junit5.BQTest;
+import io.bootique.junit5.BQTestFactory;
+import io.bootique.junit5.BQTestTool;
+import io.bootique.logback.unit.LogTester;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
+@BQTest
 public class LogbackBQConfigIT {
 
     private final static String LOGFILE_PREFIX = "logfile-";
@@ -41,48 +41,44 @@ public class LogbackBQConfigIT {
     private final static String HELLO_WORLD_VALUE = "Hello World!";
     private final static String CONTENT_VALUE_FORMAT = "%s." + HELLO_WORLD_VALUE;
 
-    @Rule
-    public LogbackTestFactory testFactory = new LogbackTestFactory();
+    @BQTestTool
+    final BQTestFactory testFactory = new BQTestFactory().autoLoadModules();
+
+    @BQTestTool
+    final LogTester logTester = new LogTester(testFactory, "target/logs");
 
     @Test
     public void testFileAppender() {
 
-        testFactory.prepareLogDir("target/logs/rotate");
-        Logger logger = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appender.yml");
-        logger.info("info-log-to-file");
+        String logfile1 = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender.yml",
+                "logfile1.log",
+                l -> l.info("info-log-to-file")
+        );
 
-        // must stop to ensure logs are flushed...
-        testFactory.stop();
-
-        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/rotate", "logfile1.log");
-
-        assertEquals(1, logfileContents.size());
-        String[] lines = logfileContents.get("logfile1.log");
-        String oneLine = String.join("\n", lines);
-
-        assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
+        assertTrue(logfile1.endsWith("ROOT: info-log-to-file"), () -> "Unexpected logs: " + logfile1);
     }
 
     @Test
-    public void testFileAppenderWithFlag() {
-        testFactory.prepareLogDir("target/logs/rotate-flag");
-        Logger logger = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appender-with-flag.yml");
-        logger.info("info-log-to-file");
+    public void testFileAppender_NoAppend() {
 
-        // must stop to ensure logs are flushed...
-        testFactory.stop();
+        String logfile1 = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-with-flag.yml",
+                "logfile1.log",
+                l -> l.info("run1")
+        );
 
-        Logger logger1 = testFactory.newRootLogger("classpath:io/bootique/logback/test-file-appender-with-flag.yml");
-        logger1.info("info-log-to-file");
-        testFactory.stop();
+        assertTrue(logfile1.endsWith("ROOT: run1"), () -> "Unexpected log: " + logfile1);
 
-        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/rotate-flag", "logfile1.log");
-        assertEquals(1, logfileContents.size());
-        String[] lines = logfileContents.get("logfile1.log");
-        assertEquals(2, lines.length);
-        String oneLine = String.join("\n", asList(lines));
 
-        assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith("ROOT: info-log-to-file"));
+        String logfile2 = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-with-flag.yml",
+                "logfile1.log",
+                l -> l.info("run2")
+        );
+
+        assertTrue(logfile2.endsWith("ROOT: run2"), () -> "Unexpected log: " + logfile2);
+        assertFalse(logfile2.contains("run1"));
     }
 
     /**
@@ -93,54 +89,37 @@ public class LogbackBQConfigIT {
      * 1 - If appender has no name it will be added to root logger and it will write logs from all sources.
      * 2 - If child appender has name, child has link to this appender and root has not, this appender will be added to this logger.
      * 3 - If appender has name and root logger has reference to this name it will be added to root logger and it will be newer added to child,
-     * eaven if it will have reference to the same appender.
+     * even if it will have reference to the same appender.
      */
     @Test
     public void testFileMultiAppender_Root() {
-        testFactory.prepareLogDir("target/logs/multi-file");
-        Logger rootLogger = testFactory.newRootLogger("classpath:io/bootique/logback/test-multi-file-appender.yml");
-        rootLogger.info("info-log-to-file");
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-multi-file-appender.yml",
+                l -> l.info("info-log-to-file")
+        );
 
-        // must stop to ensure logs are flushed...
-        testFactory.stop();
+        assertEquals(3, logs.size());
+        assertEquals(new HashSet<>(asList("multi-one.log", "multi-two.log", "multi-noname.log")), logs.keySet());
 
-        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/multi-file", "multi-");
-
-        assertEquals(3, logfileContents.size());
-
-        String rootLogLine = "ROOT: info-log-to-file";
-        checkContainsLog(logfileContents, "multi-one.log", rootLogLine);
-        checkContainsLog(logfileContents, "multi-noname.log", rootLogLine);
-        assertEquals(0, logfileContents.get("multi-two.log").length);
+        assertTrue(logs.get("multi-one.log").endsWith("ROOT: info-log-to-file"), () -> "Unexpected log: " + logs.get("multi-one.log"));
+        assertTrue(logs.get("multi-noname.log").endsWith("ROOT: info-log-to-file"), () -> "Unexpected log: " + logs.get("multi-noname.log"));
+        assertEquals("", logs.get("multi-two.log"));
     }
 
     @Test
     public void testFileMultiAppender_Child() {
 
-        testFactory.prepareLogDir("target/logs/multi-file");
-        testFactory.newBQRuntime("classpath:io/bootique/logback/test-multi-file-appender.yml");
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-multi-file-appender.yml",
+                l -> LoggerFactory.getLogger("one").info("info-log-to-file")
+        );
 
-        org.slf4j.Logger one = LoggerFactory.getLogger("one");
+        assertEquals(3, logs.size());
+        assertEquals(new HashSet<>(asList("multi-one.log", "multi-two.log", "multi-noname.log")), logs.keySet());
 
-        one.info("info-log-to-file");
-
-        testFactory.stop();
-
-        Map<String, String[]> logfileContents = testFactory.loglines("target/logs/multi-file", "multi-");
-
-        assertEquals(3, logfileContents.size());
-
-        String logLine = "one: info-log-to-file";
-        checkContainsLog(logfileContents, "multi-one.log", logLine);
-        checkContainsLog(logfileContents, "multi-two.log", logLine);
-        checkContainsLog(logfileContents, "multi-noname.log", logLine);
-    }
-
-    private void checkContainsLog(Map<String, String[]> logfileContents, String fileName, String logLine) {
-        String[] lines = logfileContents.get(fileName);
-        String oneLine = String.join("\n", asList(lines));
-
-        assertTrue("Unexpected logs: " + oneLine, oneLine.endsWith(logLine));
+        assertTrue(logs.get("multi-one.log").endsWith("one: info-log-to-file"), () -> "Unexpected log: " + logs.get("multi-one.log"));
+        assertTrue(logs.get("multi-two.log").endsWith("one: info-log-to-file"), () -> "Unexpected log: " + logs.get("multi-two.log"));
+        assertTrue(logs.get("multi-noname.log").endsWith("one: info-log-to-file"), () -> "Unexpected log: " + logs.get("multi-noname.log"));
     }
 
     /**
@@ -155,23 +134,17 @@ public class LogbackBQConfigIT {
      * - 3 total rows in all log file
      */
     @Test
-    public void testFileAppender_Rotate_By_Time() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_By_Time() {
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time",
-                "classpath:io/bootique/logback/test-file-appender-time-rotation.yml", 3, 1000, 1);
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-time-rotation.yml",
+                l -> printLog(l, 3, 1000, 1)
+        );
 
-        // Checks file numbers: Expected 2 archived files + 1 current log-file
-        assertEquals(3, logfileContents.size());
-
-        // Checks current file exists
-        assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
-
-        // Checks file names: each file must start with "logfile-"
-        logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
-
-        // Check total rows number in all log files
-        assertEquals(3, logfileContents.values().stream().flatMap(Arrays::stream)
-                .filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+        assertEquals(3, logs.size(), "Expected 2 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "Each file must start with 'logfile-'"));
+        assertEquals(3, logs.values().stream().map(s -> countMatches(s, HELLO_WORLD_VALUE)).reduce(0, (i1, i2) -> i1 + i2));
     }
 
     /**
@@ -184,24 +157,17 @@ public class LogbackBQConfigIT {
      * As result, 2 archived files + 1 current log-file are expected; 4 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Time_And_History() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_By_Time_And_History() {
 
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-time-and-history-rotation.yml",
+                l -> printLog(l, 4, 1000, 1)
+        );
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time-and-history",
-                "classpath:io/bootique/logback/test-file-appender-time-and-history-rotation.yml", 4, 1000, 1);
-
-        // Checks file numbers: Expected 2 archived files + 1 current log-file
-        assertEquals(3, logfileContents.size());
-
-        // Checks current file exists
-        assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
-
-        // Checks file names: each file must start with "logfile-"
-        logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
-
-        // Check total rows number in all log files
-        assertEquals(3, logfileContents.values().stream().flatMap(Arrays::stream)
-                .filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+        assertEquals(3, logs.size(), "Expected 2 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "each file must start with 'logfile-'"));
+        assertEquals(3, logs.values().stream().map(s -> countMatches(s, HELLO_WORLD_VALUE)).reduce(0, (i1, i2) -> i1 + i2));
     }
 
     /**
@@ -214,24 +180,17 @@ public class LogbackBQConfigIT {
      * As result, 3 archived files (63 bytes) + 1 current log-file are expected; 4 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Time_And_History_And_TotalSize() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_By_Time_And_History_And_TotalSize() {
 
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-time-and-history-and-totalsize-rotation.yml",
+                l -> printLog(l, 5, 1000, 1)
+        );
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-time-and-history-and-totalsize",
-                "classpath:io/bootique/logback/test-file-appender-time-and-history-and-totalsize-rotation.yml", 5, 1000, 1);
-
-        // Checks file numbers: Expected 3 archived files + 1 current log-file
-        assertEquals(4, logfileContents.size());
-
-        // Checks current file exists
-        assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
-
-        // Checks file names: each file must start with "logfile-"
-        logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
-
-        // Check total rows number in all log files
-        assertEquals(4, logfileContents.values().stream().flatMap(Arrays::stream)
-                .filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+        assertEquals(4, logs.size(), "Expected 3 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "each file must start with 'logfile-'"));
+        assertEquals(4, logs.values().stream().map(s -> countMatches(s, HELLO_WORLD_VALUE)).reduce(0, (i1, i2) -> i1 + i2));
     }
 
     /**
@@ -247,23 +206,17 @@ public class LogbackBQConfigIT {
      * - 20 total rows in all log file
      */
     @Test
-    public void testFileAppender_Rotate_By_Size() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_By_Size() {
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size",
-                "classpath:io/bootique/logback/test-file-appender-size-rotation.yml", 3, 1000, 2);
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-size-rotation.yml",
+                l -> printLog(l, 3, 1000, 2)
+        );
 
-        // Checks file numbers: Expected 2 archived files + 1 current log-file
-        assertEquals(3, logfileContents.size());
-
-        // Checks current file exists
-        assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
-
-        // Checks file names: each file must start with "logfile-"
-        logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
-
-        // Check total rows number in all log files
-        assertEquals(6, logfileContents.values().stream().flatMap(Arrays::stream)
-                .filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+        assertEquals(3, logs.size(), "Expected 2 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "each file must start with 'logfile-'"));
+        assertEquals(6, logs.values().stream().map(s -> countMatches(s, HELLO_WORLD_VALUE)).reduce(0, (i1, i2) -> i1 + i2));
     }
 
     /**
@@ -276,24 +229,17 @@ public class LogbackBQConfigIT {
      * As result, 2 archived files + 1 current log-file are expected; 6 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Size_And_History() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_By_Size_And_History() {
 
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-size-and-history-rotation.yml",
+                l -> printLog(l, 4, 1000, 2)
+        );
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size-and-history",
-                "classpath:io/bootique/logback/test-file-appender-size-and-history-rotation.yml", 4, 1000, 2);
-
-        // Checks file numbers: Expected 2 archived files + 1 current log-file
-        assertEquals(3, logfileContents.size());
-
-        // Checks current file exists
-        assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
-
-        // Checks file names: each file must start with "logfile-"
-        logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
-
-        // Check total rows number in all log files
-        assertEquals(6, logfileContents.values().stream().flatMap(Arrays::stream)
-                .filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+        assertEquals(3, logs.size(), "Expected 2 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "each file must start with 'logfile-'"));
+        assertEquals(6, logs.values().stream().map(s -> countMatches(s, HELLO_WORLD_VALUE)).reduce(0, (i1, i2) -> i1 + i2));
     }
 
     /**
@@ -306,24 +252,17 @@ public class LogbackBQConfigIT {
      * As result, 3 archived files (135 bytes) + 1 current log-file are expected; 8 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Size_And_History_And_TotalSize() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_By_Size_And_History_And_TotalSize() {
 
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-size-and-history-and-totalsize-rotation.yml",
+                l -> printLog(l, 5, 1000, 2)
+        );
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-by-size-and-history-and-totalsize",
-                "classpath:io/bootique/logback/test-file-appender-size-and-history-and-totalsize-rotation.yml", 5, 1000, 2);
-
-        // Checks file numbers: Expected 3 archived files + 1 current log-file
-        assertEquals(4, logfileContents.size());
-
-        // Checks current file exists
-        assertTrue(logfileContents.containsKey(CURRENT_LOGFILE_NAME));
-
-        // Checks file names: each file must start with "logfile-"
-        logfileContents.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX)));
-
-        // Check total rows number in all log files
-        assertEquals(8, logfileContents.values().stream().flatMap(Arrays::stream)
-                .filter(s -> s.contains(HELLO_WORLD_VALUE)).count());
+        assertEquals(4, logs.size(), "Expected 3 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "each file must start with 'logfile-'"));
+        assertEquals(8, logs.values().stream().map(s -> countMatches(s, HELLO_WORLD_VALUE)).reduce(0, (i1, i2) -> i1 + i2));
     }
 
     /**
@@ -336,19 +275,21 @@ public class LogbackBQConfigIT {
      * As result, 2 archived files + 1 current log-file are expected;
      */
     @Test
-    public void testFileAppender_Rotate_Fixed() throws InterruptedException, IOException {
+    public void testFileAppender_Rotate_Fixed() {
 
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-fixed-rotation.yml",
+                l -> printLog(l, 4, 800, 1)
+        );
 
-        Map<String, String[]> logfileContents = rotate("target/logs/rotate-fixed",
-                "classpath:io/bootique/logback/test-file-appender-fixed-rotation.yml", 4, 800, 1);
-
-        // Check file numbers: Expected 3 files = 1 current file + 2 archived files
-        assertEquals(3, logfileContents.size());
+        assertEquals(3, logs.size(), "Expected 2 archived files + 1 current log-file");
+        assertTrue(logs.containsKey(CURRENT_LOGFILE_NAME));
+        logs.keySet().forEach(key -> assertTrue(key.startsWith(LOGFILE_PREFIX), "each file must start with 'logfile-'"));
 
         // Check file names and file content
         final String EXPECTED_VALUE_FORMAT = "ROOT: " + CONTENT_VALUE_FORMAT;
-        logfileContents.forEach((key, value) -> {
-            String expectedValue = null;
+        logs.forEach((key, value) -> {
+            String expectedValue;
             switch (key) {
                 case "logfile-current.log": {
                     expectedValue = String.format(EXPECTED_VALUE_FORMAT, "4");
@@ -363,36 +304,46 @@ public class LogbackBQConfigIT {
                     break;
                 }
                 default: {
-                    fail("Detected unexpected file name \"" + key + "\"");
+                    throw new RuntimeException("Detected unexpected file name \"" + key + "\"");
                 }
             }
-            // Check file content
-            assertEquals("Check expected file content \"" + expectedValue + "\" in the current file \"" + key + "\"",
-                    expectedValue, value[0]);
+
+            assertTrue(value.startsWith(expectedValue),
+                    () -> "Check expected file content '" + expectedValue + "' in the current file '" + key + "'");
         });
     }
 
-    private Map<String, String[]> rotate(String logDir, String configFile, int attempts, int period, int rowsCount)
-            throws InterruptedException {
-        testFactory.prepareLogDir(logDir);
-
-        Logger logger = testFactory.newRootLogger(configFile);
-
-        printLog(logger, attempts, period, rowsCount);
-
-        // must stop to ensure logs are flushed...
-        testFactory.stop();
-        return testFactory.loglines(logDir, LOGFILE_PREFIX);
-    }
-
-    private void printLog(Logger logger, int attempts, int period, int rowsCount) throws InterruptedException {
+    private void printLog(Logger logger, int attempts, int period, int rowsCount) {
         int index = 1;
         for (int i = 1; i <= attempts; i++) {
             for (int j = 0; j < rowsCount; j++) {
                 logger.warn(String.format(CONTENT_VALUE_FORMAT, index));
                 index++;
             }
-            Thread.sleep(period + 1);
+
+            try {
+                Thread.sleep(period + 1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
+    }
+
+    private int countMatches(String string, String substring) {
+
+        int lastIndex = 0;
+        int count = 0;
+
+        while (lastIndex != -1) {
+
+            lastIndex = string.indexOf(substring, lastIndex);
+
+            if (lastIndex != -1) {
+                count++;
+                lastIndex += substring.length();
+            }
+        }
+
+        return count;
     }
 }

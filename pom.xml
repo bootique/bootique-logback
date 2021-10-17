@@ -54,6 +54,41 @@
         <tag>HEAD</tag>
     </scm>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.bootique</groupId>
+				<artifactId>bootique</artifactId>
+				<version>${bootique.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.bootique</groupId>
+				<artifactId>bootique-junit5</artifactId>
+				<version>${bootique.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.sentry</groupId>
+				<artifactId>sentry-logback</artifactId>
+				<version>${logback.sentry.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<plugins>
 			<plugin>

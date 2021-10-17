@@ -18,9 +18,9 @@ log:
   appenders:
     - type: file
       logFormat: '%c{20}: %m%n'
-      file: 'target/logs/rotate-by-time-and-history-and-totalsize/logfile-current.log'
+      file: "target/logs/logfile-current.log"
       rollingPolicy:
         type: time
-        fileNamePattern: 'target/logs/rotate-by-time-and-history-and-totalsize/logfile-%d{yyyyMMDDHHmmss}.log'
+        fileNamePattern: "target/logs/logfile-%d{yyyyMMDDHHmmss}.log"
         historySize: 3
         totalSize: 66

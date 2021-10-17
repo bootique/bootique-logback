@@ -35,50 +35,22 @@
 		Provides Logback integration with Bootique 
 	</description>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.bootique</groupId>
-				<artifactId>bootique</artifactId>
-				<version>${bootique.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.bootique</groupId>
-				<artifactId>bootique-test</artifactId>
-				<version>${bootique.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
 		<!-- Compile dependencies -->
 		<dependency>
 			<groupId>io.bootique</groupId>
 			<artifactId>bootique</artifactId>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
-			<scope>compile</scope>
 		</dependency>
 
 		<!-- Unit test dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -86,7 +58,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.bootique</groupId>
-			<artifactId>bootique-test</artifactId>
+			<artifactId>bootique-junit5</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

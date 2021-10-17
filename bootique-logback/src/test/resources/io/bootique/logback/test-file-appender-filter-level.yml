@@ -18,7 +18,7 @@ log:
   appenders:
     - type: file
       logFormat: '%c{20}: %m%n'
-      file: target/logs/rotate/level.log
+      file: "target/logs/level.log"
       filters:
         - type: level
           level: INFO

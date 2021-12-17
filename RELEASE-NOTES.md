@@ -1,3 +1,7 @@
+## 1.3
+
+* #59 Upgrade to Logback 1.2.9
+
 ## 1.1
 
 * #48 'append' flag in appender config

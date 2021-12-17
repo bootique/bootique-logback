@@ -1,7 +1,3 @@
-## 3.0.M1
-
-* #56 Upgrade to Logback 1.2.6
-
 ## 2.0.RC1
 
 * #52 "LOGBACK: No context given for c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy" printed 

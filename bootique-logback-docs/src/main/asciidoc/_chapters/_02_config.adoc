@@ -35,11 +35,13 @@ log:
   appenders:
     - type: file
       name: test
-      logFormat: '%c{20}: %m%n'
       file: target/logback/testRun_Debug.log
       filters:
         - type: threshold
           level: info
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
 ----
 "log" is a root element of the Logback configuration and is bound to a
 https://github.com/bootique/bootique-logback/blob/master/bootique-logback/src/main/java/io/bootique/logback/LogbackContextFactory.java[`LogbackContextFactory`]
@@ -86,10 +88,14 @@ log:
   appenders:
     - type: file
       name: test
-      logFormat: '%c{20}: %m%n'
       file: /var/log/myapp.log
+      layout:
+        type: json
+        timestampFormat: "yyyy-MM-dd HH:mm"
     - type: console
-      logFormat: '%c{20}: %m%n'
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
 ----
 Lists appenders to sends the logs to. If the list is empty, console appender is used with default settings. Currently
 available appenders are "console" and "file":
@@ -105,6 +111,7 @@ available appenders are "console" and "file":
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
 for details.
+Moved in the layout properties. Will be deprecated  in appender properties since 4.0.
 
 |`target`
 |`stdout`
@@ -113,7 +120,13 @@ for details.
 |`filters`
 |none
 |A collection of filters to use with this appender
+
+|`layout`
+|pattern
+|Layout config for this appender. Possible values are `pattern` and `json`. Examples given <<log.appenders.layout,below>>
 |===
+
+
 
 ."file" Appender Property Reference
 [cols=3*,options=header]
@@ -126,6 +139,7 @@ for details.
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
 for details.
+Moved in the layout properties. Will be deprecated  in appender properties since 4.0.
 
 |`name`
 |none
@@ -148,6 +162,10 @@ truncated. The append option is set to true by default.
 |`filters`
 |none
 |A collection of filters to use with this appender. See link:#_log_appenders_filters[filters] section.
+
+|`layout`
+|pattern
+|Layout config for this appender. Possible values are `pattern` and `json`. Examples given <<log.appenders.layout,below>>
 |===
 
 There are a few ways log file rotation can be configured for the "file" appender, as defined by the `rollingPolicy`.
@@ -164,13 +182,15 @@ http://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy[`time`], `siz
 log:
   appenders:
     - type: file
-      logFormat: '%c{20}: %m%n'
       file: /var/log/myapp.log
       rollingPolicy:
         type: fixedWindow
         fileNamePattern: '/var/log/myapp-%i.log'
         historySize: 5
         fileSize: 20
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
 ----
 "fixedWindow" policy rotates the main log file when it reaches a certain size, keeping one or more rotated files.
 
@@ -202,11 +222,13 @@ value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB
 log:
   appenders:
     - type: file
-      logFormat: '%c{20}: %m%n'
       file: /var/log/myapp.log
       rollingPolicy:
         type: time
         fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.log'
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
 ----
 "time" policy rotates the main log file at a fixed time interval determined by the file name pattern.
 
@@ -241,7 +263,6 @@ with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
 log:
   appenders:
     - type: file
-      logFormat: '%c{20}: %m%n'
       file: /var/log/myapp.log
       rollingPolicy:
         type: sizeAndTime
@@ -249,6 +270,9 @@ log:
         historySize: 5
         fileSize: 50
         totalSize: 150
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
 ----
 "sizeAndTime" policy rotates the main log file either at a fixed time interval determined by the file name pattern or
 when the log file reaches a certain size.
@@ -292,13 +316,15 @@ log:
   level: debug
   appenders:
     - type: file
-      logFormat: '%c{20}: %m%n'
       file: target/logs/info-only.log
       filters:
         - type: level
           level: info
           onMatch: accept
           onMismatch: deny
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
 ----
 
 `level` filter filters events based on exact level matching.
@@ -330,7 +356,6 @@ log:
   level: debug
   appenders:
     - type: console
-      logFormat: '%c{20}: %m%n'
       filters:
         - type: threshold
           level: warn
@@ -348,6 +373,67 @@ Events with a level below the threshold will be denied.
 |`level`
 |none
 |logging event level to filter
+|===
+
+=== log.appenders.layout [[log.appenders.layout]]
+
+==== Layout "pattern"
+
+[source,yaml]
+----
+log:
+  level: debug
+  appenders:
+    - type: file
+      file: target/logs/info-only.log
+      layout:
+        type: pattern
+        logFormat: '%c{20}: %m%n'
+----
+
+`pattern` layout configure log massage as plain text.
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`logFormat`
+|`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
+|A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
+for details.
+|===
+
+==== Layout "json"
+
+[source,yaml]
+----
+log:
+  level: debug
+  appenders:
+    - type: console
+      layout:
+        type: json
+        timestampFormat: 'yyyy-MM-dd HH:mm:ss'
+        prettyPrint: true
+----
+
+`json` layout configure log massage as json.
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`timestampFormat`
+|`yyyy-MM-dd HH:mm:ss.SSS`
+|A format of the timestamp value.
+
+|`prettyPrint`
+|`false`
+|Option for human-readable output.
 |===
 
 === log.loggers

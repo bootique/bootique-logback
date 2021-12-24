@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +42,7 @@ public class LogbackBQConfigIT {
     private final static String CURRENT_LOGFILE_NAME = LOGFILE_PREFIX + "current.log";
     private final static String HELLO_WORLD_VALUE = "Hello World!";
     private final static String CONTENT_VALUE_FORMAT = "%s." + HELLO_WORLD_VALUE;
+    private final static String PATTERN_LOG_MASSAGE_JSON = "(\")?message(\" )?|(\")?[:=](\")?|( \")?info-log-json\"";
 
     @BQTestTool
     final BQTestFactory testFactory = new BQTestFactory().autoLoadModules();
@@ -79,6 +82,34 @@ public class LogbackBQConfigIT {
 
         assertTrue(logfile2.endsWith("ROOT: run2"), () -> "Unexpected log: " + logfile2);
         assertFalse(logfile2.contains("run1"));
+    }
+
+    @Test
+    public void testFileAppenderJson() {
+
+        String logfile = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-json-layout.yml",
+                "logfile_layout1.log",
+                l -> l.info("info-log-json")
+        );
+
+        Pattern pattern = Pattern.compile(PATTERN_LOG_MASSAGE_JSON);
+        Matcher matcher = pattern.matcher(logfile);
+        assertTrue(matcher.find(), () -> "Unexpected logs: " + logfile);
+    }
+
+    @Test
+    public void testFileAppenderJsonWithTimestamp() {
+
+        String logfile = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-json-layout-with-timestamp.yml",
+                "logfile_layout1.log",
+                l -> l.info("info-log-json")
+        );
+
+        Pattern pattern = Pattern.compile(PATTERN_LOG_MASSAGE_JSON);
+        Matcher matcher = pattern.matcher(logfile);
+        assertTrue(matcher.find(), () -> "Unexpected logs: " + logfile);
     }
 
     /**

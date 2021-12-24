@@ -7,3 +7,6 @@ io.bootique.logback.policy.TimeBasedPolicyFactory
 io.bootique.logback.policy.SizeAndTimeBasedPolicyFactory
 io.bootique.logback.filter.LevelFilterFactory
 io.bootique.logback.filter.ThresholdFilterFactory
+io.bootique.logback.layout.LayoutFactory
+io.bootique.logback.layout.DefaultLayoutFactory
+io.bootique.logback.layout.JsonLayoutFactory

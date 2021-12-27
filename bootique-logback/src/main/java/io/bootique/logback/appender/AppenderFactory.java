@@ -118,9 +118,9 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         }
 
         Layout<ILoggingEvent> currentLayout = layout.createLayout(context, logFormat);
-//        if (!currentLayout.isStarted()) {
-//            throw new RuntimeException("Layout isn't configured for starting : " + currentLayout);
-//        }
+        if (!currentLayout.isStarted()) {
+            throw new RuntimeException("Layout isn't configured for starting : " + currentLayout);
+        }
         return currentLayout;
     }
 

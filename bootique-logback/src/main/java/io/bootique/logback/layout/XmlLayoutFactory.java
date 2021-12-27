@@ -20,7 +20,7 @@
 package io.bootique.logback.layout;
 
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.classic.log4j.XMLLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Layout;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -30,32 +30,50 @@ import io.bootique.annotation.BQConfigProperty;
 /**
  * @since 3.0
  */
-@JsonTypeName("pattern")
+@JsonTypeName("xml")
 @BQConfig
-public class DefaultLayoutFactory extends LayoutFactory {
-    private String logFormat;
+public class XmlLayoutFactory extends LayoutFactory {
+    private boolean locationInfo;
+    private boolean properties;
 
     /**
-     * @return configured log format
+     * @return location info flag
      */
-    public String getLogFormat() {
-        return logFormat;
+    public boolean getLocationInfo() {
+        return locationInfo;
     }
 
-    @BQConfigProperty("Log format for pattern.")
-    public void setLogFormat(String logFormat) {
-        this.logFormat = logFormat;
+    /**
+     * Sets location info flag that enables the inclusion of location info (caller data) in the each event.
+     */
+    @BQConfigProperty("Set locationInfo.")
+    public void setLocationInfo(boolean locationInfo) {
+        this.locationInfo = locationInfo;
+    }
+
+    /**
+     * @return flag properties
+     */
+    public boolean getProperties() {
+        return properties;
+    }
+
+    /**
+     * Sets properties flag that enables the inclusion of MDC information.
+     */
+    @BQConfigProperty("Set properties.")
+    public void setProperties(boolean properties) {
+        this.properties = properties;
     }
 
     @Override
     public Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
-        String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;
+        XMLLayout layout = new XMLLayout();
+        layout.setContext(context);
+        layout.setLocationInfo(locationInfo);
+        layout.setProperties(properties);
 
-        PatternLayout layoutPattern = new PatternLayout();
-        layoutPattern.setPattern(logFormat);
-        layoutPattern.setContext(context);
-
-        layoutPattern.start();
-        return layoutPattern;
+        layout.start();
+        return layout;
     }
 }

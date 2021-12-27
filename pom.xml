@@ -40,13 +40,13 @@
 		<module>bootique-logback</module>
 		<module>bootique-logback-sentry</module>
 		<module>bootique-logback-docs</module>
-	</modules>
+        <module>bootique-logback-json</module>
+    </modules>
 
 	<properties>
 		<bootique.version>${project.version}</bootique.version>
 		<logback.version>1.2.9</logback.version>
 		<logback.sentry.version>1.7.29</logback.sentry.version>
-		<logback.contrib.version>0.1.5</logback.contrib.version>
 	</properties>
 
 	<scm>
@@ -71,16 +71,6 @@
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>
 				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback.contrib</groupId>
-				<artifactId>logback-json-classic</artifactId>
-				<version>${logback.contrib.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback.contrib</groupId>
-				<artifactId>logback-jackson</artifactId>
-				<version>${logback.contrib.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.sentry</groupId>

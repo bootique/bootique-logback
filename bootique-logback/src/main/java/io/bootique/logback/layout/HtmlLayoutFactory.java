@@ -20,34 +20,46 @@
 package io.bootique.logback.layout;
 
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.html.HTMLLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Layout;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
-import io.bootique.config.PolymorphicConfiguration;
 
 /**
  * @since 3.0
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@BQConfig("Create layout.")
-public abstract class LayoutFactory implements PolymorphicConfiguration {
-    private String type;
+@JsonTypeName("html")
+@BQConfig
+public class HtmlLayoutFactory extends LayoutFactory{
+    private static final String DEFAULT_PATTERN = "%relative%thread%mdc%level%logger%msg";
+    private String pattern;
 
-    public String getType() {
-        return type;
+    /**
+     * @return configured pattern (log format)
+     */
+    public String getPattern() {
+        return pattern;
     }
 
     /**
-     * @param type layout type.
+     * Sets pattern for output logs.
      */
-    @BQConfigProperty("content out type, available types: \"json\", \"pattern\", \"html\", \"xml\". By default is \"pattern\".")
-    public void setType(String type) {
-        this.type = type;
+    @BQConfigProperty("Set pattern.")
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 
+    @Override
+    public Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
+        String currentPattern = this.pattern != null ? this.pattern : DEFAULT_PATTERN;
 
-    public abstract Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat);
+        HTMLLayout layout = new HTMLLayout();
+        layout.setContext(context);
+        layout.setPattern(currentPattern);
 
+        layout.start();
+        return layout;
+    }
 }

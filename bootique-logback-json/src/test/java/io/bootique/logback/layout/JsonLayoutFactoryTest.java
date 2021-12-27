@@ -21,33 +21,22 @@ package io.bootique.logback.layout;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.contrib.json.classic.JsonLayout;
 import ch.qos.logback.core.Layout;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.bootique.annotation.BQConfig;
-import io.bootique.annotation.BQConfigProperty;
-import io.bootique.config.PolymorphicConfiguration;
+import io.bootique.junit5.BQTest;
+import org.junit.jupiter.api.Test;
 
-/**
- * @since 3.0
- */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@BQConfig("Create layout.")
-public abstract class LayoutFactory implements PolymorphicConfiguration {
-    private String type;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    public String getType() {
-        return type;
+@BQTest
+class JsonLayoutFactoryTest {
+
+    @Test
+    void createLayoutTest() {
+        LoggerContext context = new LoggerContext();
+        JsonLayoutFactory factory = new JsonLayoutFactory();
+        Layout<ILoggingEvent> layout = factory.createLayout(context, null);
+        assertTrue(layout instanceof JsonLayout);
+        assertTrue(layout.isStarted());
     }
-
-    /**
-     * @param type layout type.
-     */
-    @BQConfigProperty("content out type, available types: \"json\", \"pattern\", \"html\", \"xml\". By default is \"pattern\".")
-    public void setType(String type) {
-        this.type = type;
-    }
-
-
-    public abstract Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat);
-
 }

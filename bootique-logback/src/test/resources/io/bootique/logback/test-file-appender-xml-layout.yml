@@ -17,8 +17,9 @@ log:
   level: debug
   appenders:
     - type: file
-      logFormat: '%c{20}: %m%n'
-      file: "target/logs/logfile_layout.log"
+      file: "target/logs/logfile_layout13.xml"
       layout:
-        type: pattern
+        type: xml
+        locationInfo: true
+        properties: true
 

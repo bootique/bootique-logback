@@ -111,7 +111,7 @@ available appenders are "console" and "file":
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
 for details.
-Moved in the layout properties. Will be deprecated  in appender properties since 4.0.
+Moved in the layout properties.
 
 |`target`
 |`stdout`
@@ -139,7 +139,7 @@ Moved in the layout properties. Will be deprecated  in appender properties since
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
 for details.
-Moved in the layout properties. Will be deprecated  in appender properties since 4.0.
+Moved in the layout properties.
 
 |`name`
 |none
@@ -223,12 +223,12 @@ log:
   appenders:
     - type: file
       file: /var/log/myapp.log
+      logFormat: '%c{20}: %m%n'
       rollingPolicy:
         type: time
         fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.log'
       layout:
         type: pattern
-        logFormat: '%c{20}: %m%n'
 ----
 "time" policy rotates the main log file at a fixed time interval determined by the file name pattern.
 
@@ -317,6 +317,7 @@ log:
   appenders:
     - type: file
       file: target/logs/info-only.log
+      logFormat: '%c{20}: %m%n'
       filters:
         - type: level
           level: info
@@ -324,7 +325,6 @@ log:
           onMismatch: deny
       layout:
         type: pattern
-        logFormat: '%c{20}: %m%n'
 ----
 
 `level` filter filters events based on exact level matching.
@@ -412,7 +412,8 @@ for details.
 log:
   level: debug
   appenders:
-    - type: console
+    - type: file
+      file: target/logs/info-only.log
       layout:
         type: json
         timestampFormat: 'yyyy-MM-dd HH:mm:ss'
@@ -434,6 +435,65 @@ log:
 |`prettyPrint`
 |`false`
 |Option for human-readable output.
+|===
+
+==== Layout "html"
+
+[source,yaml]
+----
+log:
+  level: debug
+  appenders:
+    - type: file
+      file: target/logs/info-only.html
+      layout:
+        type: html
+        pattern: %relative%thread%level%logger%msg
+----
+
+`html` layout configure log massage as html page. See Logback https://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout[HTMLLayout]
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`pattern`
+|`%relative%thread%mdc%level%logger%msg`
+|Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
+|===
+
+==== Layout "xml"
+
+[source,yaml]
+----
+log:
+  level: debug
+  appenders:
+    - type: file
+      file: target/logs/info-only.xml
+      layout:
+        type: xml
+        locationInfo: true
+        properties: true
+----
+
+`xml` layout configure log massage as xml. See Logback https://logback.qos.ch/manual/layouts.html#log4jXMLLayout[XMLLayout]
+
+[cols=3*,options=header]
+|===
+|Property
+|Default
+|Description
+
+|`locationInfo`
+|`false`
+|Setting `locationInfo` to true enables the inclusion of location info (caller data) in the each event.
+
+|`properties`
+|`false`
+|Setting `properties` to true enables the inclusion of MDC information. Both options are set to false by default.
 |===
 
 === log.loggers

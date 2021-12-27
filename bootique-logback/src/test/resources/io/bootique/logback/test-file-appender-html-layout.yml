@@ -17,8 +17,8 @@ log:
   level: debug
   appenders:
     - type: file
-      logFormat: '%c{20}: %m%n'
-      file: "target/logs/logfile_layout.log"
+      file: "target/logs/logfile_layout12.html"
       layout:
-        type: pattern
+        type: html
+        pattern: "%relative%thread%level%logger%msg"
 

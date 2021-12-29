@@ -28,12 +28,19 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
 /**
+ * Create HTMLLayout. HTMLLayout outputs events in an HTML table. <p> The content of the table
+ * columns are specified using a conversion pattern. See
+ * {@link ch.qos.logback.classic.PatternLayout} for documentation on the
+ * available patterns. <p> For more information about this layout, please refer
+ * to the online manual at
+ * http://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout
+ *
  * @since 3.0
  */
 @JsonTypeName("html")
-@BQConfig
+@BQConfig("HTMLLayout outputs logging events in an HTML " +
+        "table where each row of the table corresponds to a logging event")
 public class HtmlLayoutFactory extends LayoutFactory{
-    private static final String DEFAULT_PATTERN = "%relative%thread%mdc%level%logger%msg";
     private String pattern;
 
     /**
@@ -44,20 +51,20 @@ public class HtmlLayoutFactory extends LayoutFactory{
     }
 
     /**
-     * Sets pattern for output logs.
+     * Sets pattern for output logs. By default is '%date%thread%level%logger%mdc%msg'.
      */
-    @BQConfigProperty("Set pattern.")
+    @BQConfigProperty("Set pattern for output massage. By default is \'%date%thread%level%logger%mdc%msg\'.")
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }
 
     @Override
-    public Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
-        String currentPattern = this.pattern != null ? this.pattern : DEFAULT_PATTERN;
-
+    public Layout<ILoggingEvent> createLayout(LoggerContext context, String logFormat) {
         HTMLLayout layout = new HTMLLayout();
         layout.setContext(context);
-        layout.setPattern(currentPattern);
+        if (pattern != null && !pattern.isEmpty()) {
+            layout.setPattern(pattern);
+        }
 
         layout.start();
         return layout;

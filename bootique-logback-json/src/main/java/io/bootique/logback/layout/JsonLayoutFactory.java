@@ -24,15 +24,21 @@ import ch.qos.logback.contrib.jackson.JacksonJsonFormatter;
 import ch.qos.logback.contrib.json.classic.JsonLayout;
 import ch.qos.logback.core.Layout;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
 /**
  * JsonLayout configure logs with json format.
- * Can be specify timestamp format and human-readable option.
+ * Can be specify timestampFormat format and prettyPrint for human-readable option.
+ * A JsonLayout builds its jsonMap from a source {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvent}
+ * with keys/value pairs.
+ * For more information see https://www.baeldung.com/java-log-json-output#2-configuration-1
  *
  * @since 3.0
  */
 @JsonTypeName("json")
+@BQConfig("A JsonLayout builds its jsonMap from a source {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvent}" +
+        " with keys/value pairs.")
 public class JsonLayoutFactory extends LayoutFactory {
     private static final String DEFAULT_TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSS";
     private String timestampFormat;
@@ -47,9 +53,9 @@ public class JsonLayoutFactory extends LayoutFactory {
 
 
     /**
-     * Sets timestamp for output logs.
+     * Sets timestamp for output logs. By default is DEFAULT_TIMESTAMP.
      */
-    @BQConfigProperty("Timestamp format for json.")
+    @BQConfigProperty("Timestamp format for json. By default is \'yyyy-MM-dd HH:mm:ss.SSS\'")
     public void setTimestampFormat(String timestampFormat) {
         this.timestampFormat = timestampFormat;
     }
@@ -62,16 +68,16 @@ public class JsonLayoutFactory extends LayoutFactory {
     }
 
     /**
-     * Sets prettyPrint value for human-readable.
+     * Sets prettyPrint value for human-readable. By default false.
      */
-    @BQConfigProperty("Print logs in a human-readable format.")
+    @BQConfigProperty("Print logs in a human-readable format. By default false.")
     public void setPrettyPrint(boolean prettyPrint) {
         this.prettyPrint = prettyPrint;
     }
 
 
     @Override
-    public Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
+    public Layout<ILoggingEvent> createLayout(LoggerContext context, String logFormat) {
         String timestamp = this.timestampFormat != null ? this.timestampFormat : DEFAULT_TIMESTAMP;
 
         JsonLayout jsonLayout = new JsonLayout();

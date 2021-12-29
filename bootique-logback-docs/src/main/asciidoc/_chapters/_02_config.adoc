@@ -448,7 +448,7 @@ log:
       file: target/logs/info-only.html
       layout:
         type: html
-        pattern: %relative%thread%level%logger%msg
+        pattern: %date%thread%level%logger%mdc%msg
 ----
 
 `html` layout configure log massage as html page. See Logback https://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout[HTMLLayout]
@@ -460,7 +460,7 @@ log:
 |Description
 
 |`pattern`
-|`%relative%thread%mdc%level%logger%msg`
+|`%date%thread%level%logger%mdc%msg`
 |Each specifier found in the pattern will result in a separate column. Likewise a separate column will be generated for each block of literal text found in the pattern, potentially wasting valuable real-estate on your screen. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
 |===
 

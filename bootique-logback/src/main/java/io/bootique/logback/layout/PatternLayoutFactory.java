@@ -28,31 +28,42 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
 /**
+ *
+ * * <p>
+ * A flexible layout configurable with pattern string. The format of the string depends on the
+ * <em>conversion pattern</em>.
+ * <p>
+ * For more information about this layout, please refer to the online manual at
+ * http://logback.qos.ch/manual/layouts.html#PatternLayout
+ *
  * @since 3.0
  */
 @JsonTypeName("pattern")
-@BQConfig
-public class DefaultLayoutFactory extends LayoutFactory {
+@BQConfig("PatternLayout takes a logging event and returns a String. String can be customized by tweaking PatternLayout's conversion pattern(Parameter \'logFormat\').")
+public class PatternLayoutFactory extends LayoutFactory {
     private String logFormat;
 
     /**
-     * @return configured log format
+     * @return configured log format.
      */
     public String getLogFormat() {
         return logFormat;
     }
 
-    @BQConfigProperty("Log format for pattern.")
+    /**
+     * Set log format for output pattern. By default is set in {@link io.bootique.logback.LogbackContextFactory}
+     */
+    @BQConfigProperty("Log format for output pattern. By default is set in {@link io.bootique.logback.LogbackContextFactory}.")
     public void setLogFormat(String logFormat) {
         this.logFormat = logFormat;
     }
 
     @Override
-    public Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
-        String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;
+    public Layout<ILoggingEvent> createLayout(LoggerContext context, String logFormat) {
+        String currentLogFormat = this.logFormat != null ? this.logFormat : logFormat;
 
         PatternLayout layoutPattern = new PatternLayout();
-        layoutPattern.setPattern(logFormat);
+        layoutPattern.setPattern(currentLogFormat);
         layoutPattern.setContext(context);
 
         layoutPattern.start();

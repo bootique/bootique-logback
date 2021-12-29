@@ -31,7 +31,7 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import io.bootique.config.PolymorphicConfiguration;
 import io.bootique.logback.filter.FilterFactory;
-import io.bootique.logback.layout.DefaultLayoutFactory;
+import io.bootique.logback.layout.PatternLayoutFactory;
 import io.bootique.logback.layout.LayoutFactory;
 
 import java.util.Collection;
@@ -114,7 +114,7 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;
 
         if(layout == null) {
-            layout = new DefaultLayoutFactory();
+            layout = new PatternLayoutFactory();
         }
 
         Layout<ILoggingEvent> currentLayout = layout.createLayout(context, logFormat);

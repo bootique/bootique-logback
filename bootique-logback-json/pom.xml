@@ -41,13 +41,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.bootique</groupId>
-            <artifactId>bootique</artifactId>
+            <groupId>io.bootique.logback</groupId>
+            <artifactId>bootique-logback</artifactId>
+            <version>${bootique.version}</version>
         </dependency>
         <dependency>
             <groupId>io.bootique.logback</groupId>
             <artifactId>bootique-logback</artifactId>
             <version>${bootique.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback.contrib</groupId>

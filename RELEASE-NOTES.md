@@ -1,5 +1,6 @@
 ## 1.3
 
+* #54 Log files are not deleted after file count reaches 1000
 * #59 Upgrade to Logback 1.2.9
 
 ## 1.1

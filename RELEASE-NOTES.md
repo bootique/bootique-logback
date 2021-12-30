@@ -1,3 +1,7 @@
+## 3.0.M1
+
+* #57 Config for JSON layout 
+
 ## 2.0.RC1
 
 * #52 "LOGBACK: No context given for c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy" printed

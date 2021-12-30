@@ -40,7 +40,8 @@
 		<module>bootique-logback</module>
 		<module>bootique-logback-sentry</module>
 		<module>bootique-logback-docs</module>
-	</modules>
+        <module>bootique-logback-json</module>
+    </modules>
 
 	<properties>
 		<bootique.version>${project.version}</bootique.version>

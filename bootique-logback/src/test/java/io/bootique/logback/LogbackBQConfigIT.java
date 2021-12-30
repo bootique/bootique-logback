@@ -81,6 +81,30 @@ public class LogbackBQConfigIT {
         assertFalse(logfile2.contains("run1"));
     }
 
+    @Test
+    public void testFileAppenderHtml() {
+
+        String logfile = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-html-layout.yml",
+                "logfile_layout12.html",
+                l -> l.info("info-log-html")
+        );
+
+        assertTrue(logfile.contains("\"Message\">info-log-html<"), () -> "Unexpected logs: " + logfile);
+    }
+
+    @Test
+    public void testFileAppenderXml() {
+
+        String logfile = logTester.run(
+                "classpath:io/bootique/logback/test-file-appender-xml-layout.yml",
+                "logfile_layout13.xml",
+                l -> l.info("info-log-xml")
+        );
+
+        assertTrue(logfile.contains("message>info-log-xml<"), () -> "Unexpected logs: " + logfile);
+    }
+
     /**
      * Checks multi appender for child Loggers.
      * Should log to different files.

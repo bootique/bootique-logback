@@ -28,18 +28,15 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
 /**
- *
- * * <p>
- * A flexible layout configurable with pattern string. The format of the string depends on the
- * <em>conversion pattern</em>.
+ * A flexible layout configurable with pattern string.
  * <p>
  * For more information about this layout, please refer to the online manual at
- * http://logback.qos.ch/manual/layouts.html#PatternLayout
+ * https://logback.qos.ch/manual/layouts.html#ClassicPatternLayout
  *
  * @since 3.0
  */
 @JsonTypeName("pattern")
-@BQConfig("PatternLayout takes a logging event and returns a String. String can be customized by tweaking PatternLayout's conversion pattern(Parameter \'logFormat\').")
+@BQConfig("A flexible layout configurable with pattern string.")
 public class PatternLayoutFactory extends LayoutFactory {
     private String logFormat;
 
@@ -53,7 +50,7 @@ public class PatternLayoutFactory extends LayoutFactory {
     /**
      * Set log format for output pattern. By default is set in {@link io.bootique.logback.LogbackContextFactory}
      */
-    @BQConfigProperty("Log format for output pattern. By default is set in {@link io.bootique.logback.LogbackContextFactory}.")
+    @BQConfigProperty("A format of the log lines")
     public void setLogFormat(String logFormat) {
         this.logFormat = logFormat;
     }

@@ -110,8 +110,7 @@ available appenders are "console" and "file":
 |`logFormat`
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
-for details.
-Moved in the layout properties.
+for details. This is a shortcut for a `pattern` layout with a given format.
 
 |`target`
 |`stdout`
@@ -123,10 +122,8 @@ Moved in the layout properties.
 
 |`layout`
 |pattern
-|Layout config for this appender. Possible values are `pattern` and `json`. Examples given <<log.appenders.layout,below>>
+|Layout config for this appender. Possible values are `pattern`, `html`, `xml` and `json`. If not set `pattern` layout is used by default. Examples are given <<log.appenders.layout,below>>
 |===
-
-
 
 ."file" Appender Property Reference
 [cols=3*,options=header]
@@ -138,8 +135,7 @@ Moved in the layout properties.
 |`logFormat`
 |`%-5p [%d{ISO8601,UTC}] %thread %c{20}: %m%n%rEx`
 |A format of the log lines. See Logback http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout[PatternLayout]
-for details.
-Moved in the layout properties.
+for details. This is a shortcut for a `pattern` layout with a given format.
 
 |`name`
 |none
@@ -165,7 +161,7 @@ truncated. The append option is set to true by default.
 
 |`layout`
 |pattern
-|Layout config for this appender. Possible values are `pattern` and `json`. Examples given <<log.appenders.layout,below>>
+|Layout config for this appender. Possible values are `pattern`,`html`, `xml` and `json`. Examples are given <<log.appenders.layout,below>>
 |===
 
 There are a few ways log file rotation can be configured for the "file" appender, as defined by the `rollingPolicy`.
@@ -183,14 +179,12 @@ log:
   appenders:
     - type: file
       file: /var/log/myapp.log
+      logFormat: '%c{20}: %m%n'
       rollingPolicy:
         type: fixedWindow
         fileNamePattern: '/var/log/myapp-%i.log'
         historySize: 5
         fileSize: 20
-      layout:
-        type: pattern
-        logFormat: '%c{20}: %m%n'
 ----
 "fixedWindow" policy rotates the main log file when it reaches a certain size, keeping one or more rotated files.
 
@@ -227,8 +221,6 @@ log:
       rollingPolicy:
         type: time
         fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.log'
-      layout:
-        type: pattern
 ----
 "time" policy rotates the main log file at a fixed time interval determined by the file name pattern.
 
@@ -264,15 +256,13 @@ log:
   appenders:
     - type: file
       file: /var/log/myapp.log
+      logFormat: '%c{20}: %m%n'
       rollingPolicy:
         type: sizeAndTime
         fileNamePattern: '/var/log/myapp-%d{yyyyMMddHHmmss}.%i.log'
         historySize: 5
         fileSize: 50
         totalSize: 150
-      layout:
-        type: pattern
-        logFormat: '%c{20}: %m%n'
 ----
 "sizeAndTime" policy rotates the main log file either at a fixed time interval determined by the file name pattern or
 when the log file reaches a certain size.
@@ -323,8 +313,6 @@ log:
           level: info
           onMatch: accept
           onMismatch: deny
-      layout:
-        type: pattern
 ----
 
 `level` filter filters events based on exact level matching.
@@ -407,6 +395,32 @@ for details.
 
 ==== Layout "json"
 
+`json` layout generates logs in JSON format.
+This layout requires additional dependency:
+
+.Maven
+[%collapsible%open]
+====
+[source,xml]
+----
+<dependency>
+    <groupId>io.bootique.logback</groupId>
+    <artifactId>bootique-logback-json</artifactId>
+</dependency>
+----
+====
+
+.Gradle
+[%collapsible]
+====
+[source,groovy,subs="attributes"]
+----
+dependencies {
+    implementation "io.bootique.logback:bootique-logback-json"
+}
+----
+====
+
 [source,yaml]
 ----
 log:
@@ -419,8 +433,6 @@ log:
         timestampFormat: 'yyyy-MM-dd HH:mm:ss'
         prettyPrint: true
 ----
-
-`json` layout configure log massage as json.
 
 [cols=3*,options=header]
 |===
@@ -451,7 +463,7 @@ log:
         pattern: %date%thread%level%logger%mdc%msg
 ----
 
-`html` layout configure log massage as html page. See Logback https://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout[HTMLLayout]
+`html` layout generates logs in HTML format. See Logback documentation on https://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout[HTMLLayout] for details
 
 [cols=3*,options=header]
 |===
@@ -479,7 +491,7 @@ log:
         properties: true
 ----
 
-`xml` layout configure log massage as xml. See Logback https://logback.qos.ch/manual/layouts.html#log4jXMLLayout[XMLLayout]
+`xml` generates logs in Log4j XML format. See Logback https://logback.qos.ch/manual/layouts.html#log4jXMLLayout[XMLLayout]
 
 [cols=3*,options=header]
 |===

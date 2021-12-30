@@ -28,13 +28,11 @@ import io.bootique.annotation.BQConfigProperty;
 import io.bootique.config.PolymorphicConfiguration;
 
 /**
- *
- * Create layout for appender. By default is PatternLayout.
+ * Creates layout for appender. Default is {@link PatternLayoutFactory}.
  *
  * @since 3.0
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
-@BQConfig("Create layout. By default is PatternLayout.")
 public abstract class LayoutFactory implements PolymorphicConfiguration {
     private String type;
 
@@ -43,13 +41,12 @@ public abstract class LayoutFactory implements PolymorphicConfiguration {
     }
 
     /**
-     * @param type layout type, available types: "pattern", "json", "html", "xml". By default is "pattern".
+     * @param type layout type, available types: "pattern", "json", "html", "xml". Default is "pattern".
      */
-    @BQConfigProperty("Content out type (layout), available types: \"pattern\", \"json\", \"html\", \"xml\". By default is \"pattern\".")
+    @BQConfigProperty("Content layout, available types: \"pattern\", \"json\", \"html\", \"xml\". Default is \"pattern\".")
     public void setType(String type) {
         this.type = type;
     }
-
 
     public abstract Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat);
 

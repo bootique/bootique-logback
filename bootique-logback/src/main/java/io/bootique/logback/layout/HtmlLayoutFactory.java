@@ -28,18 +28,14 @@ import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 
 /**
- * Create HTMLLayout. HTMLLayout outputs events in an HTML table. <p> The content of the table
- * columns are specified using a conversion pattern. See
- * {@link ch.qos.logback.classic.PatternLayout} for documentation on the
- * available patterns. <p> For more information about this layout, please refer
- * to the online manual at
+ * Creates HTMLLayout. HTMLLayout outputs events in an HTML table.
+ * <p> For more information about this layout, please refer to the logback manual
  * http://logback.qos.ch/manual/layouts.html#ClassicHTMLLayout
  *
  * @since 3.0
  */
 @JsonTypeName("html")
-@BQConfig("HTMLLayout outputs logging events in an HTML " +
-        "table where each row of the table corresponds to a logging event")
+@BQConfig("Generates logs in HTML format")
 public class HtmlLayoutFactory extends LayoutFactory{
     private String pattern;
 
@@ -51,9 +47,9 @@ public class HtmlLayoutFactory extends LayoutFactory{
     }
 
     /**
-     * Sets pattern for output logs. By default is '%date%thread%level%logger%mdc%msg'.
+     * Sets pattern for output logs. Default is '%date%thread%level%logger%mdc%msg'.
      */
-    @BQConfigProperty("Set pattern for output massage. By default is \'%date%thread%level%logger%mdc%msg\'.")
+    @BQConfigProperty("Set pattern for output massage. Default is '%date%thread%level%logger%mdc%msg'.")
     public void setPattern(String pattern) {
         this.pattern = pattern;
     }

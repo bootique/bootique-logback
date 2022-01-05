@@ -1,6 +1,7 @@
 ## 3.0.M1
 
 * #57 Config for JSON layout 
+* #60 Upgrade logback-sentry to 5.5.2 
 
 ## 2.0.RC1
 

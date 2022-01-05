@@ -51,26 +51,33 @@ public class LogbackSentryFactory extends AppenderFactory {
 
     private String release;
 
-    private String minLevel;
+    private String minLevel = LogbackLevel.error.name();
 
     private String distribution;
 
     private List<String> applicationPackages = new ArrayList<>();
 
+    @Deprecated
     private boolean commonFramesEnabled = true;
 
     private Map<String, String> tags;
 
     private Map<String, String> extra;
 
-    public LogbackSentryFactory() {
-        this.minLevel = LogbackLevel.error.name();
-    }
-
     @Override
     public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
-        final BootiqueSentryClientFactory sentryClientFactory = new BootiqueSentryClientFactory(this);
-        Sentry.init(this.getDsn(), sentryClientFactory);
+        Sentry.init(options -> {
+            options.setDsn(getDsn());
+            options.setServerName(getServerName());
+            options.setEnvironment(getEnvironment());
+            options.setRelease(getRelease());
+            options.setDist(getDistribution());
+
+            getTags().forEach(options::setTag);
+            getApplicationPackages().forEach(options::addInAppInclude);
+        });
+
+        getExtra().forEach(Sentry::setExtra);
 
         final SentryAppender sentryAppender = new SentryAppender();
 
@@ -166,11 +173,19 @@ public class LogbackSentryFactory extends AppenderFactory {
         this.applicationPackages = applicationPackages;
     }
 
+    /**
+     * @deprecated as it doesn't have corresponding config parameter in a new version of the Sentry API
+     */
+    @Deprecated
     public boolean isCommonFramesEnabled() {
         return commonFramesEnabled;
     }
 
-    @BQConfigProperty("Allow/Disallow Sentry replacing common frames by the ... N more line.")
+    /**
+     * @deprecated as it doesn't have corresponding config parameter in a new version of the Sentry API
+     */
+    @Deprecated
+    @BQConfigProperty("Deprecated config parameter. Does nothing.")
     public void setCommonFramesEnabled(boolean commonFramesEnabled) {
         this.commonFramesEnabled = commonFramesEnabled;
     }

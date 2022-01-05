@@ -27,8 +27,8 @@ import io.bootique.logback.LogbackContextFactory;
 import io.bootique.logback.LogbackLevel;
 import io.bootique.logback.LogbackModule;
 import io.bootique.logback.appender.AppenderFactory;
+import io.sentry.IHub;
 import io.sentry.Sentry;
-import io.sentry.SentryClient;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,10 +81,8 @@ public class LogbackSentryContextFactoryIT {
     public void testSentryClientInit() {
         createRuntime().getInstance(Logger.class).trace("Init logging");
 
-        final SentryClient storedClient = Sentry.getStoredClient();
-
-        assertEquals(BootiqueSentryClient.class, storedClient.getClass());
-        assertEquals("testDistribution", storedClient.getDist());
+        final IHub hub = Sentry.getCurrentHub();
+        assertEquals("testDistribution", hub.getOptions().getDist());
     }
 
     private BQRuntime createRuntime() {

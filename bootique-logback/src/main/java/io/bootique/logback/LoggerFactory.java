@@ -21,7 +21,6 @@ package io.bootique.logback;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import io.bootique.annotation.BQConfig;
@@ -49,14 +48,6 @@ public class LoggerFactory {
     @BQConfigProperty("Logging level of a given logger and its children.")
     public void setLevel(LogbackLevel level) {
         this.level = level;
-    }
-
-    /**
-     * @deprecated since 1.0.RC1 now use {{@link #configLogger(Logger, Map, Collection)}}
-     */
-    @Deprecated
-    public void configLogger(String loggerName, LoggerContext context) {
-        configLogger(context.getLogger(loggerName), Collections.emptyMap(), Collections.emptyList());
     }
 
     public void configLogger(

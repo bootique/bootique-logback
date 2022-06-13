@@ -24,9 +24,11 @@ import io.bootique.junit5.BQTestFactory;
 import io.bootique.junit5.BQTestTool;
 import io.bootique.logback.unit.LogTester;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @BQTest
@@ -112,5 +114,25 @@ public class LogbackFiltersIT {
 
         String levelLog = logs.get("level.log");
         assertTrue(levelLog.endsWith("ROOT: info-log-to-file"), () -> "Unexpected log: " + levelLog);
+    }
+
+
+    @Test
+    public void testFileLoggerLevelOff() {
+
+        Map<String, String> logs = logTester.run(
+                "classpath:io/bootique/logback/test-logger-level-off.yml",
+                l -> {
+                    LoggerFactory.getLogger("one").debug("debug-log-to-file-1");
+                    LoggerFactory.getLogger("one").info("info-log-to-file-1");
+                    LoggerFactory.getLogger("one").warn("warn-log-to-file-1");
+
+                    LoggerFactory.getLogger("two").debug("debug-log-to-file-2");
+                    LoggerFactory.getLogger("two").info("info-log-to-file-2");
+                    LoggerFactory.getLogger("two").warn("warn-log-to-file-2");
+                });
+
+        String thresholdLog = logs.get("logfile1-off.log");
+        assertEquals("two: warn-log-to-file-2", thresholdLog, () -> "Unexpected log: " + thresholdLog);
     }
 }

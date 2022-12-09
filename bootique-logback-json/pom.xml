@@ -34,37 +34,44 @@
         Provides JSON layout for bootique-logback
     </description>
 
-    <properties>
-        <bootique.version>${project.version}</bootique.version>
-        <logback.contrib.version>0.1.5</logback.contrib.version>
-    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.bootique.logback</groupId>
+                <artifactId>bootique-logback</artifactId>
+                <version>${bootique.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique.logback</groupId>
+                <artifactId>bootique-logback</artifactId>
+                <version>${bootique.version}</version>
+                <type>test-jar</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>io.bootique.logback</groupId>
             <artifactId>bootique-logback</artifactId>
-            <version>${bootique.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.bootique.logback</groupId>
-            <artifactId>bootique-logback</artifactId>
-            <version>${bootique.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-json-classic</artifactId>
-            <version>${logback.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-jackson</artifactId>
-            <version>${logback.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>io.bootique</groupId>
             <artifactId>bootique-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.bootique.logback</groupId>
+            <artifactId>bootique-logback</artifactId>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>

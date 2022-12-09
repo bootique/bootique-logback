@@ -47,6 +47,7 @@
 		<bootique.version>${project.version}</bootique.version>
 		<logback.version>1.2.11</logback.version>
 		<logback.sentry.version>5.5.2</logback.sentry.version>
+		<logback.contrib.version>0.1.5</logback.contrib.version>
 	</properties>
 
 	<scm>
@@ -96,6 +97,16 @@
 						<artifactId>logback-classic</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback.contrib</groupId>
+				<artifactId>logback-json-classic</artifactId>
+				<version>${logback.contrib.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback.contrib</groupId>
+				<artifactId>logback-jackson</artifactId>
+				<version>${logback.contrib.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

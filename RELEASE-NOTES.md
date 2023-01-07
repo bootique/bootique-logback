@@ -1,3 +1,7 @@
+## 3.0.M2
+
+* #63 Upgrade Logback to 1.4.5
+
 ## 3.0.M1
 
 * #57 Config for JSON layout 

@@ -26,6 +26,7 @@ import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
 import ch.qos.logback.core.rolling.helper.RollingCalendar;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 abstract class FileNamePatternValidator {
 
@@ -90,8 +91,9 @@ abstract class FileNamePatternValidator {
 
     private void checkDateFormat(DateTokenConverter<Object> token, String pattern) {
         RollingCalendar rollingCalendar;
-        if (token.getTimeZone() != null) {
-            rollingCalendar = new RollingCalendar(token.getDatePattern(), token.getTimeZone(), Locale.getDefault());
+        if (token.getZoneId() != null) {
+            TimeZone tz = TimeZone.getTimeZone(token.getZoneId());
+            rollingCalendar = new RollingCalendar(token.getDatePattern(), tz, Locale.getDefault());
         } else {
             rollingCalendar = new RollingCalendar(token.getDatePattern());
         }

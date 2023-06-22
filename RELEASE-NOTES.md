@@ -1,6 +1,7 @@
 ## 3.0.M2
 
 * #63 Upgrade Logback to 1.4.5
+* #64 Logback / Sentry - app crashes on startup when tags or extras are empty
 
 ## 3.0.M1
 

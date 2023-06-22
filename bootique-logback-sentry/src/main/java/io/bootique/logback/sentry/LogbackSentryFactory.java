@@ -31,7 +31,7 @@ import io.bootique.logback.appender.AppenderFactory;
 import io.sentry.Sentry;
 import io.sentry.logback.SentryAppender;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,24 +44,17 @@ import java.util.Map;
 public class LogbackSentryFactory extends AppenderFactory {
 
     private String dsn;
-
     private String serverName;
-
     private String environment;
-
     private String release;
-
-    private String minLevel = LogbackLevel.error.name();
-
+    private String minLevel;
     private String distribution;
-
-    private List<String> applicationPackages = new ArrayList<>();
+    private List<String> applicationPackages;
 
     @Deprecated
     private boolean commonFramesEnabled = true;
 
     private Map<String, String> tags;
-
     private Map<String, String> extra;
 
     @Override
@@ -82,7 +75,7 @@ public class LogbackSentryFactory extends AppenderFactory {
         final SentryAppender sentryAppender = new SentryAppender();
 
         final ThresholdFilter thresholdFilter = new ThresholdFilter();
-        thresholdFilter.setLevel(minLevel);
+        thresholdFilter.setLevel(getMinLevel());
         thresholdFilter.start();
 
         sentryAppender.addFilter(thresholdFilter);
@@ -129,7 +122,7 @@ public class LogbackSentryFactory extends AppenderFactory {
     }
 
     public Map<String, String> getTags() {
-        return tags;
+        return tags != null ? tags : Collections.emptyMap();
     }
 
     @BQConfigProperty("Set the tags that should be sent along with the events. Example: tag1:value1,tag2:value2")
@@ -139,7 +132,7 @@ public class LogbackSentryFactory extends AppenderFactory {
 
 
     public Map<String, String> getExtra() {
-        return extra;
+        return extra != null ? extra : Collections.emptyMap();
     }
 
     @BQConfigProperty("By default all MDC parameters are sent under the Additional Data Tab. " +
@@ -151,7 +144,7 @@ public class LogbackSentryFactory extends AppenderFactory {
     }
 
     public String getMinLevel() {
-        return minLevel;
+        return minLevel != null ? minLevel : LogbackLevel.error.name();
     }
 
     public String getDistribution() {
@@ -165,7 +158,7 @@ public class LogbackSentryFactory extends AppenderFactory {
     }
 
     public List<String> getApplicationPackages() {
-        return applicationPackages;
+        return applicationPackages != null ? applicationPackages : Collections.emptyList();
     }
 
     @BQConfigProperty("Sentry differentiates stack frames that are directly related to your application (\"in application\") from stack frames that come from other packages such as the standard library, frameworks, or other dependencies. The difference is visible in the Sentry web interface where only the \"in application\" frames are displayed by default.")

@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 public class LogbackModuleProviderIT {
 
 	@Test
-	public void testAutoLoadable() {
+    public void autoLoadable() {
 		BQModuleProviderChecker.testAutoLoadable(LogbackModuleProvider.class);
 	}
 
 	@Test
-	public void testMetadata() {
+    public void metadata() {
 		BQModuleProviderChecker.testMetadata(LogbackModuleProvider.class);
 	}
 }

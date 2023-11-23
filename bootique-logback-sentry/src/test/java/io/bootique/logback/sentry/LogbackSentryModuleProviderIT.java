@@ -31,17 +31,17 @@ public class LogbackSentryModuleProviderIT {
     final BQTestFactory testFactory = new BQTestFactory();
 
     @Test
-    public void testAutoLoadable() {
+    public void autoLoadable() {
         BQModuleProviderChecker.testAutoLoadable(LogbackSentryModuleProvider.class);
     }
 
     @Test
-    public void testMetadata() {
+    public void metadata() {
         BQModuleProviderChecker.testMetadata(LogbackSentryModuleProvider.class);
     }
 
     @Test
-    public void testModuleDeclaresDependencies() {
+    public void moduleDeclaresDependencies() {
         final BQRuntime bqRuntime = testFactory.app().moduleProvider(new LogbackSentryModuleProvider()).createRuntime();
         BQRuntimeChecker.testModulesLoaded(bqRuntime, LogbackSentryModule.class, LogbackModule.class);
     }

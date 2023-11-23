@@ -39,7 +39,7 @@ public class MainTest {
     // end::useLogbackConfig[]
 
     @Test
-    public void testMe() {
+    public void me() {
 
     }
 }

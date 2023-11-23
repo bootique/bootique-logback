@@ -44,7 +44,7 @@ public class LogbackFiltersIT {
      * Checks file appender with ThresholdFilter
      */
     @Test
-    public void testFileAppenderThresholdFilter() {
+    public void fileAppenderThresholdFilter() {
 
         String thresholdLog = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-filter-threshold.yml",
@@ -62,7 +62,7 @@ public class LogbackFiltersIT {
      * Checks file appender with LevelFilter
      */
     @Test
-    public void testFileAppenderLevelFilter() {
+    public void fileAppenderLevelFilter() {
 
         String levelLog = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-filter-level.yml",
@@ -81,7 +81,7 @@ public class LogbackFiltersIT {
      * One appender, two filters
      */
     @Test
-    public void testFileAppenderLevelFilterAndThresholdFilter() {
+    public void fileAppenderLevelFilterAndThresholdFilter() {
 
         String filterLog = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-filter-level-threshold.yml",
@@ -99,7 +99,7 @@ public class LogbackFiltersIT {
      * Each appender with one filter
      */
     @Test
-    public void testFileAppendersLevelFilterAndThresholdFilter() {
+    public void fileAppendersLevelFilterAndThresholdFilter() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appenders-filter-level-threshold.yml",
@@ -118,7 +118,7 @@ public class LogbackFiltersIT {
 
 
     @Test
-    public void testFileLoggerLevelOff() {
+    public void fileLoggerLevelOff() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-logger-level-off.yml",

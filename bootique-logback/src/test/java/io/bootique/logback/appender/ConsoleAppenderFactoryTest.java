@@ -38,7 +38,7 @@ public class ConsoleAppenderFactoryTest {
     }
 
     @Test
-    public void testCreateConsoleAppenderTarget_Default() {
+    public void createConsoleAppenderTarget_Default() {
         ConsoleAppenderFactory factory = new ConsoleAppenderFactory();
         ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext, "%c{20}: %m%n");
 
@@ -46,7 +46,7 @@ public class ConsoleAppenderFactoryTest {
     }
 
     @Test
-    public void testCreateConsoleAppenderTarget_Stderr() {
+    public void createConsoleAppenderTarget_Stderr() {
         ConsoleAppenderFactory factory = new ConsoleAppenderFactory();
         factory.setTarget(ConsoleTarget.stderr);
         ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext, "%c{20}: %m%n");
@@ -55,7 +55,7 @@ public class ConsoleAppenderFactoryTest {
     }
 
     @Test
-    public void testCreateConsoleAppenderTarget_Stdout() {
+    public void createConsoleAppenderTarget_Stdout() {
         ConsoleAppenderFactory factory = new ConsoleAppenderFactory();
         factory.setTarget(ConsoleTarget.stdout);
         ConsoleAppender<ILoggingEvent> appender = factory.createConsoleAppender(mockContext, "%c{20}: %m%n");

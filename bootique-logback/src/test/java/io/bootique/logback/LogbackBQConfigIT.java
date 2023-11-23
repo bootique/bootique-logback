@@ -48,7 +48,7 @@ public class LogbackBQConfigIT {
     final LogTester logTester = new LogTester(testFactory, "target/logs");
 
     @Test
-    public void testFileAppender() {
+    public void fileAppender() {
 
         String logfile1 = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender.yml",
@@ -60,7 +60,7 @@ public class LogbackBQConfigIT {
     }
 
     @Test
-    public void testFileAppender_NoAppend() {
+    public void fileAppender_NoAppend() {
 
         String logfile1 = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-with-flag.yml",
@@ -82,7 +82,7 @@ public class LogbackBQConfigIT {
     }
 
     @Test
-    public void testFileAppenderHtml() {
+    public void fileAppenderHtml() {
 
         String logfile = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-html-layout.yml",
@@ -94,7 +94,7 @@ public class LogbackBQConfigIT {
     }
 
     @Test
-    public void testFileAppenderXml() {
+    public void fileAppenderXml() {
 
         String logfile = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-xml-layout.yml",
@@ -116,7 +116,7 @@ public class LogbackBQConfigIT {
      * even if it will have reference to the same appender.
      */
     @Test
-    public void testFileMultiAppender_Root() {
+    public void fileMultiAppender_Root() {
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-multi-file-appender.yml",
                 l -> l.info("info-log-to-file")
@@ -131,7 +131,7 @@ public class LogbackBQConfigIT {
     }
 
     @Test
-    public void testFileMultiAppender_Child() {
+    public void fileMultiAppender_Child() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-multi-file-appender.yml",
@@ -158,7 +158,7 @@ public class LogbackBQConfigIT {
      * - 3 total rows in all log file
      */
     @Test
-    public void testFileAppender_Rotate_By_Time() {
+    public void fileAppender_Rotate_By_Time() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-time-rotation.yml",
@@ -181,7 +181,7 @@ public class LogbackBQConfigIT {
      * As result, 2 archived files + 1 current log-file are expected; 4 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Time_And_History() {
+    public void fileAppender_Rotate_By_Time_And_History() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-time-and-history-rotation.yml",
@@ -204,7 +204,7 @@ public class LogbackBQConfigIT {
      * As result, 3 archived files (63 bytes) + 1 current log-file are expected; 4 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Time_And_History_And_TotalSize() {
+    public void fileAppender_Rotate_By_Time_And_History_And_TotalSize() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-time-and-history-and-totalsize-rotation.yml",
@@ -230,7 +230,7 @@ public class LogbackBQConfigIT {
      * - 20 total rows in all log file
      */
     @Test
-    public void testFileAppender_Rotate_By_Size() {
+    public void fileAppender_Rotate_By_Size() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-size-rotation.yml",
@@ -253,7 +253,7 @@ public class LogbackBQConfigIT {
      * As result, 2 archived files + 1 current log-file are expected; 6 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Size_And_History() {
+    public void fileAppender_Rotate_By_Size_And_History() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-size-and-history-rotation.yml",
@@ -276,7 +276,7 @@ public class LogbackBQConfigIT {
      * As result, 3 archived files (135 bytes) + 1 current log-file are expected; 8 rows are expected in all log files
      */
     @Test
-    public void testFileAppender_Rotate_By_Size_And_History_And_TotalSize() {
+    public void fileAppender_Rotate_By_Size_And_History_And_TotalSize() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-size-and-history-and-totalsize-rotation.yml",
@@ -299,7 +299,7 @@ public class LogbackBQConfigIT {
      * As result, 2 archived files + 1 current log-file are expected;
      */
     @Test
-    public void testFileAppender_Rotate_Fixed() {
+    public void fileAppender_Rotate_Fixed() {
 
         Map<String, String> logs = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-fixed-rotation.yml",

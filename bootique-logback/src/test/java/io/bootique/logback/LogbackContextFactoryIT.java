@@ -42,7 +42,7 @@ public class LogbackContextFactoryIT {
     final LogTester logTester = new LogTester(testFactory, "target/logs");
 
     @Test
-    public void testInitFromConfig() {
+    public void initFromConfig() {
 
         ConfigurationFactory configFactory = testFactory.app("-c", "classpath:io/bootique/logback/test-multi-appender.yml")
                 .module(LogbackModule.class)

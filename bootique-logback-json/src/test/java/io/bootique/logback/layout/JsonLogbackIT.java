@@ -37,7 +37,7 @@ public class JsonLogbackIT {
     final LogTester logTester = new LogTester(testFactory, "target/logs");
 
     @Test
-    public void testFileAppenderJson() {
+    public void fileAppenderJson() {
         String logfile = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-json-layout.yml",
                 "logfile_layout1.log",
@@ -48,7 +48,7 @@ public class JsonLogbackIT {
     }
 
     @Test
-    public void testFileAppenderJsonWithTimestamp() {
+    public void fileAppenderJsonWithTimestamp() {
 
         String logfile = logTester.run(
                 "classpath:io/bootique/logback/test-file-appender-json-layout-with-timestamp.yml",

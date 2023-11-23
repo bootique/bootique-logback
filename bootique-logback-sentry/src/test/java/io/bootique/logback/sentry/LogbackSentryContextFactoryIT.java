@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LogbackSentryContextFactoryIT {
 
     @Test
-    public void testInitFromConfig() {
+    public void initFromConfig() {
         ConfigurationFactory configFactory = createRuntime().getInstance(ConfigurationFactory.class);
 
         LogbackContextFactory rootFactory = configFactory.config(LogbackContextFactory.class, "log");
@@ -48,7 +48,7 @@ public class LogbackSentryContextFactoryIT {
     }
 
     @Test
-    public void testSentryAppenderFactory() {
+    public void sentryAppenderFactory() {
         ConfigurationFactory configFactory = createRuntime().getInstance(ConfigurationFactory.class);
 
         LogbackContextFactory rootFactory = configFactory.config(LogbackContextFactory.class, "log");
@@ -78,7 +78,7 @@ public class LogbackSentryContextFactoryIT {
     }
 
     @Test
-    public void testSentryClientInit() {
+    public void sentryClientInit() {
         createRuntime().getInstance(Logger.class).trace("Init logging");
 
         final IHub hub = Sentry.getCurrentHub();

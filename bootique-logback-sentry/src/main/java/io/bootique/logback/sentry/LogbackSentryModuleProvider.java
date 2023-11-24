@@ -20,7 +20,7 @@
 package io.bootique.logback.sentry;
 
 import io.bootique.BQModuleProvider;
-import io.bootique.di.BQModule;
+import io.bootique.bootstrap.BuiltModule;
 import io.bootique.logback.LogbackModuleProvider;
 
 import java.util.Collection;
@@ -28,14 +28,15 @@ import java.util.Collections;
 
 /**
  * Provider for {@link LogbackSentryModule}.
- *
- * @author Ibragimov Ruslan
  */
 public class LogbackSentryModuleProvider implements BQModuleProvider {
 
     @Override
-    public BQModule module() {
-        return new LogbackSentryModule();
+    public BuiltModule buildModule() {
+        return BuiltModule.of(new LogbackSentryModule())
+                .provider(this)
+                .description("Integrates Sentry logging appender to Logback")
+                .build();
     }
 
     @Override

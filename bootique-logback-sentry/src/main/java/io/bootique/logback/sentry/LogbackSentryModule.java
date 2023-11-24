@@ -24,8 +24,6 @@ import io.bootique.di.BQModule;
 
 /**
  * Loads configuration for {@link io.sentry.Sentry}.
- *
- * @author Ibragimov Ruslan
  */
 public class LogbackSentryModule implements BQModule {
 

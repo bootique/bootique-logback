@@ -20,9 +20,11 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
-import io.bootique.ConfigModule;
+import io.bootique.BQModuleProvider;
 import io.bootique.annotation.LogLevels;
+import io.bootique.bootstrap.BuiltModule;
 import io.bootique.config.ConfigurationFactory;
+import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 import io.bootique.shutdown.ShutdownManager;
@@ -31,11 +33,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 
-public class LogbackModule extends ConfigModule {
+public class LogbackModule implements BQModule, BQModuleProvider {
+
+    private static final String CONFIG_PREFIX = "log";
 
     @Override
-    protected String defaultConfigPrefix() {
-        return "log";
+    public BuiltModule buildModule() {
+        return BuiltModule.of(this)
+                .description("Integrates Logback logging library")
+                .config(CONFIG_PREFIX, LogbackContextFactory.class)
+                .build();
     }
 
     @Override
@@ -47,11 +54,13 @@ public class LogbackModule extends ConfigModule {
 
     @Singleton
     @Provides
-    Logger provideRootLogger(ConfigurationFactory configFactory,
-                             ShutdownManager shutdownManager,
-                             @LogLevels Map<String, java.util.logging.Level> defaultLevels) {
+    Logger provideRootLogger(
+            ConfigurationFactory configFactory,
+            ShutdownManager shutdownManager,
+            @LogLevels Map<String, java.util.logging.Level> defaultLevels) {
 
-        return config(LogbackContextFactory.class, configFactory)
+        return configFactory
+                .config(LogbackContextFactory.class, CONFIG_PREFIX)
                 .createRootLogger(shutdownManager, defaultLevels);
     }
 

@@ -21,7 +21,7 @@ package io.bootique.logback.sentry;
 
 import io.bootique.BQModuleProvider;
 import io.bootique.bootstrap.BuiltModule;
-import io.bootique.logback.LogbackModuleProvider;
+import io.bootique.logback.LogbackModule;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +42,6 @@ public class LogbackSentryModuleProvider implements BQModuleProvider {
     @Override
     @Deprecated(since = "3.0", forRemoval = true)
     public Collection<BQModuleProvider> dependencies() {
-        return Collections.singletonList(new LogbackModuleProvider());
+        return Collections.singletonList(new LogbackModule());
     }
 }

@@ -25,24 +25,24 @@ import io.bootique.logback.LogbackModule;
 import org.junit.jupiter.api.Test;
 
 @BQTest
-public class LogbackSentryModuleProviderIT {
+public class LogbackSentryModuleTest {
 
     @BQTestTool
     final BQTestFactory testFactory = new BQTestFactory();
 
     @Test
     public void autoLoadable() {
-        BQModuleProviderChecker.testAutoLoadable(LogbackSentryModuleProvider.class);
+        BQModuleProviderChecker.testAutoLoadable(LogbackSentryModule.class);
     }
 
     @Test
     public void metadata() {
-        BQModuleProviderChecker.testMetadata(LogbackSentryModuleProvider.class);
+        BQModuleProviderChecker.testMetadata(LogbackSentryModule.class);
     }
 
     @Test
     public void moduleDeclaresDependencies() {
-        final BQRuntime bqRuntime = testFactory.app().moduleProvider(new LogbackSentryModuleProvider()).createRuntime();
+        final BQRuntime bqRuntime = testFactory.app().moduleProvider(new LogbackSentryModule()).createRuntime();
         BQRuntimeChecker.testModulesLoaded(bqRuntime, LogbackSentryModule.class, LogbackModule.class);
     }
 }

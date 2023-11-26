@@ -19,13 +19,33 @@
 
 package io.bootique.logback.sentry;
 
+import io.bootique.BQModuleProvider;
+import io.bootique.ModuleCrate;
 import io.bootique.di.Binder;
 import io.bootique.di.BQModule;
+import io.bootique.logback.LogbackModule;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Loads configuration for {@link io.sentry.Sentry}.
  */
-public class LogbackSentryModule implements BQModule {
+public class LogbackSentryModule implements BQModule, BQModuleProvider {
+
+    @Override
+    public ModuleCrate moduleCrate() {
+        return ModuleCrate.of(new LogbackSentryModule())
+                .provider(this)
+                .description("Integrates Sentry logging appender to Logback")
+                .build();
+    }
+
+    @Override
+    @Deprecated(since = "3.0", forRemoval = true)
+    public Collection<BQModuleProvider> dependencies() {
+        return Collections.singletonList(new LogbackModule());
+    }
 
     @Override
     public void configure(Binder binder) {

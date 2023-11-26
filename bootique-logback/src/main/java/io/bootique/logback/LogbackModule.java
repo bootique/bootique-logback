@@ -22,7 +22,7 @@ package io.bootique.logback;
 import ch.qos.logback.classic.Logger;
 import io.bootique.BQModuleProvider;
 import io.bootique.annotation.LogLevels;
-import io.bootique.bootstrap.BuiltModule;
+import io.bootique.ModuleCrate;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
@@ -38,8 +38,8 @@ public class LogbackModule implements BQModule, BQModuleProvider {
     private static final String CONFIG_PREFIX = "log";
 
     @Override
-    public BuiltModule buildModule() {
-        return BuiltModule.of(this)
+    public ModuleCrate moduleCrate() {
+        return ModuleCrate.of(this)
                 .description("Integrates Logback logging library")
                 .config(CONFIG_PREFIX, LogbackContextFactory.class)
                 .build();

@@ -1,1 +1,1 @@
-io.bootique.logback.sentry.LogbackSentryModuleProvider
+io.bootique.logback.sentry.LogbackSentryModule

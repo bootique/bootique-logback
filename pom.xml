@@ -45,7 +45,7 @@
 
 	<properties>
 		<bootique.version>${project.version}</bootique.version>
-		<logback.version>1.4.5</logback.version>
+		<logback.version>1.4.12</logback.version>
 		<logback.sentry.version>5.5.2</logback.sentry.version>
 		<logback.contrib.version>0.1.5</logback.contrib.version>
 	</properties>

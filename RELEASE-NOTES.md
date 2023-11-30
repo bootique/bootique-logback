@@ -1,3 +1,7 @@
+## 3.0-M3
+
+* #66 Upgrade to Logback 1.4.13
+
 ## 3.0.M2
 
 * #63 Upgrade Logback to 1.4.5

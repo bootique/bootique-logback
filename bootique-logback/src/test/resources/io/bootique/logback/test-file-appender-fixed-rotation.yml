@@ -24,3 +24,4 @@ log:
         fileNamePattern: "target/logs/logfile-%i.log"
         historySize: 2
         fileSize: 20
+        checkIncrement: 50ms

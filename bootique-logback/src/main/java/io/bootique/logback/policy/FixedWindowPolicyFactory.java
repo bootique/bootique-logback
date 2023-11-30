@@ -28,68 +28,84 @@ import ch.qos.logback.core.util.FileSize;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import io.bootique.value.Duration;
 
 /**
  * A factory that can be used to setup "fixed window" log rolling policy. The
  * policy is triggered by the main log file reaching a certain size and will
  * keep up to "historySize" rotated files. Follow the logback link below for
  * file name pattern rules, etc.
- * 
+ *
  * @see <a href=
- *      "http://logback.qos.ch/manual/appenders.html#FixedWindowRollingPolicy">
- *      Logback documentation</a>
+ * "http://logback.qos.ch/manual/appenders.html#FixedWindowRollingPolicy">
+ * Logback documentation</a>
  */
 @JsonTypeName("fixedWindow")
 @BQConfig
 public class FixedWindowPolicyFactory extends RollingPolicyFactory {
 
-	private String fileSize;
+    private String fileSize;
+    private Duration checkIncrement;
 
-	/**
-	 * Sets a maximum size of a single log file. Exceeding this size causes
-	 * rotation.
-	 *
-	 * @param fileSize
-	 *            maximum size of a single log file expressed in bytes,
-	 *            kilobytes, megabytes or gigabytes by suffixing a numeric value
-	 *            with KB, MB and respectively GB. For example: 5000000, 5000KB,
-	 *            5MB and 2GB.
-	 */
-	@BQConfigProperty
-	public void setFileSize(String fileSize) {
-		this.fileSize = fileSize;
-	}
+    /**
+     * Sets a maximum size of a single log file. Exceeding this size causes
+     * rotation.
+     *
+     * @param fileSize maximum size of a single log file expressed in bytes,
+     *                 kilobytes, megabytes or gigabytes by suffixing a numeric value
+     *                 with KB, MB and respectively GB. For example: 5000000, 5000KB,
+     *                 5MB and 2GB.
+     */
+    // TODO: convert to Bytes value object from String
+    @BQConfigProperty
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
+    }
 
-	@Override
-	protected FixedWindowRollingPolicy instantiatePolicy(LoggerContext context) {
-		FixedWindowRollingPolicy policy = new FixedWindowRollingPolicy();
-		policy.setFileNamePattern(getFileNamePattern());
-		if (getHistorySize() > 0) {
-			policy.setMinIndex(1);
-			policy.setMaxIndex(getHistorySize());
-		}
-		policy.setContext(context);
-		return policy;
-	}
+    /**
+     * @since 3.0
+     */
+    @BQConfigProperty
+    public void setCheckIncrement(Duration checkIncrement) {
+        this.checkIncrement = checkIncrement;
+    }
 
-	@Override
-	public TriggeringPolicy<ILoggingEvent> createTriggeringPolicy(LoggerContext context) {
-		SizeBasedTriggeringPolicy<ILoggingEvent> policy = new SizeBasedTriggeringPolicy<ILoggingEvent>();
-		if (fileSize != null && fileSize.length() > 0) {
-			policy.setMaxFileSize(FileSize.valueOf(fileSize));
-		}
-		policy.setContext(context);
-		return policy;
-	}
+    @Override
+    protected FixedWindowRollingPolicy instantiatePolicy(LoggerContext context) {
+        FixedWindowRollingPolicy policy = new FixedWindowRollingPolicy();
+        policy.setFileNamePattern(getFileNamePattern());
+        if (getHistorySize() > 0) {
+            policy.setMinIndex(1);
+            policy.setMaxIndex(getHistorySize());
+        }
+        policy.setContext(context);
+        return policy;
+    }
 
-	@Override
-	protected FileNamePatternValidator getFileNamePatternValidator(LoggerContext context) {
+    @Override
+    public TriggeringPolicy<ILoggingEvent> createTriggeringPolicy(LoggerContext context) {
+        SizeBasedTriggeringPolicy<ILoggingEvent> policy = new SizeBasedTriggeringPolicy<ILoggingEvent>();
 
-		return new FileNamePatternValidator(context, getFileNamePattern(), FixedWindowRollingPolicy.class.getSimpleName()) {
-			@Override
-			protected void validate() {
-				checkPattern(false, true);
-			}
-		};
-	}
+        if (fileSize != null && fileSize.length() > 0) {
+            policy.setMaxFileSize(FileSize.valueOf(fileSize));
+        }
+
+        if (checkIncrement != null) {
+            policy.setCheckIncrement(new ch.qos.logback.core.util.Duration(checkIncrement.getDuration().toMillis()));
+        }
+
+        policy.setContext(context);
+        return policy;
+    }
+
+    @Override
+    protected FileNamePatternValidator getFileNamePatternValidator(LoggerContext context) {
+
+        return new FileNamePatternValidator(context, getFileNamePattern(), FixedWindowRollingPolicy.class.getSimpleName()) {
+            @Override
+            protected void validate() {
+                checkPattern(false, true);
+            }
+        };
+    }
 }

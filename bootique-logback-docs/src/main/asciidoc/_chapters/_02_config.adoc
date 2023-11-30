@@ -185,6 +185,7 @@ log:
         fileNamePattern: '/var/log/myapp-%i.log'
         historySize: 5
         fileSize: 20
+        checkIncrement: 50ms
 ----
 "fixedWindow" policy rotates the main log file when it reaches a certain size, keeping one or more rotated files.
 
@@ -207,6 +208,11 @@ log:
 |none
 |Max file size that causes rotation. Expressed in bytes, kilobytes, megabytes or gigabytes by suffixing a numeric
 value with KB, MB and respectively GB. For example: 5000000, 5000KB, 5MB and 2GB.
+
+|`checkIncrement`
+|1s
+|Prevents very quick succession of rotations. Files will not be rotated regardless of their size if the previous
+rotation happened within the specified interval.
 |===
 
 ==== "time" Rolling Policy

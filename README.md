@@ -21,5 +21,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.bootique.logback/bootique-logback.svg?colorB=brightgreen)](https://search.maven.org/artifact/io.bootique.logback/bootique-logback/)
 
 # bootique-logback
-Provides Logback integration with [Bootique](http://bootique.io). Documentation and configuration reference is 
-[available here](http://bootique.io/docs/0/bootique-logback-docs/).
+Provides Logback integration with [Bootique](https://bootique.io). Documentation and configuration reference is 
+[available here](https://bootique.io/docs/3.x/bootique-logback-docs/).

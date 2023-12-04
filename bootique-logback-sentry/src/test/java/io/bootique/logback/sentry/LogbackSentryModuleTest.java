@@ -19,30 +19,15 @@
 
 package io.bootique.logback.sentry;
 
-import io.bootique.BQRuntime;
-import io.bootique.junit5.*;
-import io.bootique.logback.LogbackModule;
+import io.bootique.junit5.BQModuleTester;
+import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.Test;
 
 @BQTest
 public class LogbackSentryModuleTest {
 
-    @BQTestTool
-    final BQTestFactory testFactory = new BQTestFactory();
-
     @Test
-    public void autoLoadable() {
-        BQModuleProviderChecker.testAutoLoadable(LogbackSentryModule.class);
-    }
-
-    @Test
-    public void metadata() {
-        BQModuleProviderChecker.testMetadata(LogbackSentryModule.class);
-    }
-
-    @Test
-    public void moduleDeclaresDependencies() {
-        final BQRuntime bqRuntime = testFactory.app().moduleProvider(new LogbackSentryModule()).createRuntime();
-        BQRuntimeChecker.testModulesLoaded(bqRuntime, LogbackSentryModule.class, LogbackModule.class);
+    public void check() {
+        BQModuleTester.of(LogbackSentryModule.class).testAutoLoadable().testConfig();
     }
 }

@@ -19,18 +19,13 @@
 
 package io.bootique.logback;
 
-import io.bootique.junit5.BQModuleProviderChecker;
+import io.bootique.junit5.BQModuleTester;
 import org.junit.jupiter.api.Test;
 
 public class LogbackModuleTest {
 
-	@Test
-    public void autoLoadable() {
-		BQModuleProviderChecker.testAutoLoadable(LogbackModule.class);
-	}
-
-	@Test
-    public void metadata() {
-		BQModuleProviderChecker.testMetadata(LogbackModule.class);
-	}
+    @Test
+    public void check() {
+        BQModuleTester.of(LogbackModule.class).testAutoLoadable().testConfig();
+    }
 }

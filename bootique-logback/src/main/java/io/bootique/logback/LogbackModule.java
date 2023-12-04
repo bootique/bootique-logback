@@ -20,11 +20,10 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
-import io.bootique.BQModuleProvider;
-import io.bootique.annotation.LogLevels;
+import io.bootique.BQModule;
 import io.bootique.ModuleCrate;
+import io.bootique.annotation.LogLevels;
 import io.bootique.config.ConfigurationFactory;
-import io.bootique.di.BQModule;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
 import io.bootique.shutdown.ShutdownManager;
@@ -33,12 +32,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 
-public class LogbackModule implements BQModule, BQModuleProvider {
+public class LogbackModule implements BQModule {
 
     private static final String CONFIG_PREFIX = "log";
 
     @Override
-    public ModuleCrate moduleCrate() {
+    public ModuleCrate crate() {
         return ModuleCrate.of(this)
                 .description("Integrates Logback logging library")
                 .config(CONFIG_PREFIX, LogbackContextFactory.class)

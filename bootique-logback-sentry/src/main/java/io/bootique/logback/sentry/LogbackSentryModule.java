@@ -20,7 +20,7 @@
 package io.bootique.logback.sentry;
 
 import io.bootique.ModuleCrate;
-import io.bootique.di.BQModule;
+import io.bootique.BQModule;
 import io.bootique.di.Binder;
 
 /**

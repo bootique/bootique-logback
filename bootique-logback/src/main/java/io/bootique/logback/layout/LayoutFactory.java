@@ -32,6 +32,7 @@ import io.bootique.config.PolymorphicConfiguration;
  *
  * @since 3.0
  */
+@BQConfig
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 public abstract class LayoutFactory implements PolymorphicConfiguration {
     private String type;

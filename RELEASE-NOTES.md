@@ -1,6 +1,7 @@
 ## 3.0-M3
 
 * #66 Upgrade to Logback 1.4.13
+* #67 LayoutFactory is not annotated and not showing subclasses in the docs
 
 ## 3.0.M2
 

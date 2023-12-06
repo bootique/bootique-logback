@@ -64,8 +64,7 @@ public class LogbackContextFactory {
 
     public Logger createRootLogger(ShutdownManager shutdownManager, Map<String, java.util.logging.Level> defaultLevels) {
 
-        LoggerContext context = createLogbackContext();
-        shutdownManager.addShutdownHook(context::stop);
+        LoggerContext context = shutdownManager.onShutdown(createLogbackContext(), LoggerContext::stop);
 
         rerouteJUL();
 

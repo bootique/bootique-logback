@@ -28,12 +28,14 @@ import ch.qos.logback.core.status.OnConsoleStatusListener;
 import ch.qos.logback.core.util.StatusListenerConfigHelper;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
+import io.bootique.annotation.LogLevels;
 import io.bootique.logback.appender.AppenderFactory;
 import io.bootique.logback.appender.ConsoleAppenderFactory;
 import io.bootique.shutdown.ShutdownManager;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,6 +47,9 @@ import java.util.Set;
 @BQConfig
 public class LogbackContextFactory {
 
+    private final ShutdownManager shutdownManager;
+    private final Map<String, java.util.logging.Level> diLevels;
+
     private LoggerFactory rootLoggerFactory;
     private String logFormat;
     private Map<String, LoggerFactory> loggers;
@@ -52,7 +57,14 @@ public class LogbackContextFactory {
     private boolean useLogbackConfig;
     private boolean debugLogback;
 
-    public LogbackContextFactory() {
+    @Inject
+    public LogbackContextFactory(
+            ShutdownManager shutdownManager,
+            @LogLevels Map<String, java.util.logging.Level> diLevels) {
+
+        this.shutdownManager = shutdownManager;
+        this.diLevels = diLevels;
+
         this.rootLoggerFactory = new LoggerFactory();
         this.loggers = Collections.emptyMap();
         this.appenders = Collections.emptyList();
@@ -62,14 +74,16 @@ public class LogbackContextFactory {
         this.useLogbackConfig = false;
     }
 
-    public Logger createRootLogger(ShutdownManager shutdownManager, Map<String, java.util.logging.Level> defaultLevels) {
+    public Logger createRootLogger() {
 
-        LoggerContext context = shutdownManager.onShutdown(createLogbackContext(), LoggerContext::stop);
+        LoggerContext context = shutdownManager.onShutdown(
+                createLogbackContext(),
+                LoggerContext::stop);
 
         rerouteJUL();
 
         if (!useLogbackConfig) {
-            Map<String, LoggerFactory> loggers = mergeLevels(defaultLevels);
+            Map<String, LoggerFactory> loggers = mergeLevels();
             configLogbackContext(context, loggers);
         }
 
@@ -149,27 +163,22 @@ public class LogbackContextFactory {
      * configuration. Factory logger levels take precedence over the provided levels argument (i.e. configuration
      * overrides code settings).
      *
-     * @param levels a map of levels keyed by logger name.
      * @return a new map that is combination of factory loggers config and provided set of levels.
      */
-    protected Map<String, LoggerFactory> mergeLevels(Map<String, java.util.logging.Level> levels) {
+    protected Map<String, LoggerFactory> mergeLevels() {
 
-        if (levels.isEmpty()) {
+        if (diLevels.isEmpty()) {
             return this.loggers;
         }
 
         Map<String, LoggerFactory> merged = new HashMap<>(loggers);
 
-        levels.forEach((name, level) -> {
-
-            LoggerFactory factory = loggers.get(name);
-            if (factory == null) {
-                factory = new LoggerFactory();
-                factory.setLevel(mapJULLevel(level));
-
-
-                merged.put(name, factory);
-            }
+        diLevels.forEach((name, level) -> {
+            merged.computeIfAbsent(name, n -> {
+                LoggerFactory f = new LoggerFactory();
+                f.setLevel(mapJULLevel(level));
+                return f;
+            });
         });
 
         return merged;
@@ -179,10 +188,11 @@ public class LogbackContextFactory {
         return JulLevel.valueOf(level.getName()).getLevel();
     }
 
-    // inspired by Dropwizard. See DW DefaultLoggingFactory and
-    // http://jira.qos.ch/browse/SLF4J-167. Though presumably Bootique calls
-    // this from the main thread, so we should not be affected by the issue.
     protected LoggerContext createLogbackContext() {
+
+        // deal with startup thread-safety issues (see Dropwizard DefaultLoggingFactory).
+        // TODO: https://jira.qos.ch/browse/SLF4J-167 is already fixed. This should not be needed
+
         long startTime = System.nanoTime();
         while (true) {
             ILoggerFactory iLoggerFactory = org.slf4j.LoggerFactory.getILoggerFactory();

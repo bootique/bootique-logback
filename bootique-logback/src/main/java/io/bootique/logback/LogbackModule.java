@@ -22,15 +22,12 @@ package io.bootique.logback;
 import ch.qos.logback.classic.Logger;
 import io.bootique.BQModule;
 import io.bootique.ModuleCrate;
-import io.bootique.annotation.LogLevels;
 import io.bootique.config.ConfigurationFactory;
 import io.bootique.di.Binder;
 import io.bootique.di.Provides;
-import io.bootique.shutdown.ShutdownManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
 
 public class LogbackModule implements BQModule {
 
@@ -53,14 +50,10 @@ public class LogbackModule implements BQModule {
 
     @Singleton
     @Provides
-    Logger provideRootLogger(
-            ConfigurationFactory configFactory,
-            ShutdownManager shutdownManager,
-            @LogLevels Map<String, java.util.logging.Level> defaultLevels) {
-
+    Logger provideRootLogger(ConfigurationFactory configFactory) {
         return configFactory
                 .config(LogbackContextFactory.class, CONFIG_PREFIX)
-                .createRootLogger(shutdownManager, defaultLevels);
+                .createRootLogger();
     }
 
     static class LogInitTrigger {

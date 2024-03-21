@@ -134,6 +134,7 @@
                                 <icons>font</icons>
                                 <toc>auto</toc>
                                 <bootique_version>${bootique.version}</bootique_version>
+                                <bootique_doc_version>2.x</bootique_doc_version>
                             </attributes>
                         </configuration>
                     </execution>

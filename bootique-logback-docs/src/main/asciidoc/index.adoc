@@ -21,7 +21,7 @@
 
 == Bootique Integration with Logback
 
-As mentioned in Bootique http://bootique.io/docs/0/bootique-docs/index.html#logging[general documentation on logging], standard modules rely on SLF4J loggers that can be easily bridged to various advanced logging frameworks. Same maximally neutral logging approach is reasonable to apply in the user modules as well.
+As mentioned in Bootique https://bootique.io/docs/{bootique_doc_version}/bootique-docs/index.html#_logging[general documentation on logging], standard modules rely on SLF4J loggers that can be easily bridged to various advanced logging frameworks. Same maximally neutral logging approach is reasonable to apply in the user modules as well.
 
 https://github.com/bootique/bootique-logback[`bootique-logback`] is a "drag-and-drop" module integrating Bootique logging with http://logback.qos.ch/[Logback logging framework]. Just like any other module, `bootique-logback` can be enabled by simply adding it to the `pom.xml` dependencies, assuming `autoLoadModules()` is in effect:
 

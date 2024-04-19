@@ -23,6 +23,7 @@ import io.bootique.junit5.BQModuleTester;
 import io.bootique.junit5.BQTest;
 import org.junit.jupiter.api.Test;
 
+@Deprecated
 @BQTest
 public class LogbackSentryModuleTest {
 

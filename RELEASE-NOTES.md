@@ -1,7 +1,8 @@
 ## 3.0-M4
 
 * #68 Upgrade logback to 1.5.5
-* #69 Upgarde sentry-logback to 7.8.0
+* #69 Upgrade sentry-logback to 7.8.0
+* #70 Deprecate bootique-logback-sentry
 
 ## 3.0-M3
 

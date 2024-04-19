@@ -41,6 +41,7 @@ import java.util.Map;
  */
 @JsonTypeName("sentry")
 @BQConfig("Appender that sends errors to Sentry.")
+@Deprecated(since = "3.0", forRemoval = true)
 public class LogbackSentryFactory extends AppenderFactory {
 
     private String dsn;

@@ -24,14 +24,15 @@ import io.bootique.BQModule;
 import io.bootique.di.Binder;
 
 /**
- * Loads configuration for {@link io.sentry.Sentry}.
+ * @deprecated No longer supported
  */
+@Deprecated(since = "3.0", forRemoval = true)
 public class LogbackSentryModule implements BQModule {
 
     @Override
     public ModuleCrate crate() {
         return ModuleCrate.of(new LogbackSentryModule())
-                .description("Integrates Sentry logging appender to Logback")
+                .description("Deprecated without replacement.")
                 .build();
     }
 

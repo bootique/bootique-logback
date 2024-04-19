@@ -50,17 +50,14 @@
         <dependency>
             <groupId>io.bootique</groupId>
             <artifactId>bootique</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.bootique.logback</groupId>
             <artifactId>bootique-logback</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry-logback</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <!-- Unit test dependencies -->

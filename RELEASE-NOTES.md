@@ -1,6 +1,7 @@
 ## 3.0-M4
 
 * #68 Upgrade logback to 1.5.5
+* #69 Upgarde sentry-logback to 7.8.0
 
 ## 3.0-M3
 

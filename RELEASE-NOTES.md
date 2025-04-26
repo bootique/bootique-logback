@@ -1,3 +1,7 @@
+## 4.0-M1
+
+* #71 Remove deprecated "bootique-logback-sentry" module
+
 ## 3.0-M4
 
 * #68 Upgrade logback to 1.5.5

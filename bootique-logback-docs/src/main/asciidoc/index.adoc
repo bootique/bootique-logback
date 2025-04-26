@@ -22,4 +22,3 @@
 include::_chapters/_01_intro.adoc[]
 include::_chapters/_02_config.adoc[]
 include::_chapters/_03_unit_test.adoc[]
-include::_chapters/_04_sentry.adoc[]

@@ -18,120 +18,104 @@
   under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>io.bootique.modules.parent</groupId>
-		<artifactId>bootique-modules-parent</artifactId>
-		<version>4.0.0</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.bootique.modules.parent</groupId>
+        <artifactId>bootique-modules-parent</artifactId>
+        <version>4.0.0</version>
+    </parent>
 
-	<groupId>io.bootique.logback</groupId>
-	<artifactId>bootique-logback-parent</artifactId>
-	<version>4.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+    <groupId>io.bootique.logback</groupId>
+    <artifactId>bootique-logback-parent</artifactId>
+    <version>4.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-	<name>bootique-logback-parent: Parent of Logback integration modules for Bootique</name>
-	<description>
-		Parent POM of Logback-related Bootique modules.
-	</description>
+    <name>bootique-logback-parent: Parent of Logback integration modules for Bootique</name>
+    <description>
+        Parent POM of Logback-related Bootique modules.
+    </description>
 
-	<modules>
-		<module>bootique-logback</module>
-		<module>bootique-logback-sentry</module>
-		<module>bootique-logback-docs</module>
+    <modules>
+        <module>bootique-logback</module>
+        <module>bootique-logback-docs</module>
         <module>bootique-logback-json</module>
     </modules>
 
-	<properties>
-		<logback.version>1.5.5</logback.version>
-		<logback.sentry.version>7.8.0</logback.sentry.version>
-		<logback.contrib.version>0.1.5</logback.contrib.version>
-	</properties>
+    <properties>
+        <logback.version>1.5.5</logback.version>
+        <logback.contrib.version>0.1.5</logback.contrib.version>
+    </properties>
 
-	<scm>
+    <scm>
         <developerConnection>scm:git:ssh://git@github.com/bootique/bootique-logback</developerConnection>
         <url>https://github.com/bootique/bootique-logback</url>
         <tag>HEAD</tag>
     </scm>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.bootique</groupId>
-				<artifactId>bootique</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.bootique</groupId>
-				<artifactId>bootique-junit5</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>*</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jul-to-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>${mockito.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.sentry</groupId>
-				<artifactId>sentry-logback</artifactId>
-				<version>${logback.sentry.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>ch.qos.logback</groupId>
-						<artifactId>logback-core</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>ch.qos.logback</groupId>
-						<artifactId>logback-classic</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback.contrib</groupId>
-				<artifactId>logback-json-classic</artifactId>
-				<version>${logback.contrib.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback.contrib</groupId>
-				<artifactId>logback-jackson</artifactId>
-				<version>${logback.contrib.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.bootique</groupId>
+                <artifactId>bootique</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.bootique</groupId>
+                <artifactId>bootique-junit5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback.contrib</groupId>
+                <artifactId>logback-json-classic</artifactId>
+                <version>${logback.contrib.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback.contrib</groupId>
+                <artifactId>logback-jackson</artifactId>
+                <version>${logback.contrib.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<configuration>
-					<!-- Deploy every module independently to be able to skip deployment for some of them -->
-					<skipLocalStaging>true</skipLocalStaging>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Deploy every module independently to be able to skip deployment for some of them -->
+                    <skipLocalStaging>true</skipLocalStaging>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

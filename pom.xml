@@ -44,7 +44,7 @@
     </modules>
 
     <properties>
-        <logback.version>1.5.5</logback.version>
+        <logback.version>1.5.18</logback.version>
         <logback.contrib.version>0.1.5</logback.contrib.version>
     </properties>
 

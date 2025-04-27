@@ -73,12 +73,12 @@ public class LogTester implements BQBeforeScopeCallback {
     public Map<String, String> run(String appConfig, Consumer<Logger> logger) {
         try {
             return doRun(appConfig, logger);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Map<String, String> doRun(String appConfig, Consumer<Logger> logger) throws IOException {
+    private Map<String, String> doRun(String appConfig, Consumer<Logger> logger) throws IOException, InterruptedException {
 
         BQRuntime app = testFactory.app("-c", appConfig)
                 .module(LogbackModule.class)
@@ -86,8 +86,9 @@ public class LogTester implements BQBeforeScopeCallback {
 
         logger.accept(app.getInstance(Logger.class));
 
-        // must stop to ensure logs are flushed...
+        // must stop and wait to ensure logs are flushed...
         app.shutdown();
+        Thread.sleep(50);
 
         return logsByFile();
     }

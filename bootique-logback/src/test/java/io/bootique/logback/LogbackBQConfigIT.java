@@ -247,10 +247,10 @@ public class LogbackBQConfigIT {
      * Checks file appender with rolling policy "size" (SizeAndTimeBasedRollingPolicy)
      * <p>
      * This test makes 4 attempts of printing 2 log rows each second.
-     * Logback configuration defines rollover by seconds with help of file name pattern;
+     * Logback configuration defines rollover by seconds with the help of file name pattern;
      * 5 seconds of total history and size of each file is 40 bytes.
      * <p>
-     * As result, 2 archived files + 1 current log-file are expected; 6 rows are expected in all log files
+     * As a result, 2 archived files + 1 current log-file are expected; 6 rows are expected in all log files
      */
     @Test
     public void fileAppender_Rotate_By_Size_And_History() {

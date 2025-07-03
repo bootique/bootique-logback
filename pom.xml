@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.bootique.modules.parent</groupId>
         <artifactId>bootique-modules-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
     </parent>
 
     <groupId>io.bootique.logback</groupId>
@@ -108,14 +108,16 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <extensions>true</extensions>
                 <configuration>
-                    <!-- Deploy every module independently to be able to skip deployment for some of them -->
-                    <skipLocalStaging>true</skipLocalStaging>
+                    <publishingServerId>sonatype-central</publishingServerId>
+                    <excludeArtifacts>
+                        <excludeArtifact>bootique-logback-docs</excludeArtifact>
+                    </excludeArtifacts>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

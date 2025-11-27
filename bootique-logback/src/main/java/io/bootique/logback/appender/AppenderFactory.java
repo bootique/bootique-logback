@@ -24,15 +24,14 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.AsyncAppenderBase;
-import ch.qos.logback.core.Context;
 import ch.qos.logback.core.Layout;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.bootique.annotation.BQConfig;
 import io.bootique.annotation.BQConfigProperty;
 import io.bootique.config.PolymorphicConfiguration;
 import io.bootique.logback.filter.FilterFactory;
-import io.bootique.logback.layout.PatternLayoutFactory;
 import io.bootique.logback.layout.LayoutFactory;
+import io.bootique.logback.layout.PatternLayoutFactory;
 
 import java.util.Collection;
 
@@ -42,17 +41,13 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     private String logFormat;
     private String name;
-
-    /**
-     * @since 3.0
-     */
     private LayoutFactory layout;
-
     private Collection<FilterFactory> filters;
 
     /**
-     * @return configured log format
+     * @deprecated factory getters should not be publicly accessible
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public String getLogFormat() {
         return logFormat;
     }
@@ -65,10 +60,11 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     public abstract Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat);
 
-
     /**
      * @since 3.0
+     * @deprecated factory getters should not be publicly accessible
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public LayoutFactory getLayout() {
         return layout;
     }
@@ -90,14 +86,14 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         this.name = name;
     }
 
+    /**
+     * @deprecated factory getters should not be publicly accessible
+     */
+    @Deprecated(since = "4.0", forRemoval = true)
     public Collection<FilterFactory> getFilters() {
         return filters;
     }
-
-    /**
-     * @since 2.0
-     * @param filters configuration of Logabck filters
-     */
+    
     @BQConfigProperty("Collection of Logback filters")
     public void setFilters(Collection<FilterFactory> filters) {
         this.filters = filters;
@@ -113,7 +109,7 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
     protected Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
         String logFormat = this.logFormat != null ? this.logFormat : defaultLogFormat;
 
-        if(layout == null) {
+        if (layout == null) {
             layout = new PatternLayoutFactory();
         }
 
@@ -125,15 +121,11 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
     }
 
     protected Appender<ILoggingEvent> asAsync(Appender<ILoggingEvent> appender) {
-        return asAsync(appender, appender.getContext());
-    }
-
-    protected Appender<ILoggingEvent> asAsync(Appender<ILoggingEvent> appender, Context context) {
         AsyncAppender asyncAppender = new AsyncAppender();
         asyncAppender.setIncludeCallerData(false);
         asyncAppender.setQueueSize(AsyncAppenderBase.DEFAULT_QUEUE_SIZE);
         asyncAppender.setDiscardingThreshold(-1);
-        asyncAppender.setContext(context);
+        asyncAppender.setContext(appender.getContext());
         asyncAppender.setName(appender.getName());
         asyncAppender.addAppender(appender);
         asyncAppender.start();

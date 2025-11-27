@@ -43,17 +43,13 @@ public class ConsoleAppenderFactory extends AppenderFactory {
     }
 
     /**
-     * @return configured target (stdout or stderr).
+     * @deprecated factory getters should not be publicly accessible
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public ConsoleTarget getTarget() {
         return target;
     }
 
-    /**
-     * Sets whether the appender should log to stderr or stdout. "stdout" is the default.
-     *
-     * @param target either "stdout" or "stderr".
-     */
     @BQConfigProperty("Whether the log should be sent to stdout or stderr. The default is 'stdout'")
     public void setTarget(ConsoleTarget target) {
         this.target = Objects.requireNonNull(target);

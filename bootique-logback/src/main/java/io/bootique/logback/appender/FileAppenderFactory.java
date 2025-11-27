@@ -30,9 +30,7 @@ import ch.qos.logback.core.rolling.RollingPolicy;
 import ch.qos.logback.core.rolling.TriggeringPolicy;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfigProperty;
-import io.bootique.logback.policy.FixedWindowPolicyFactory;
 import io.bootique.logback.policy.RollingPolicyFactory;
-import io.bootique.logback.policy.TimeBasedPolicyFactory;
 
 import java.util.Objects;
 
@@ -48,38 +46,30 @@ public class FileAppenderFactory extends AppenderFactory {
     private boolean append = true;
 
     /**
-     * @return name of the log file.
+     * @deprecated factory getters should not be publicly accessible
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public String getFile() {
         return file;
     }
 
-    /**
-     * Sets a filename for the current log file.
-     *
-     * @param file a filename for the current log file.
-     */
-    @BQConfigProperty
+    @BQConfigProperty("A filename for the current log file.")
     public void setFile(String file) {
         this.file = file;
     }
 
+
     /**
-     * @return factory for log file rotation policy
+     * @deprecated factory getters should not be publicly accessible
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public RollingPolicyFactory getRollingPolicy() {
         return rollingPolicy;
     }
 
     /**
-     * Rolling policy factory what defines rolling policy for rotation.
-     * If rolling policy factory is not defined the rotation is not used
-     *
-     * @param rollingPolicy a rolling policy factory
-     * @see RollingPolicyFactory
-     * @see FixedWindowPolicyFactory
-     * @see TimeBasedPolicyFactory
-     * @see ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy
+     * Rolling policy factory what defines rolling policy for rotation. If rolling policy factory is not defined the
+     * rotation is not used
      */
     @BQConfigProperty
     public void setRollingPolicy(RollingPolicyFactory rollingPolicy) {
@@ -87,20 +77,18 @@ public class FileAppenderFactory extends AppenderFactory {
     }
 
     /**
-     * @return append flag for the current log file.
      * @since 1.1
+     * @deprecated factory getters should not be publicly accessible
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public boolean isAppend() {
         return append;
     }
 
     /**
-     * Sets a append flag for the current log file.
-     *
-     * @param append a flag for the current log file.
      * @since 1.1
      */
-    @BQConfigProperty
+    @BQConfigProperty("Whether to append to the existing file")
     public void setAppend(boolean append) {
         this.append = append;
     }
@@ -120,8 +108,10 @@ public class FileAppenderFactory extends AppenderFactory {
         return asAsync(appender);
     }
 
-    protected FileAppender<ILoggingEvent> createSingleFileAppender(Encoder<ILoggingEvent> encoder,
-                                                                   LoggerContext context) {
+    protected FileAppender<ILoggingEvent> createSingleFileAppender(
+            Encoder<ILoggingEvent> encoder,
+            LoggerContext context) {
+
         FileAppender<ILoggingEvent> appender = new FileAppender<>();
         appender.setFile(Objects.requireNonNull(file));
 
@@ -133,9 +123,10 @@ public class FileAppenderFactory extends AppenderFactory {
         return appender;
     }
 
-    protected FileAppender<ILoggingEvent> createRollingFileAppender(Encoder<ILoggingEvent> encoder,
-                                                                    LoggerContext context,
-                                                                    RollingPolicyFactory rollingPolicy) {
+    protected FileAppender<ILoggingEvent> createRollingFileAppender(
+            Encoder<ILoggingEvent> encoder,
+            LoggerContext context,
+            RollingPolicyFactory rollingPolicy) {
 
         RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
         appender.setFile(file);

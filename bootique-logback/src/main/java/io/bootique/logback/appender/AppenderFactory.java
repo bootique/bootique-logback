@@ -39,10 +39,21 @@ import java.util.Collection;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = ConsoleAppenderFactory.class)
 public abstract class AppenderFactory implements PolymorphicConfiguration {
 
-    private String logFormat;
     protected String name;
+    private String logFormat;
     private LayoutFactory layout;
-    private Collection<FilterFactory> filters;
+    protected Collection<FilterFactory> filters;
+
+    public abstract Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat);
+
+    public String getName() {
+        return name;
+    }
+
+    @BQConfigProperty("Appender name.")
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * @deprecated factory getters should not be publicly accessible
@@ -52,13 +63,12 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         return logFormat;
     }
 
+
     @BQConfigProperty("Log format specification compatible with Logback framework. If not set, the value is propagated " +
             "from the parent configuration.")
     public void setLogFormat(String logFormat) {
         this.logFormat = logFormat;
     }
-
-    public abstract Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat);
 
     /**
      * @since 3.0
@@ -77,15 +87,6 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         this.layout = layout;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    @BQConfigProperty("Appender name.")
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
      * @deprecated factory getters should not be publicly accessible
      */
@@ -93,17 +94,10 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
     public Collection<FilterFactory> getFilters() {
         return filters;
     }
-    
+
     @BQConfigProperty("Collection of Logback filters")
     public void setFilters(Collection<FilterFactory> filters) {
         this.filters = filters;
-    }
-
-    protected Appender<ILoggingEvent> createFilters(Appender<ILoggingEvent> appender) {
-        if (filters != null) {
-            filters.forEach(filter -> appender.addFilter(filter.createFilter()));
-        }
-        return appender;
     }
 
     protected Layout<ILoggingEvent> createLayout(LoggerContext context, String defaultLogFormat) {
@@ -131,4 +125,5 @@ public abstract class AppenderFactory implements PolymorphicConfiguration {
         asyncAppender.start();
         return asyncAppender;
     }
+
 }

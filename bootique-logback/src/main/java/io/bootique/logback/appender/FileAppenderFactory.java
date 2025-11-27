@@ -118,7 +118,9 @@ public class FileAppenderFactory extends AppenderFactory {
         appender.setEncoder(encoder);
         appender.setAppend(append);
 
-        createFilters(appender);
+        if (filters != null) {
+            filters.forEach(filter -> appender.addFilter(filter.createFilter()));
+        }
 
         return appender;
     }
@@ -146,7 +148,9 @@ public class FileAppenderFactory extends AppenderFactory {
             triggeringPolicy.start();
         }
 
-        createFilters(appender);
+        if (filters != null) {
+            filters.forEach(filter -> appender.addFilter(filter.createFilter()));
+        }
 
         return appender;
     }

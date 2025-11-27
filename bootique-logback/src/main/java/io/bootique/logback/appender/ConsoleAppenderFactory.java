@@ -72,8 +72,11 @@ public class ConsoleAppenderFactory extends AppenderFactory {
         layoutEncoder.setLayout(createLayout(context, defaultLogFormat));
         appender.setEncoder(layoutEncoder);
 
-        createFilters(appender);
+        if (filters != null) {
+            filters.forEach(filter -> appender.addFilter(filter.createFilter()));
+        }
 
+        appender.start();
         return appender;
     }
 }

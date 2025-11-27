@@ -1,3 +1,7 @@
+## 4.0-M2
+
+* #74 "bootique-logback-smtp" and SMTPAppender
+
 ## 4.0-M1
 
 * #71 Remove deprecated "bootique-logback-sentry" module

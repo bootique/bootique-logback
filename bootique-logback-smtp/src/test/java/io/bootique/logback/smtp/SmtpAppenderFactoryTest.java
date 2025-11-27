@@ -48,7 +48,7 @@ public class SmtpAppenderFactoryTest {
         assertFalse(appender.isSSL());
         assertNull(appender.getLocalhost());
         assertEquals(Charset.defaultCharset().toString(), appender.getCharsetEncoding());
-        assertEquals(1, appender.getCopyOfAttachedFiltersList().size());
+        assertEquals(0, appender.getCopyOfAttachedFiltersList().size());
 
         assertEquals(List.of("a@example.org%nopex", "b@example.org%nopex"), appender.getToAsListOfString());
     }

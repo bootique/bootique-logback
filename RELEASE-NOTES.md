@@ -1,6 +1,7 @@
 ## 3.0-RC2
 
 * #73 Upgrade Logback to 1.5.18
+* #75 Upgrade to Logback 1.5.21
 
 ## 3.0-M4
 

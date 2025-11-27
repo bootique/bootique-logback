@@ -35,8 +35,7 @@ import io.bootique.logback.policy.RollingPolicyFactory;
 import java.util.Objects;
 
 /**
- * A configuration object that sets up a file appender in Logback, potentially
- * with support for rotation, etc.
+ * A configuration object that sets up a file appender in Logback, potentially with support for rotation, etc.
  */
 @JsonTypeName("file")
 public class FileAppenderFactory extends AppenderFactory {
@@ -105,6 +104,8 @@ public class FileAppenderFactory extends AppenderFactory {
 
         appender.setName(getName());
         createFilters(appender);
+
+        appender.start();
         return asAsync(appender);
     }
 
@@ -118,7 +119,6 @@ public class FileAppenderFactory extends AppenderFactory {
         appender.setContext(context);
         appender.setEncoder(encoder);
         appender.setAppend(append);
-        appender.start();
 
         return appender;
     }
@@ -126,25 +126,24 @@ public class FileAppenderFactory extends AppenderFactory {
     protected FileAppender<ILoggingEvent> createRollingFileAppender(
             Encoder<ILoggingEvent> encoder,
             LoggerContext context,
-            RollingPolicyFactory rollingPolicy) {
+            RollingPolicyFactory rollingPolicyFactory) {
 
         RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
         appender.setFile(file);
         appender.setContext(context);
         appender.setEncoder(encoder);
         appender.setAppend(append);
-        // Setup rolling policy
-        RollingPolicy policy = rollingPolicy.createRollingPolicy(context);
-        appender.setRollingPolicy(policy);
-        policy.setParent(appender);
-        // Setup triggering policy
-        TriggeringPolicy<ILoggingEvent> triggeringPolicy = rollingPolicy.createTriggeringPolicy(context);
+
+        RollingPolicy rollingPolicy = rollingPolicyFactory.createRollingPolicy(context);
+        appender.setRollingPolicy(rollingPolicy);
+        rollingPolicy.setParent(appender);
+        rollingPolicy.start();
+
+        TriggeringPolicy<ILoggingEvent> triggeringPolicy = rollingPolicyFactory.createTriggeringPolicy(context);
         if (triggeringPolicy != null) {
             appender.setTriggeringPolicy(triggeringPolicy);
             triggeringPolicy.start();
         }
-        policy.start();
-        appender.start();
 
         return appender;
     }

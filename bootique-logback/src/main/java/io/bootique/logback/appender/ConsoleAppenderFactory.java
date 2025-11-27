@@ -57,10 +57,12 @@ public class ConsoleAppenderFactory extends AppenderFactory {
 
     @Override
     public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
-        ConsoleAppender<ILoggingEvent> consoleAppender = createConsoleAppender(context, defaultLogFormat);
-        consoleAppender.setName(getName());
-        createFilters(consoleAppender);
-        return asAsync(consoleAppender);
+        ConsoleAppender<ILoggingEvent> appender = createConsoleAppender(context, defaultLogFormat);
+        appender.setName(getName());
+        createFilters(appender);
+
+        appender.start();
+        return asAsync(appender);
     }
 
     protected ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext context, String defaultLogFormat) {
@@ -72,8 +74,6 @@ public class ConsoleAppenderFactory extends AppenderFactory {
         LayoutWrappingEncoder<ILoggingEvent> layoutEncoder = new LayoutWrappingEncoder<>();
         layoutEncoder.setLayout(createLayout(context, defaultLogFormat));
         appender.setEncoder(layoutEncoder);
-
-        appender.start();
 
         return appender;
     }

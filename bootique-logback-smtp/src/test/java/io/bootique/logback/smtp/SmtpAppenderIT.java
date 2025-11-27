@@ -51,7 +51,7 @@ public class SmtpAppenderIT {
                     .setProperty("bq.log.appenders[0].subject", "[%c %p] %m")
                     .setProperty("bq.log.appenders[0].from", "f@example.org")
                     .setProperty("bq.log.appenders[0].to[0]", "t@example.org")
-                    .setProperty("bq.log.appenders[0].logFormat", "%c %p| %m"))
+                    .setProperty("bq.log.appenders[0].logFormat", "%c %p| %m %ex{full}"))
             .createRuntime();
 
     @Test
@@ -66,6 +66,30 @@ public class SmtpAppenderIT {
 
         String body = GreenMailUtil.getBody(logMessage);
         assertTrue(body.contains("deliverErrors ERROR| This is an error"), body);
+    }
+
+    @Test
+    public void deliverErrorsWithStacks() throws MessagingException {
+
+        Throwable th;
+        try {
+            throw new RuntimeException("Test Exception");
+        } catch (RuntimeException e) {
+            th = e;
+        }
+
+        Logger logger = LoggerFactory.getLogger("deliverErrors");
+        logger.error("This is an error", th);
+
+        MimeMessage logMessage = readMail();
+        assertEquals("f@example.org", logMessage.getFrom()[0].toString());
+        assertEquals("t@example.org", logMessage.getRecipients(Message.RecipientType.TO)[0].toString());
+        assertEquals("[deliverErrors ERROR] This is an error", logMessage.getSubject());
+
+        String body = GreenMailUtil.getBody(logMessage);
+        assertTrue(body.contains("deliverErrors ERROR| This is an error java.lang.RuntimeException: Test Exception"), body);
+        assertTrue(body.contains("at io.bootique.logback.smtp.SmtpAppenderIT.deliverErrorsWithStacks("), body);
+
     }
 
     @Test

@@ -40,7 +40,7 @@ import java.util.Collection;
 public abstract class AppenderFactory implements PolymorphicConfiguration {
 
     private String logFormat;
-    private String name;
+    protected String name;
     private LayoutFactory layout;
     private Collection<FilterFactory> filters;
 

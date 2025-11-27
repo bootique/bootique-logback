@@ -102,9 +102,6 @@ public class FileAppenderFactory extends AppenderFactory {
                 ? createSingleFileAppender(encoder, context)
                 : createRollingFileAppender(encoder, context, rollingPolicy);
 
-        appender.setName(getName());
-        createFilters(appender);
-
         appender.start();
         return asAsync(appender);
     }
@@ -114,11 +111,14 @@ public class FileAppenderFactory extends AppenderFactory {
             LoggerContext context) {
 
         FileAppender<ILoggingEvent> appender = new FileAppender<>();
-        appender.setFile(Objects.requireNonNull(file));
 
+        appender.setName(name);
+        appender.setFile(Objects.requireNonNull(file));
         appender.setContext(context);
         appender.setEncoder(encoder);
         appender.setAppend(append);
+
+        createFilters(appender);
 
         return appender;
     }
@@ -129,6 +129,7 @@ public class FileAppenderFactory extends AppenderFactory {
             RollingPolicyFactory rollingPolicyFactory) {
 
         RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<>();
+        appender.setName(name);
         appender.setFile(file);
         appender.setContext(context);
         appender.setEncoder(encoder);
@@ -144,6 +145,8 @@ public class FileAppenderFactory extends AppenderFactory {
             appender.setTriggeringPolicy(triggeringPolicy);
             triggeringPolicy.start();
         }
+
+        createFilters(appender);
 
         return appender;
     }

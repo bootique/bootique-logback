@@ -58,22 +58,21 @@ public class ConsoleAppenderFactory extends AppenderFactory {
     @Override
     public Appender<ILoggingEvent> createAppender(LoggerContext context, String defaultLogFormat) {
         ConsoleAppender<ILoggingEvent> appender = createConsoleAppender(context, defaultLogFormat);
-        appender.setName(getName());
-        createFilters(appender);
-
         appender.start();
         return asAsync(appender);
     }
 
     protected ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext context, String defaultLogFormat) {
         ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<>();
-        appender.setName("console");
+        appender.setName(name);
         appender.setContext(context);
         appender.setTarget(target.getLogbackTarget());
 
         LayoutWrappingEncoder<ILoggingEvent> layoutEncoder = new LayoutWrappingEncoder<>();
         layoutEncoder.setLayout(createLayout(context, defaultLogFormat));
         appender.setEncoder(layoutEncoder);
+
+        createFilters(appender);
 
         return appender;
     }

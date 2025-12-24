@@ -25,8 +25,7 @@ import ch.qos.logback.core.ConsoleAppender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConsoleAppenderFactoryTest {
 
@@ -34,7 +33,7 @@ public class ConsoleAppenderFactoryTest {
 
     @BeforeEach
     public void before() {
-        mockContext = mock(LoggerContext.class);
+        mockContext = new LoggerContext();
     }
 
     @Test

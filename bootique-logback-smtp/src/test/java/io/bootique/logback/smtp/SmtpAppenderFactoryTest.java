@@ -27,7 +27,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 public class SmtpAppenderFactoryTest {
 
@@ -37,7 +36,7 @@ public class SmtpAppenderFactoryTest {
         SmtpAppenderFactory factory = new SmtpAppenderFactory()
                 .setTo(List.of("a@example.org", "b@example.org"));
 
-        SMTPAppender appender = factory.createSmtpAppender(mock(LoggerContext.class), "%c{20}: %m%n");
+        SMTPAppender appender = factory.createSmtpAppender(new LoggerContext(), "%c{20}: %m%n");
         assertNull(appender.getSmtpHost());
         assertEquals(25, appender.getSMTPPort());
         assertNull(appender.getFrom());

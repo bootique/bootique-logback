@@ -46,7 +46,7 @@
     <properties>
         <logback.version>1.5.21</logback.version>
         <logback.contrib.version>0.1.5</logback.contrib.version>
-        <jakarta.mail.version>2.1.3</jakarta.mail.version>
+        <jakarta.mail.version>2.1.5</jakarta.mail.version>
         <angus.mail.version>2.0.5</angus.mail.version>
         <greenmail.version>2.1.7</greenmail.version>
     </properties>

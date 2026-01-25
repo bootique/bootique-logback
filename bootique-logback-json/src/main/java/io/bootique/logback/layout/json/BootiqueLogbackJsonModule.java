@@ -16,25 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package io.bootique.logback.layout.json;
 
-package io.bootique.logback.layout;
+import io.bootique.BQModule;
+import io.bootique.ModuleCrate;
+import io.bootique.di.Binder;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.html.HTMLLayout;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Layout;
-import org.junit.jupiter.api.Test;
+/**
+ * @since 4.0
+ * @deprecated as the corresponding layout factory is included in the main "bootique-logback" module now and this module
+ * is redundant.
+ */
+@Deprecated(since = "4.0", forRemoval = true)
+public class BootiqueLogbackJsonModule implements BQModule {
 
-import static org.junit.jupiter.api.Assertions.*;
+    @Override
+    public ModuleCrate crate() {
+        return ModuleCrate.of(this).deprecated(true)
+                .description("Deprecated. Merged to 'bootique-logback' and is no longer needed.")
+                .build();
+    }
 
-public class HtmlLayoutFactoryTest {
-
-    @Test
-    public void createLayoutTest() {
-        LoggerContext context = new LoggerContext();
-        HtmlLayoutFactory factory = new HtmlLayoutFactory();
-        Layout<ILoggingEvent> layout = factory.createLayout(context, "");
-        assertInstanceOf(HTMLLayout.class, layout);
-        assertTrue(layout.isStarted());
+    @Override
+    public void configure(Binder binder) {
     }
 }

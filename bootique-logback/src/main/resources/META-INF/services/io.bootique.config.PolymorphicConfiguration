@@ -10,4 +10,5 @@ io.bootique.logback.filter.ThresholdFilterFactory
 io.bootique.logback.layout.LayoutFactory
 io.bootique.logback.layout.PatternLayoutFactory
 io.bootique.logback.layout.HtmlLayoutFactory
+io.bootique.logback.layout.JsonLayoutFactory
 io.bootique.logback.layout.XmlLayoutFactory

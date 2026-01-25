@@ -20,21 +20,33 @@
 package io.bootique.logback.layout;
 
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.html.HTMLLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.contrib.json.classic.JsonLayout;
 import ch.qos.logback.core.Layout;
+import io.bootique.junit5.BQModuleTester;
+import io.bootique.junit5.BQTest;
+import io.bootique.logback.LogbackModule;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HtmlLayoutFactoryTest {
+@BQTest
+public class JsonLayoutFactoryTest {
 
     @Test
     public void createLayoutTest() {
         LoggerContext context = new LoggerContext();
-        HtmlLayoutFactory factory = new HtmlLayoutFactory();
-        Layout<ILoggingEvent> layout = factory.createLayout(context, "");
-        assertInstanceOf(HTMLLayout.class, layout);
+        JsonLayoutFactory factory = new JsonLayoutFactory();
+        Layout<ILoggingEvent> layout = factory.createLayout(context, null);
+        assertInstanceOf(JsonLayout.class, layout);
         assertTrue(layout.isStarted());
+    }
+
+    @Test
+    void config() {
+        // even though we don't have a module class here, testing with LogbackModule will ensure JSON config
+        // objects are setup properly
+        BQModuleTester.of(LogbackModule.class).testConfig();
     }
 }

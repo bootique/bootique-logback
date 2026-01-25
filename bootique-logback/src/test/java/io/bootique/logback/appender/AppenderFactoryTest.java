@@ -32,22 +32,18 @@ import io.bootique.junit5.BQTestTool;
 import io.bootique.logback.LogbackContextFactory;
 import io.bootique.logback.LogbackLevel;
 import io.bootique.logback.LogbackModule;
-import io.bootique.logback.unit.LogTester;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @BQTest
-class AppenderFactoryTest {
+public class AppenderFactoryTest {
 
     @BQTestTool
     final BQTestFactory testFactory = new BQTestFactory().autoLoadModules();
 
-    @BQTestTool
-    final LogTester logTester = new LogTester(testFactory, "target/logs");
-
     @Test
-    void createLayout() {
+    public void createLayout() {
 
         ConfigurationFactory configFactory = testFactory.app("-c", "classpath:io/bootique/logback/test-file-appender-pattern-layout.yml")
                 .module(LogbackModule.class)
@@ -61,14 +57,14 @@ class AppenderFactoryTest {
         assertNotNull(rootFactory.getAppenders());
         assertEquals(1, rootFactory.getAppenders().size());
         AppenderFactory[] appenders = rootFactory.getAppenders().toArray(new AppenderFactory[1]);
-        assertTrue(appenders[0] instanceof FileAppenderFactory);
+        assertInstanceOf(FileAppenderFactory.class, appenders[0]);
         FileAppenderFactory a1 = (FileAppenderFactory) appenders[0];
         Layout<ILoggingEvent> actualLayout = a1.createLayout(new LoggerContext(), "");
-        assertTrue(actualLayout instanceof PatternLayout);
+        assertInstanceOf(PatternLayout.class, actualLayout);
     }
 
     @Test
-    void createDefaultLayout() {
+    public void createDefaultLayout() {
 
         ConfigurationFactory configFactory = testFactory.app("-c", "classpath:io/bootique/logback/test-file-appender-default-layout.yml")
                 .module(LogbackModule.class)
@@ -82,15 +78,15 @@ class AppenderFactoryTest {
         assertNotNull(rootFactory.getAppenders());
         assertEquals(1, rootFactory.getAppenders().size());
         AppenderFactory[] appenders = rootFactory.getAppenders().toArray(new AppenderFactory[1]);
-        assertTrue(appenders[0] instanceof FileAppenderFactory);
+        assertInstanceOf(FileAppenderFactory.class, appenders[0]);
         FileAppenderFactory a1 = (FileAppenderFactory) appenders[0];
         Layout<ILoggingEvent> actualLayout = a1.createLayout(new LoggerContext(), "");
-        assertTrue(actualLayout instanceof PatternLayout);
+        assertInstanceOf(PatternLayout.class, actualLayout);
     }
 
 
     @Test
-    void createHtmlLayout() {
+    public void createHtmlLayout() {
         ConfigurationFactory configFactory = testFactory.app("-c", "classpath:io/bootique/logback/test-file-appender-html-layout.yml")
                 .module(LogbackModule.class)
                 .createRuntime()
@@ -103,14 +99,14 @@ class AppenderFactoryTest {
         assertNotNull(rootFactory.getAppenders());
         assertEquals(1, rootFactory.getAppenders().size());
         AppenderFactory[] appenders = rootFactory.getAppenders().toArray(new AppenderFactory[1]);
-        assertTrue(appenders[0] instanceof FileAppenderFactory);
+        assertInstanceOf(FileAppenderFactory.class, appenders[0]);
         FileAppenderFactory a1 = (FileAppenderFactory) appenders[0];
         Layout<ILoggingEvent> actualLayout = a1.createLayout(new LoggerContext(), "");
-        assertTrue(actualLayout instanceof HTMLLayout);
+        assertInstanceOf(HTMLLayout.class, actualLayout);
     }
 
     @Test
-    void createXmlLayout() {
+    public void createXmlLayout() {
         ConfigurationFactory configFactory = testFactory.app("-c", "classpath:io/bootique/logback/test-file-appender-xml-layout.yml")
                 .module(LogbackModule.class)
                 .createRuntime()
@@ -123,9 +119,9 @@ class AppenderFactoryTest {
         assertNotNull(rootFactory.getAppenders());
         assertEquals(1, rootFactory.getAppenders().size());
         AppenderFactory[] appenders = rootFactory.getAppenders().toArray(new AppenderFactory[1]);
-        assertTrue(appenders[0] instanceof FileAppenderFactory);
+        assertInstanceOf(FileAppenderFactory.class, appenders[0]);
         FileAppenderFactory a1 = (FileAppenderFactory) appenders[0];
         Layout<ILoggingEvent> actualLayout = a1.createLayout(new LoggerContext(), "");
-        assertTrue(actualLayout instanceof XMLLayout);
+        assertInstanceOf(XMLLayout.class, actualLayout);
     }
 }

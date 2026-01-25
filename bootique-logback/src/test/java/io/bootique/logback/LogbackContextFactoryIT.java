@@ -27,7 +27,6 @@ import io.bootique.logback.appender.AppenderFactory;
 import io.bootique.logback.appender.ConsoleAppenderFactory;
 import io.bootique.logback.appender.ConsoleTarget;
 import io.bootique.logback.appender.FileAppenderFactory;
-import io.bootique.logback.unit.LogTester;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,9 +36,6 @@ public class LogbackContextFactoryIT {
 
     @BQTestTool
     final BQTestFactory testFactory = new BQTestFactory().autoLoadModules();
-
-    @BQTestTool
-    final LogTester logTester = new LogTester(testFactory, "target/logs");
 
     @Test
     public void initFromConfig() {

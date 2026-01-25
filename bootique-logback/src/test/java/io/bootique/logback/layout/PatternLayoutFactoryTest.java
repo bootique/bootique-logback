@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PatternLayoutFactoryTest {
+public class PatternLayoutFactoryTest {
 
     @Test
-    void createLayoutTest() {
+    public void createLayoutTest() {
         LoggerContext context = new LoggerContext();
         PatternLayoutFactory factory = new PatternLayoutFactory();
         Layout<ILoggingEvent> layout = factory.createLayout(context, "%c{20}: %m%n");

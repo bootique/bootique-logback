@@ -1,3 +1,7 @@
+## 4.0-M3
+
+* #76 Merge bootique-logback-json into bootique-logback
+
 ## 4.0-M2
 
 * #74 "bootique-logback-smtp" and SMTPAppender

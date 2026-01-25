@@ -30,25 +30,16 @@ import io.bootique.annotation.BQConfigProperty;
 /**
  * JsonLayout generates logs in JSON format.
  *
- * A JsonLayout builds its jsonMap from a source {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvent}
- * with keys/value pairs.
- * For more information see https://www.baeldung.com/java-log-json-output#2-configuration-1
- *
- * @since 3.0
+ * @since 4.0
  */
 @JsonTypeName("json")
 @BQConfig("A Json layout generates logs in JSON format")
 public class JsonLayoutFactory extends LayoutFactory {
+
     private static final String DEFAULT_TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSS";
+
     private String timestampFormat;
     private boolean prettyPrint;
-
-    /**
-     * @return configured timestamp
-     */
-    public String getTimestampFormat() {
-        return timestampFormat;
-    }
 
     /**
      * Sets timestamp for output logs. Default is {@link #DEFAULT_TIMESTAMP}.
@@ -56,13 +47,6 @@ public class JsonLayoutFactory extends LayoutFactory {
     @BQConfigProperty("Timestamp format for json. Default is \'yyyy-MM-dd HH:mm:ss.SSS\'")
     public void setTimestampFormat(String timestampFormat) {
         this.timestampFormat = timestampFormat;
-    }
-
-    /**
-     * @return prettyPrint
-     */
-    public boolean getPrettyPrint() {
-        return prettyPrint;
     }
 
     /**
@@ -87,5 +71,4 @@ public class JsonLayoutFactory extends LayoutFactory {
         jsonLayout.start();
         return jsonLayout;
     }
-
 }

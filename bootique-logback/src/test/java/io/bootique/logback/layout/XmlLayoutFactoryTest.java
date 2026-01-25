@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class XmlLayoutFactoryTest {
+public class XmlLayoutFactoryTest {
 
     @Test
-    void createLayoutTest() {
+    public void createLayoutTest() {
         LoggerContext context = new LoggerContext();
         XmlLayoutFactory factory = new XmlLayoutFactory();
         Layout<ILoggingEvent> layout = factory.createLayout(context, "");

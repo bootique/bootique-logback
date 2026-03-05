@@ -23,8 +23,8 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.contrib.json.classic.JsonLayout;
 import ch.qos.logback.core.Layout;
-import io.bootique.junit5.BQModuleTester;
-import io.bootique.junit5.BQTest;
+import io.bootique.junit.BQModuleTester;
+import io.bootique.junit.BQTest;
 import io.bootique.logback.LogbackModule;
 import org.junit.jupiter.api.Test;
 

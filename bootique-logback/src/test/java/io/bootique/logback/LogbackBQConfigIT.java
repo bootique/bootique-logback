@@ -20,9 +20,9 @@
 package io.bootique.logback;
 
 import ch.qos.logback.classic.Logger;
-import io.bootique.junit5.BQTest;
-import io.bootique.junit5.BQTestFactory;
-import io.bootique.junit5.BQTestTool;
+import io.bootique.junit.BQTest;
+import io.bootique.junit.BQTestFactory;
+import io.bootique.junit.BQTestTool;
 import io.bootique.logback.unit.LogTester;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;

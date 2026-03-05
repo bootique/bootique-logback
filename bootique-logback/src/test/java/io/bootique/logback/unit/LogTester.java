@@ -20,9 +20,9 @@ package io.bootique.logback.unit;
 
 import ch.qos.logback.classic.Logger;
 import io.bootique.BQRuntime;
-import io.bootique.junit5.BQTestFactory;
-import io.bootique.junit5.BQTestScope;
-import io.bootique.junit5.scope.BQBeforeScopeCallback;
+import io.bootique.junit.BQTestFactory;
+import io.bootique.junit.BQTestScope;
+import io.bootique.junit.scope.BQBeforeScopeCallback;
 import io.bootique.logback.LogbackModule;
 import org.junit.jupiter.api.extension.ExtensionContext;
 

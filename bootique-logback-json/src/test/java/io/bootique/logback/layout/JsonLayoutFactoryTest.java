@@ -21,7 +21,6 @@ package io.bootique.logback.layout;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.contrib.json.classic.JsonLayout;
 import ch.qos.logback.core.Layout;
 import io.bootique.junit.BQModuleTester;
 import io.bootique.junit.BQTest;

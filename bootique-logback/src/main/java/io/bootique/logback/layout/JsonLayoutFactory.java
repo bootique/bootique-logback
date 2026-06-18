@@ -20,8 +20,6 @@ package io.bootique.logback.layout;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.contrib.jackson.JacksonJsonFormatter;
-import ch.qos.logback.contrib.json.classic.JsonLayout;
 import ch.qos.logback.core.Layout;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.bootique.annotation.BQConfig;
@@ -62,11 +60,9 @@ public class JsonLayoutFactory extends LayoutFactory {
         String timestamp = this.timestampFormat != null ? this.timestampFormat : DEFAULT_TIMESTAMP;
 
         JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.setContext(context);
         jsonLayout.setTimestampFormat(timestamp);
-
-        JacksonJsonFormatter formatter = new JacksonJsonFormatter();
-        formatter.setPrettyPrint(prettyPrint);
-        jsonLayout.setJsonFormatter(formatter);
+        jsonLayout.setPrettyPrint(prettyPrint);
 
         jsonLayout.start();
         return jsonLayout;

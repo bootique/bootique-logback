@@ -1,6 +1,7 @@
 ## 4.0-M4
 
 * #77 Upgrade to Logback 1.5.34
+* #78 Get rid of Logback "contrib" modules
 
 ## 4.0-M3
 

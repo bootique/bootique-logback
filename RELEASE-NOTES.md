@@ -1,3 +1,7 @@
+## 4.0-M4
+
+* #77 Upgrade to Logback 1.5.34
+
 ## 4.0-M3
 
 * #76 Merge bootique-logback-json into bootique-logback

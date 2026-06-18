@@ -36,6 +36,7 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,8 +50,8 @@ public class LogbackContextFactory {
 
     private final ShutdownManager shutdownManager;
     private final Map<String, java.util.logging.Level> diLevels;
+    private final LoggerFactory rootLoggerFactory;
 
-    private LoggerFactory rootLoggerFactory;
     private String logFormat;
     private Map<String, LoggerFactory> loggers;
     private Collection<AppenderFactory> appenders;
@@ -173,13 +174,11 @@ public class LogbackContextFactory {
 
         Map<String, LoggerFactory> merged = new HashMap<>(loggers);
 
-        diLevels.forEach((name, level) -> {
-            merged.computeIfAbsent(name, n -> {
-                LoggerFactory f = new LoggerFactory();
-                f.setLevel(mapJULLevel(level));
-                return f;
-            });
-        });
+        diLevels.forEach((name, level) -> merged.computeIfAbsent(name, n -> {
+            LoggerFactory f = new LoggerFactory();
+            f.setLevel(mapJULLevel(level));
+            return f;
+        }));
 
         return merged;
     }
@@ -232,7 +231,9 @@ public class LogbackContextFactory {
 
     /**
      * @return collection of log level configurations.
+     * @deprecated unused
      */
+    @Deprecated(since = "4.0", forRemoval = true)
     public Map<String, LoggerFactory> getLoggers() {
         return loggers;
     }
@@ -263,9 +264,10 @@ public class LogbackContextFactory {
      *
      * @param useLogbackConfig if true, all other logback configuration present in YAML is ignored.
      */
-    @BQConfigProperty("If true, all Bootique logback settings are ignored and the user is expected to provide its own " +
-            "config file per Logback documentation. This is only needed for a few advanced options not directly " +
-            "available via Bootique config. So the value should stay false (which is the default).")
+    @BQConfigProperty("""
+            If true, all Bootique logback settings are ignored and the user is expected to provide its own config file \
+            per Logback documentation. This is only needed for a few advanced options not directly available via \
+            Bootique config. So the value should stay false (which is the default).""")
     public void setUseLogbackConfig(boolean useLogbackConfig) {
         this.useLogbackConfig = useLogbackConfig;
     }
@@ -275,8 +277,9 @@ public class LogbackContextFactory {
      *
      * @param debugLogback if true, turns on tracing of Logback startup.
      */
-    @BQConfigProperty("If true, Logback configuration debugging information will be printed to console. Helps to deal" +
-            " with Logback configuration issues.")
+    @BQConfigProperty("""
+            If true, Logback configuration debugging information will be printed to console. Helps to deal \
+            with Logback configuration issues.""")
     public void setDebugLogback(boolean debugLogback) {
         this.debugLogback = debugLogback;
     }
@@ -302,7 +305,7 @@ public class LogbackContextFactory {
         SEVERE(LogbackLevel.error),
         WARNING(LogbackLevel.warn);
 
-        private LogbackLevel level;
+        private final LogbackLevel level;
 
         JulLevel(LogbackLevel level) {
             this.level = level;

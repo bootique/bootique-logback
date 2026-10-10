@@ -1,3 +1,7 @@
+## 4.0-M7
+
+* #79 Upgrade SLF4J to 2.0.20
+
 ## 4.0-M4
 
 * #77 Upgrade to Logback 1.5.34
